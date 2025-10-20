@@ -1,0 +1,241 @@
+{
+  "summary": {
+    "test_run_timestamp": "2025-10-18T11:43:35.989877",
+    "collection_name": "jina_v3_test",
+    "total_questions": 18,
+    "successful_tests": 1,
+    "failed_tests": 0,
+    "total_test_duration_seconds": 14.443229913711548,
+    "service_configuration": {
+      "embeddings": {
+        "model": "jina-embeddings-v3",
+        "dimension": 1024,
+        "provider": "jina_api",
+        "device": "jina_cloud_gpu",
+        "cache_enabled": true,
+        "cache_entries": 0
+      },
+      "answer_generation": {
+        "cache_enabled": false
+      },
+      "reranking": {
+        "model": "jina-reranker-v2-base-multilingual",
+        "provider": "jina-api"
+      }
+    },
+    "average_metrics": {
+      "total_time_ms": 14443.048084009206,
+      "server_time_ms": 14437.891960144043,
+      "keyword_coverage_percentage": 83.33333333333334
+    },
+    "category_statistics": {
+      "Cross-Section Synthesis": {
+        "test_count": 1,
+        "avg_time_ms": 14443.048084009206,
+        "avg_keyword_coverage": 83.33333333333334
+      }
+    }
+  },
+  "test_results": [
+    {
+      "test_id": "1.1",
+      "category": "Cross-Section Synthesis",
+      "question": "Compare the technical terms used in the Nike Air Zoom Pegasus 40 and Michelin Pilot Sport 4S Tire sections; what technologies do they share?",
+      "difficulty": "hard",
+      "test_capability": "cross-domain synthesis",
+      "timestamp": "2025-10-18T11:43:35.989801",
+      "success": true,
+      "answer": "## Comparison: Nike Air Zoom Pegasus 40 and Michelin Pilot Sport 4S Tire\n\n### Features of Nike Air Zoom Pegasus 40\n\n| Feature | Description |\n|---------|-------------|\n| **React Foam Technology** | Responsive midsole for comfort and support |\n| **Zoom Air Cushioning** | Propulsive feel in the forefoot |\n| **Engineered Mesh Upper** | Breathable and lightweight |\n| **Waffle-Pattern Traction** | Rubber outsole for traction and durability |\n| **Reflective Elements** | Low-light visibility |\n\n### Features of Michelin Pilot Sport 4S Tire\n\n| Feature | Description |\n|---------|-------------|\n| **Bi-Compound Technology** | Asymmetric tread pattern for dry and wet grip |\n| **Dynamic Response Technology** | Responsive handling and long tread life |\n| **Variable Contact Patch 3.0** | Optimized contact patch for improved grip |\n|",
+      "citations_count": 0,
+      "citations": [],
+      "performance": {
+        "total_time_ms": 14443.048084009206,
+        "server_time_ms": 14437.891960144043,
+        "network_latency_ms": 5.156123865162954,
+        "stage_times": {
+          "intent_detection_ms": 13787.363290786743,
+          "search_ms": 4198.607921600342,
+          "reranking_ms": 9588.571071624756,
+          "compression_ms": 0.0,
+          "answer_generation_ms": 650.4702568054199
+        },
+        "stage_percentages": {
+          "intent_detection_pct": 95.4942960429882,
+          "search_pct": 29.080477490693546,
+          "reranking_pct": 66.41254206704212,
+          "compression_pct": 0.0,
+          "answer_generation_pct": 4.50529937889167
+        },
+        "bottleneck": {
+          "stage": "intent_detection",
+          "time_ms": 13787.363290786743,
+          "percentage_of_total": 95.4942960429882
+        }
+      },
+      "retrieval_metrics": {
+        "search_results_count": 18,
+        "reranked_count": 10,
+        "compressed_count": 10,
+        "context_count": 5
+      },
+      "models_used": {
+        "llm_requested": null,
+        "llm_used": "Meta-Llama-3.1-8B-Instruct",
+        "llm_temperature": 0.3,
+        "used_recommended_model": true,
+        "used_custom_prompt": true
+      },
+      "intent_analysis": {
+        "detected_intent": "comparison",
+        "language": "en",
+        "complexity": "moderate",
+        "confidence": 0.95,
+        "recommended_model": "Meta-Llama-3.1-8B-Instruct",
+        "has_custom_prompt": true
+      },
+      "keyword_analysis": {
+        "expected_keywords": [
+          "React foam",
+          "Zoom Air",
+          "engineered mesh",
+          "bi-compound",
+          "traction",
+          "performance"
+        ],
+        "keywords_found": [
+          "React foam",
+          "Zoom Air",
+          "engineered mesh",
+          "bi-compound",
+          "traction"
+        ],
+        "keywords_missing": [
+          "performance"
+        ],
+        "coverage_percentage": 83.33333333333334
+      },
+      "full_response": {
+        "success": true,
+        "query": "Compare the technical terms used in the Nike Air Zoom Pegasus 40 and Michelin Pilot Sport 4S Tire sections; what technologies do they share?",
+        "collection_name": "jina_v3_test",
+        "tenant_id": "default",
+        "answer": "## Comparison: Nike Air Zoom Pegasus 40 and Michelin Pilot Sport 4S Tire\n\n### Features of Nike Air Zoom Pegasus 40\n\n| Feature | Description |\n|---------|-------------|\n| **React Foam Technology** | Responsive midsole for comfort and support |\n| **Zoom Air Cushioning** | Propulsive feel in the forefoot |\n| **Engineered Mesh Upper** | Breathable and lightweight |\n| **Waffle-Pattern Traction** | Rubber outsole for traction and durability |\n| **Reflective Elements** | Low-light visibility |\n\n### Features of Michelin Pilot Sport 4S Tire\n\n| Feature | Description |\n|---------|-------------|\n| **Bi-Compound Technology** | Asymmetric tread pattern for dry and wet grip |\n| **Dynamic Response Technology** | Responsive handling and long tread life |\n| **Variable Contact Patch 3.0** | Optimized contact patch for improved grip |\n|",
+        "citations": [],
+        "context_chunks": [
+          {
+            "chunk_id": "comprehensive_test_doc_v1_chunk_6",
+            "text": "### Michelin Pilot Sport 4S Tire\n**Brand:** Michelin\n**Manufacturer:** Michelin North America Inc.\n**Model:** Pilot Sport 4S\n**SKU:** MICH-PS4S-245-40-R18\n**Price:** 289.99\n**Currency:** USD\n**Year:** 2024\n**Size:** 245/40R18\n**Weight:** 11.5 kg\n**Dimensions:** 245mm width, 40% aspect ratio, 18\" rim diameter\n\n**Specifications:** Max speed rating Y (186 mph), Load index 97, Summer performance tire, Asymmetric tread pattern, Bi-compound tread, Dynamic Response Technology, Premium Touch Design\n\n**Technical Terms:** Bi-compound technology, Dynamic Response Technology, Variable Contact Patch 3.0, Hybrid Aramid/Nylon belt package\n\n**Description:** The Michelin Pilot Sport 4S is an ultra-high performance summer tire designed for sports cars and high-performance sedans. Features exceptional dry and wet grip, precise handling, and long tread life.\n\n**Contact:** customer.service@michelin.com | +1-888-622-2306\n\n---",
+            "document_id": "comprehensive_test_doc_v1",
+            "topics": "Automotive tires, Performance driving, Tire technology, Vehicle safety",
+            "keywords": "Michelin, Pilot Sport 4S, summer tire, high-performance, sports cars, tread pattern, Dynamic Response Technology, Bi-compound technology, Load index, Max speed rating",
+            "summary": "The Michelin Pilot Sport 4S is an ultra-high performance summer tire designed for sports cars and high-performance sedans, offering exceptional dry and wet grip, precise handling, and long tread life through advanced technologies like Bi-compound tread and Dynamic Response Technology.",
+            "questions": "What is the Michelin Pilot Sport 4S?|Why choose a summer performance tire?|How does Dynamic Response Technology work?|What vehicles is this tire suitable for?|What are the key features of the Pilot Sport 4S?"
+          },
+          {
+            "chunk_id": "comprehensive_test_doc_v1_chunk_2",
+            "text": "### Nike Air Zoom Pegasus 40\n**Brand:** Nike\n**Manufacturer:** Nike Inc.\n**Model:** Air Zoom Pegasus 40\n**SKU:** NIKE-PEGASUS-40-MEN-10.5-BLACK\n**Price:** 139.99\n**Currency:** USD\n**Year:** 2023\n**Color:** Black/White/Anthracite\n**Size:** US Men's 10.5\n**Weight:** 283 grams (per shoe)\n**Dimensions:** Standard running shoe fit\n\n**Specifications:** React foam midsole, Zoom Air unit in forefoot, engineered mesh upper, rubber outsole with waffle pattern, heel collar for Achilles comfort, reflective elements for low-light visibility\n\n**Technical Terms:** React foam technology, Zoom Air cushioning, engineered mesh, waffle-pattern traction\n\n**Product Description:** The Nike Air Zoom Pegasus 40 continues the legacy of this iconic running shoe. Responsive cushioning provides a smooth ride for everyday runs. The mesh upper is breathable and lightweight, while the Zoom Air unit in the forefoot delivers propulsive feel.",
+            "document_id": "comprehensive_test_doc_v1",
+            "topics": "Running shoes, Footwear technology, Athletic performance, Nike products",
+            "keywords": "Nike, Air Zoom Pegasus 40, React foam, Zoom Air, engineered mesh, waffle pattern, running shoes, black/white/anthracite, US Men's 10.5, 2023",
+            "summary": "The Nike Air Zoom Pegasus 40 is a 2023 running shoe featuring React foam midsole and Zoom Air cushioning for responsive support. Designed with a breathable engineered mesh upper and a waffle-pattern rubber outsole, it offers comfort and traction for everyday runs.",
+            "questions": "What is the Nike Air Zoom Pegasus 40?|What features make the Pegasus 40 suitable for running?|How does the Zoom Air unit enhance performance?|What is the weight of the Pegasus 40?|What color options are available for the Pegasus 40?"
+          },
+          {
+            "chunk_id": "comprehensive_test_doc_v1_chunk_11",
+            "text": "**Topics:** Machine learning, deep learning, neural networks, natural language processing, computer vision, ethics in AI, future trends, transformer models, GPT architecture, reinforcement learning\n\n**Technical Terms:** Transformer architecture, attention mechanisms, backpropagation, gradient descent, convolutional neural networks (CNN), recurrent neural networks (RNN), large language models (LLM), fine-tuning, prompt engineering\n\n**Key Numbers:** 487 pages, 15 chapters, 50+ illustrations, 200+ references, Published March 2024\n\n**Contact:** orders@techpress.com | +1-555-TECH-BOOK | https://www.techpress.com/ai-future-guide\n\n**Organizations:** TechPress Publishing, Stanford AI Lab (institutional affiliation), MIT Press (distribution partner)",
+            "document_id": "comprehensive_test_doc_v1",
+            "topics": "Artificial Intelligence, Machine Learning, Neural Networks, Ethics in AI, Future Trends",
+            "keywords": "Machine learning, deep learning, neural networks, natural language processing, computer vision, ethics in AI, transformer models, GPT architecture, reinforcement learning, TechPress Publishing",
+            "summary": "This comprehensive guide explores the fundamentals and advanced concepts of AI, including machine learning, neural networks, and ethics, while highlighting future trends and practical applications.",
+            "questions": "What are the key concepts in AI and machine learning?|How do transformer models work?|Why is ethics important in AI?|What are the future trends in AI?|How are neural networks applied in real-world scenarios?"
+          },
+          {
+            "chunk_id": "comprehensive_test_doc_v1_chunk_3",
+            "text": "**Contact:** customerservice@nike.com | +1-800-806-6453 | https://www.nike.com",
+            "document_id": "comprehensive_test_doc_v1",
+            "topics": "Customer service, Contact information, Brand resources",
+            "keywords": "Nike, customerservice@nike.com, +1-800-806-6453, https://www.nike.com, contact",
+            "summary": "This provides contact details for Nike, including customer service email, phone number, and website.",
+            "questions": "How can I contact Nike?|What is Nike's customer service email?|What is Nike's website?"
+          },
+          {
+            "chunk_id": "comprehensive_test_doc_v1_chunk_5",
+            "text": "## Product Information - Automotive Parts",
+            "document_id": "comprehensive_test_doc_v1",
+            "topics": "automotive maintenance, vehicle repair, car parts",
+            "keywords": "automotive parts, engine components, brake systems, fuel injectors, air filters, exhaust systems, transmission parts, suspension components, oil filters, cooling system",
+            "summary": "This information provides an overview of key automotive parts and their roles in vehicle performance and maintenance.",
+            "questions": "What are common automotive parts and their functions?|How do I identify which car parts need replacement?|Why is regular maintenance of automotive parts important?"
+          }
+        ],
+        "stages": {
+          "search": {
+            "time_ms": 4198.607921600342,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "results_count": 18,
+              "top_k": 20,
+              "metadata_boost_enabled": true
+            }
+          },
+          "reranking": {
+            "time_ms": 9588.571071624756,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "input_count": 18,
+              "output_count": 10,
+              "top_k": 10
+            }
+          },
+          "compression": {
+            "time_ms": 0.0,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "skipped": true
+            }
+          },
+          "intent_detection": {
+            "time_ms": 13787.363290786743,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "intent": "comparison",
+              "language": "en",
+              "complexity": "moderate",
+              "confidence": 0.95,
+              "recommended_model": "Meta-Llama-3.1-8B-Instruct",
+              "recommended_max_tokens": 2048,
+              "has_custom_prompt": true
+            }
+          },
+          "answer_generation": {
+            "time_ms": 650.4702568054199,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "context_chunks": 5,
+              "citations": 0,
+              "model_used": "Meta-Llama-3.1-8B-Instruct",
+              "model_requested": null,
+              "max_tokens_used": 2048,
+              "temperature": 0.3,
+              "used_custom_prompt": true,
+              "used_recommended_model": true,
+              "used_recommended_max_tokens": true
+            }
+          }
+        },
+        "total_time_ms": 14437.891960144043,
+        "search_results_count": 18,
+        "reranked_count": 10,
+        "compressed_count": 10,
+        "context_count": 5,
+        "api_version": "1.0.0",
+        "timestamp": "2025-10-18T11:43:35.987718"
+      }
+    }
+  ]
+}

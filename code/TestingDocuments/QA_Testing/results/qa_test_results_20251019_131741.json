@@ -1,0 +1,221 @@
+{
+  "summary": {
+    "test_run_timestamp": "2025-10-19T13:17:41.381684",
+    "collection_name": "test_comprehensive_v4",
+    "total_questions": 18,
+    "successful_tests": 1,
+    "failed_tests": 0,
+    "total_test_duration_seconds": 5.61226487159729,
+    "service_configuration": {
+      "embeddings": {
+        "model": "jina-embeddings-v3",
+        "dimension": 1024,
+        "provider": "jina_api",
+        "device": "jina_cloud_gpu",
+        "cache_enabled": true,
+        "cache_entries": 0
+      },
+      "answer_generation": {
+        "cache_enabled": false
+      },
+      "reranking": {
+        "model": "jina-reranker-v2-base-multilingual",
+        "provider": "jina-api"
+      }
+    },
+    "average_metrics": {
+      "total_time_ms": 5612.06412500178,
+      "server_time_ms": 5608.000993728638,
+      "keyword_coverage_percentage": 40.0
+    },
+    "category_statistics": {
+      "Temporal Reasoning": {
+        "test_count": 1,
+        "avg_time_ms": 5612.06412500178,
+        "avg_keyword_coverage": 40.0
+      }
+    }
+  },
+  "test_results": [
+    {
+      "test_id": "5.1",
+      "category": "Temporal Reasoning",
+      "question": "Which products have any information about expiration or best-before dates, and what are those dates?",
+      "difficulty": "easy",
+      "test_capability": "temporal information extraction",
+      "timestamp": "2025-10-19T13:17:41.381615",
+      "success": true,
+      "answer": "## Products with Expiration/Best-Before Dates\n\n### **Source 1: CardioHealth Plus Daily Supplement**\n- **Product:** CardioHealth Plus Daily Supplement (Health Supplement)  \n- **Manufacturer:** VitaLife Laboratories Inc.  \n- **Brand:** VitaLife Sciences  \n- **Certifications:** NSF International, USP Verified  \n- **Expiration Date:** **December 31, 2026**  \n- **Best-Before Date:** **December 31, 2026** (same as expiration date)  \n- **Manufacturing Date:** January 15, 2024  \n- **Packaging Details:** 120 capsules (60-day supply, 2 capsules daily)  \n\n---\n\n### **Sources 2 & 3: No Expiration/Best-Before Dates Provided**\n- **Source 2 (Technology Purchases):**  \n  - Products: Dell XPS 15 Laptop, Samsung 34\" Monitor, Logitech MX Master 3S Mouse  \n  - **No expiration or best-before dates** mentioned in the context.  \n\n- **Source 3 (Sherwin-Williams Paint):**  \n  - Product: Sherwin-Williams ProClassic Paint (20 gallons)  \n  - **No expiration or best-before dates** provided in the context.  \n\n---\n\n### **Summary Table**\n\n| **Product**                          | **Source** | **Expiration/Best-Before Date** | **Notes**                          |\n|--------------------------------------|------------|----------------------------------|------------------------------------|\n| CardioHealth Plus Daily Supplement   | Source 1   | December 31, 2026                | Matches expiration and best-before |\n| Dell XPS 15 Laptop                   | Source 2   | Not specified                    | Hardware product                   |\n| Samsung 34\" Monitor                  | Source 2   | Not specified                    | Hardware product                   |\n| Logitech MX Master 3S Mouse          | Source 2   | Not specified                    | Hardware product                   |\n| Sherwin-Williams ProClassic Paint    | Source 3   | Not specified                    | Paint shelf life not mentioned     |\n\n---\n\n### **Key Observations**\n1. **Only Source 1** provides explicit expiration and best-before dates for the CardioHealth Plus supplement.  \n2. **Sources 2 and 3** describe hardware and paint products, which typically do not have expiration dates in standard contexts.  \n3. **No ambiguity** in the interpretation of dates for Source 1, as the expiration and best-before dates are explicitly stated.  \n\nFor products requiring shelf-life information, additional verification with the manufacturer or vendor would be necessary for Sources 2 and 3.",
+      "citations_count": 0,
+      "citations": [],
+      "performance": {
+        "total_time_ms": 5612.06412500178,
+        "server_time_ms": 5608.000993728638,
+        "network_latency_ms": 4.063131273142062,
+        "stage_times": {
+          "intent_detection_ms": 1408.7278842926025,
+          "search_ms": 1145.150899887085,
+          "reranking_ms": 263.14306259155273,
+          "compression_ms": 0.0,
+          "answer_generation_ms": 4199.209928512573
+        },
+        "stage_percentages": {
+          "intent_detection_pct": 25.119964954855867,
+          "search_pct": 20.419948234097923,
+          "reranking_pct": 4.692279171951334,
+          "compression_pct": 0.0,
+          "answer_generation_pct": 74.87890842402669
+        },
+        "bottleneck": {
+          "stage": "answer_generation",
+          "time_ms": 4199.209928512573,
+          "percentage_of_total": 74.87890842402669
+        }
+      },
+      "retrieval_metrics": {
+        "search_results_count": 10,
+        "reranked_count": 3,
+        "compressed_count": 3,
+        "context_count": 3
+      },
+      "models_used": {
+        "llm_requested": null,
+        "llm_used": "Qwen3-32B",
+        "llm_temperature": 0.3,
+        "used_recommended_model": true,
+        "used_custom_prompt": true
+      },
+      "intent_analysis": {
+        "detected_intent": "aggregation",
+        "language": "en",
+        "complexity": "moderate",
+        "confidence": 0.95,
+        "recommended_model": "Qwen3-32B",
+        "has_custom_prompt": true
+      },
+      "keyword_analysis": {
+        "expected_keywords": [
+          "CardioHealth",
+          "2024-01-15",
+          "2026-12-31",
+          "expiration",
+          "best before"
+        ],
+        "keywords_found": [
+          "CardioHealth",
+          "expiration"
+        ],
+        "keywords_missing": [
+          "2024-01-15",
+          "2026-12-31",
+          "best before"
+        ],
+        "coverage_percentage": 40.0
+      },
+      "full_response": {
+        "success": true,
+        "query": "Which products have any information about expiration or best-before dates, and what are those dates?",
+        "collection_name": "test_comprehensive_v4",
+        "tenant_id": "test_tenant",
+        "answer": "## Products with Expiration/Best-Before Dates\n\n### **Source 1: CardioHealth Plus Daily Supplement**\n- **Product:** CardioHealth Plus Daily Supplement (Health Supplement)  \n- **Manufacturer:** VitaLife Laboratories Inc.  \n- **Brand:** VitaLife Sciences  \n- **Certifications:** NSF International, USP Verified  \n- **Expiration Date:** **December 31, 2026**  \n- **Best-Before Date:** **December 31, 2026** (same as expiration date)  \n- **Manufacturing Date:** January 15, 2024  \n- **Packaging Details:** 120 capsules (60-day supply, 2 capsules daily)  \n\n---\n\n### **Sources 2 & 3: No Expiration/Best-Before Dates Provided**\n- **Source 2 (Technology Purchases):**  \n  - Products: Dell XPS 15 Laptop, Samsung 34\" Monitor, Logitech MX Master 3S Mouse  \n  - **No expiration or best-before dates** mentioned in the context.  \n\n- **Source 3 (Sherwin-Williams Paint):**  \n  - Product: Sherwin-Williams ProClassic Paint (20 gallons)  \n  - **No expiration or best-before dates** provided in the context.  \n\n---\n\n### **Summary Table**\n\n| **Product**                          | **Source** | **Expiration/Best-Before Date** | **Notes**                          |\n|--------------------------------------|------------|----------------------------------|------------------------------------|\n| CardioHealth Plus Daily Supplement   | Source 1   | December 31, 2026                | Matches expiration and best-before |\n| Dell XPS 15 Laptop                   | Source 2   | Not specified                    | Hardware product                   |\n| Samsung 34\" Monitor                  | Source 2   | Not specified                    | Hardware product                   |\n| Logitech MX Master 3S Mouse          | Source 2   | Not specified                    | Hardware product                   |\n| Sherwin-Williams ProClassic Paint    | Source 3   | Not specified                    | Paint shelf life not mentioned     |\n\n---\n\n### **Key Observations**\n1. **Only Source 1** provides explicit expiration and best-before dates for the CardioHealth Plus supplement.  \n2. **Sources 2 and 3** describe hardware and paint products, which typically do not have expiration dates in standard contexts.  \n3. **No ambiguity** in the interpretation of dates for Source 1, as the expiration and best-before dates are explicitly stated.  \n\nFor products requiring shelf-life information, additional verification with the manufacturer or vendor would be necessary for Sources 2 and 3.",
+        "citations": [],
+        "context_chunks": [
+          {
+            "chunk_id": "ComprehensiveTestDocument_chunk_0030",
+            "text": "**Key Numbers:** 120 capsules, 60-day supply, 2 capsules daily, 1000mg omega-3 per serving, Expires 2026-12-31\n\n**Contact:** customercare@vitalifesciences.com | +1-888-VITA-LIFE | https://www.vitalifesciences.com\n\n**Organizations:** VitaLife Sciences (brand), VitaLife Laboratories Inc. (manufacturer), NSF International (certification), USP Verified (quality seal)\n\n**Dates:** Manufacturing date: 2024-01-15, Expiration date: 2026-12-31, Best before: 2026-12-31",
+            "document_id": "ComprehensiveTestDocument",
+            "topics": "Health Supplements, Omega-3 Fatty Acids, Product Specifications, Company Information, Certification",
+            "keywords": "CardioHealth Plus Daily Supplement, VitaLife Sciences, VitaLife Laboratories Inc., NSF International, USP Verified, 1000mg omega-3, 2 capsules daily, 60-day supply, 120 capsules, 2024-01-15",
+            "summary": "CardioHealth Plus Daily Supplement by VitaLife Sciences is a 60-day supply of 120 capsules, providing 1000mg of omega-3 per serving. Manufactured by VitaLife Laboratories Inc., it is certified by NSF International and USP Verified, with a manufacturing date of January 15, 2024, and an expiration date of December 31, 2026.",
+            "questions": "What is the product name?|Who is the manufacturer?|What is the omega-3 dosage per serving?|When does the product expire?|Where can I contact customer care?"
+          },
+          {
+            "chunk_id": "ComprehensiveTestDocument_chunk_0008",
+            "text": "## Invoice Document - Technology Purchase\n\n**Invoice Number:** INV-2024-00789\n**Transaction Date:** 2024-03-15\n**Vendor Name:** TechSupply Solutions\n**Vendor ID:** VENDOR-TS-001\n\n**Items Purchased:**\n1. Dell XPS 15 Laptop - Model: XPS-15-9530 - SKU: DELL-XPS15-9530-I7 - Price: 2299.00 USD - Year: 2024\n2. Samsung 34\" Ultrawide Monitor - Model: S34C502 - SKU: SAMSUNG-S34C502 - Price: 449.99 USD\n3. Logitech MX Master 3S Mouse - SKU: LOGI-MX-MASTER-3S - Price: 99.99 USD - Color: Graphite",
+            "document_id": "ComprehensiveTestDocument",
+            "topics": "Technology purchases, Computer hardware, Office equipment, Vendor information, Product specifications",
+            "keywords": "Dell XPS 15 Laptop, Samsung 34\" Ultrawide Monitor, Logitech MX Master 3S Mouse, TechSupply Solutions, XPS-15-9530, S34C502, LOGI-MX-MASTER-3S, DELL-XPS15-9530-I7, SAMSUNG-S34C502, LOGI-MX-MASTER-3S",
+            "summary": "This invoice details the purchase of a Dell XPS 15 Laptop, a Samsung 34\" Ultrawide Monitor, and a Logitech MX Master 3S Mouse from TechSupply Solutions on March 15, 2024.",
+            "questions": "What items were purchased?|Who is the vendor?|What are the product models and SKUs?|What is the total transaction date?|What is the invoice number?"
+          },
+          {
+            "chunk_id": "ComprehensiveTestDocument_chunk_0033",
+            "text": "4. Paint - Sherwin-Williams ProClassic - Color: Warm White - SKU: SW-PROCLASSIC-WW-GAL - Price: 54.99 per gallon - Quantity: 20 - Amount: 1099.80 USD",
+            "document_id": "ComprehensiveTestDocument",
+            "topics": "Paint Products, Home Improvement, Retail Pricing, Inventory Management, Brand-Specific Items",
+            "keywords": "Sherwin-Williams ProClassic, Warm White, SW-PROCLASSIC-WW-GAL, Paint, Sherwin-Williams, 54.99, 20, 1099.80 USD, Gallon, ProClassic",
+            "summary": "The text mentions the purchase of 20 gallons of Sherwin-Williams ProClassic paint in Warm White, with a total cost of 1099.80 USD.",
+            "questions": "What paint product is mentioned?|What is the color of the paint?|What is the SKU for the paint?|What is the price per gallon?|What is the total amount for the quantity purchased?"
+          }
+        ],
+        "stages": {
+          "search": {
+            "time_ms": 1145.150899887085,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "results_count": 10,
+              "top_k": 10,
+              "metadata_boost_enabled": true
+            }
+          },
+          "reranking": {
+            "time_ms": 263.14306259155273,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "input_count": 10,
+              "output_count": 3,
+              "top_k": 3
+            }
+          },
+          "compression": {
+            "time_ms": 0.0,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "skipped": true
+            }
+          },
+          "intent_detection": {
+            "time_ms": 1408.7278842926025,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "intent": "aggregation",
+              "language": "en",
+              "complexity": "moderate",
+              "confidence": 0.95,
+              "recommended_model": "Qwen3-32B",
+              "recommended_max_tokens": 2048,
+              "has_custom_prompt": true
+            }
+          },
+          "answer_generation": {
+            "time_ms": 4199.209928512573,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "context_chunks": 3,
+              "citations": 0,
+              "model_used": "Qwen3-32B",
+              "model_requested": null,
+              "max_tokens_used": 2048,
+              "temperature": 0.3,
+              "used_custom_prompt": true,
+              "used_recommended_model": true,
+              "used_recommended_max_tokens": true
+            }
+          }
+        },
+        "total_time_ms": 5608.000993728638,
+        "search_results_count": 10,
+        "reranked_count": 3,
+        "compressed_count": 3,
+        "context_count": 3,
+        "api_version": "1.0.0",
+        "timestamp": "2025-10-19T13:17:41.380709"
+      }
+    }
+  ]
+}

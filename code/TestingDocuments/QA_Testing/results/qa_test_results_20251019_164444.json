@@ -1,0 +1,216 @@
+{
+  "summary": {
+    "test_run_timestamp": "2025-10-19T16:44:44.759352",
+    "collection_name": "test_comprehensive_v4",
+    "total_questions": 18,
+    "successful_tests": 1,
+    "failed_tests": 0,
+    "total_test_duration_seconds": 4.328029155731201,
+    "service_configuration": {
+      "embeddings": {
+        "model": "jina-embeddings-v3",
+        "dimension": 1024,
+        "provider": "jina_api",
+        "device": "jina_cloud_gpu",
+        "cache_enabled": true,
+        "cache_entries": 0
+      },
+      "answer_generation": {
+        "cache_enabled": false
+      },
+      "reranking": {
+        "model": "jina-reranker-v2-base-multilingual",
+        "provider": "jina-api"
+      }
+    },
+    "average_metrics": {
+      "total_time_ms": 4327.668832993368,
+      "server_time_ms": 4322.983026504517,
+      "keyword_coverage_percentage": 0.0
+    },
+    "category_statistics": {
+      "Advanced Logic": {
+        "test_count": 1,
+        "avg_time_ms": 4327.668832993368,
+        "avg_keyword_coverage": 0.0
+      }
+    }
+  },
+  "test_results": [
+    {
+      "test_id": "7.6",
+      "category": "Advanced Logic",
+      "question": "Provide the payment terms explanation in both French and English for any invoice involving international shipment.",
+      "difficulty": "hard",
+      "test_capability": "conditional multi-language",
+      "timestamp": "2025-10-19T16:44:44.759270",
+      "success": true,
+      "answer": "## Payment Terms Explanation in French and English\n\n### Payment Terms Overview\n\nPayment terms refer to the conditions under which a payment is made for goods or services. The payment terms may include the due date, payment method, and any late payment fees.\n\n### Payment Terms in French and English\n\n* **Net 30**: This payment term means that the payment is due within 30 days from the invoice date. In French, this is referred to as \"Net 30 jours\".\n* **Payment Method**: The payment method refers to the way in which the payment is made. In the context of the invoices provided, the payment methods are:\n\t+ Purchase Order (PO): This is a payment method where the payment is made through a purchase order.\n\t+ Commercial Loan Financing: This is a payment method where the payment is made through a commercial loan.\n\t+ Net 30 Terms: This is a payment method where the payment is due within 30 days from the invoice date.\n\n### Payment Terms Explanation in French\n\n* **Exigibilité**: L'exigibilité est le moment où le paiement est dû. Dans le cas des factures fournies, l'exigibilité est généralement de 30 jours à compter de la date de facture.\n* **Méthode de paiement**: La méthode de paiement fait référence à la manière dont le paiement est effectué. Dans le contexte des factures fournies, les méthodes de paiement sont:\n\t+ Bon de commande (BOC): Cette méthode de paiement consiste à effectuer le paiement par bon de commande.\n\t+ Financement commercial: Cette méthode de paiement consiste à effectuer le paiement par financement commercial.\n\t+ Termes Net 30: Cette méthode de paiement consiste à effectuer le paiement dans les 30 jours suivant la date de facture.\n\n### Payment Terms Explanation in English\n\n* **Due Date**: The due date is the date by which the payment is due. In the context of the invoices provided, the due dates are:\n\t+ 2024-03-30: This is the due date for the invoice MED-INV-2024-1523.\n\t+ 2024-04-09: This is the due date for the invoice BUILD-2024-3309.\n* **Payment Status**: The payment status refers to the current status of the payment. In the context of the invoices provided, the payment statuses are:\n\t+ Pending: This is the payment status for the invoice BUILD-2024-3309.\n\t+ Due: This is the payment status for the invoice MED-INV-2024-1523.\n\n### Conclusion\n\nIn conclusion, the payment terms for the invoices provided are as follows:\n\n* **Invoice MED-INV-2024-1523**: The payment term is due within 30 days from the invoice date, and the payment method is Purchase Order.\n* **Invoice BUILD-2024-3309**: The payment is due within 30 days from the invoice date, and the payment method is Net 30 Terms.\n* **Invoice REST-2024-0445**: The payment is structured as a 36-month commercial loan.\n\nNote: The payment terms and conditions may vary depending on the specific agreement or contract between the parties involved. It is essential to review the agreement or contract to determine the specific payment terms and conditions.",
+      "citations_count": 0,
+      "citations": [],
+      "performance": {
+        "total_time_ms": 4327.668832993368,
+        "server_time_ms": 4322.983026504517,
+        "network_latency_ms": 4.685806488851085,
+        "stage_times": {
+          "intent_detection_ms": 3192.82603263855,
+          "search_ms": 1482.6109409332275,
+          "reranking_ms": 288.2051467895508,
+          "compression_ms": 0.0,
+          "answer_generation_ms": 2551.7380237579346
+        },
+        "stage_percentages": {
+          "intent_detection_pct": 73.85701061195721,
+          "search_pct": 34.29601577991943,
+          "reranking_pct": 6.666811898694594,
+          "compression_pct": 0.0,
+          "answer_generation_pct": 59.02725058398441
+        },
+        "bottleneck": {
+          "stage": "intent_detection",
+          "time_ms": 3192.82603263855,
+          "percentage_of_total": 73.85701061195721
+        }
+      },
+      "retrieval_metrics": {
+        "search_results_count": 10,
+        "reranked_count": 3,
+        "compressed_count": 3,
+        "context_count": 3
+      },
+      "models_used": {
+        "llm_requested": null,
+        "llm_used": "Meta-Llama-3.1-8B-Instruct",
+        "llm_temperature": 0.3,
+        "used_recommended_model": true,
+        "used_custom_prompt": true
+      },
+      "intent_analysis": {
+        "detected_intent": "factual_retrieval",
+        "language": "en",
+        "complexity": "moderate",
+        "confidence": 0.95,
+        "recommended_model": "Meta-Llama-3.1-8B-Instruct",
+        "has_custom_prompt": true
+      },
+      "keyword_analysis": {
+        "expected_keywords": [
+          "no payment terms",
+          "not specified",
+          "no international shipment"
+        ],
+        "keywords_found": [],
+        "keywords_missing": [
+          "no payment terms",
+          "not specified",
+          "no international shipment"
+        ],
+        "coverage_percentage": 0.0
+      },
+      "full_response": {
+        "success": true,
+        "query": "Provide the payment terms explanation in both French and English for any invoice involving international shipment.",
+        "collection_name": "test_comprehensive_v4",
+        "tenant_id": "test_tenant",
+        "answer": "## Payment Terms Explanation in French and English\n\n### Payment Terms Overview\n\nPayment terms refer to the conditions under which a payment is made for goods or services. The payment terms may include the due date, payment method, and any late payment fees.\n\n### Payment Terms in French and English\n\n* **Net 30**: This payment term means that the payment is due within 30 days from the invoice date. In French, this is referred to as \"Net 30 jours\".\n* **Payment Method**: The payment method refers to the way in which the payment is made. In the context of the invoices provided, the payment methods are:\n\t+ Purchase Order (PO): This is a payment method where the payment is made through a purchase order.\n\t+ Commercial Loan Financing: This is a payment method where the payment is made through a commercial loan.\n\t+ Net 30 Terms: This is a payment method where the payment is due within 30 days from the invoice date.\n\n### Payment Terms Explanation in French\n\n* **Exigibilité**: L'exigibilité est le moment où le paiement est dû. Dans le cas des factures fournies, l'exigibilité est généralement de 30 jours à compter de la date de facture.\n* **Méthode de paiement**: La méthode de paiement fait référence à la manière dont le paiement est effectué. Dans le contexte des factures fournies, les méthodes de paiement sont:\n\t+ Bon de commande (BOC): Cette méthode de paiement consiste à effectuer le paiement par bon de commande.\n\t+ Financement commercial: Cette méthode de paiement consiste à effectuer le paiement par financement commercial.\n\t+ Termes Net 30: Cette méthode de paiement consiste à effectuer le paiement dans les 30 jours suivant la date de facture.\n\n### Payment Terms Explanation in English\n\n* **Due Date**: The due date is the date by which the payment is due. In the context of the invoices provided, the due dates are:\n\t+ 2024-03-30: This is the due date for the invoice MED-INV-2024-1523.\n\t+ 2024-04-09: This is the due date for the invoice BUILD-2024-3309.\n* **Payment Status**: The payment status refers to the current status of the payment. In the context of the invoices provided, the payment statuses are:\n\t+ Pending: This is the payment status for the invoice BUILD-2024-3309.\n\t+ Due: This is the payment status for the invoice MED-INV-2024-1523.\n\n### Conclusion\n\nIn conclusion, the payment terms for the invoices provided are as follows:\n\n* **Invoice MED-INV-2024-1523**: The payment term is due within 30 days from the invoice date, and the payment method is Purchase Order.\n* **Invoice BUILD-2024-3309**: The payment is due within 30 days from the invoice date, and the payment method is Net 30 Terms.\n* **Invoice REST-2024-0445**: The payment is structured as a 36-month commercial loan.\n\nNote: The payment terms and conditions may vary depending on the specific agreement or contract between the parties involved. It is essential to review the agreement or contract to determine the specific payment terms and conditions.",
+        "citations": [],
+        "context_chunks": [
+          {
+            "chunk_id": "ComprehensiveTestDocument_chunk_0008",
+            "text": "## Medical Equipment Invoice\n\n**Invoice Number:** MED-INV-2024-1523\n**Transaction Date:** 2024-02-28\n**Vendor Name:** MedTech Equipment Supply\n**Vendor ID:** MEDTECH-SUPPLY-099\n\n**Items:**\n1. Philips IntelliVue MX40 Patient Monitor - Model: MX40 - SKU: PHIL-MX40-2024 - Price: 4500.00 USD - Year: 2024\n2. Welch Allyn Blood Pressure Cuff Set - SKU: WA-BP-CUFF-SET - Price: 189.99 USD\n3. Nonin Pulse Oximeter - Model: Onyx Vantage 9590 - SKU: NONIN-9590 - Price: 375.00 USD - Color: Black\n\n**Amount:** 5064.99\n**Tax Amount:** 405.20\n**Total:** 5470.19\n**Currency:** USD\n**Payment Method:** Purchase Order\n**Payment Status:** Net 30 - Due 2024-03-30\n\n**Technical Specifications:** Philips MX40 features ECG, SpO2, NBP monitoring, 8.4\" touchscreen display, 5-hour battery life, wireless connectivity, clinical measurements include heart rate, respiration rate, temperature",
+            "document_id": "ComprehensiveTestDocument",
+            "topics": "Medical Equipment, Invoice, Healthcare Technology",
+            "keywords": "Philips IntelliVue MX40 Patient Monitor, Welch Allyn Blood Pressure Cuff Set, Nonin Pulse Oximeter, MedTech Equipment Supply, MED-INV-2024-1523, transaction: 2024-02-28, due: 2024-03-30, payment-terms: Net 30, payment-method: Purchase Order, ECG, SpO2, NBP monitoring",
+            "summary": "This invoice from MedTech Equipment Supply details the purchase of medical equipment including a Philips IntelliVue MX40 Patient Monitor, Welch Allyn Blood Pressure Cuff Set, and Nonin Pulse Oximeter. The transaction occurred on 2024-02-28, with payment terms of Net 30, due by 2024-03-30.",
+            "questions": "What medical equipment was purchased?|When is the payment due?|What are the technical specifications of the Philips MX40?"
+          },
+          {
+            "chunk_id": "ComprehensiveTestDocument_chunk_0012",
+            "text": "## Restaurant Supply Order\n\n**Invoice Number:** REST-2024-0445\n**Transaction Date:** 2024-01-20\n**Vendor Name:** ChefPro Restaurant Supply Co.\n**Vendor ID:** CHEFPRO-VENDOR-2024\n\n**Equipment Ordered:**\n1. Hobart Commercial Dishwasher - Model: LXeR-2 - SKU: HOBART-LXER2 - Price: 8999.00 USD - Year: 2024 - Dimensions: 24.5 x 25 x 34 inches\n2. Vulcan Gas Range - Model: 60SS-10B - SKU: VULCAN-60SS-10B - Price: 5499.00 USD - Color: Stainless Steel - Size: 60 inches wide\n3. True Refrigerator - Model: T-49-HC - SKU: TRUE-T49-HC - Price: 3299.00 USD - Dimensions: 54 x 31 x 83 inches\n\n**Amount:** 17797.00\n**Tax Amount:** 1423.76\n**Total:** 19220.76\n**Currency:** USD\n**Payment Method:** Commercial Loan Financing\n**Payment Status:** Financed - 36 monthly payments",
+            "document_id": "ComprehensiveTestDocument",
+            "topics": "Restaurant Equipment, Commercial Financing, Vendor Transactions",
+            "keywords": "Hobart Commercial Dishwasher, Vulcan Gas Range, True Refrigerator, ChefPro Restaurant Supply Co., HOBART-LXER2, VULCAN-60SS-10B, TRUE-T49-HC, transaction: 2024-01-20, payment-method: Commercial Loan Financing, payment-status: Financed - 36 monthly payments",
+            "summary": "An invoice for restaurant equipment from ChefPro Restaurant Supply Co. includes a Hobart Commercial Dishwasher, Vulcan Gas Range, and True Refrigerator, totaling $19,220.76, with payment structured as a 36-month commercial loan.",
+            "questions": "What restaurant equipment was ordered?|Who is the vendor for the restaurant supply order?|How is the payment structured for this order?"
+          },
+          {
+            "chunk_id": "ComprehensiveTestDocument_chunk_0016",
+            "text": "## Construction Materials Invoice\n\n**Invoice Number:** BUILD-2024-3309\n**Transaction Date:** 2024-03-10\n**Vendor Name:** BuildRight Materials & Supply\n**Vendor ID:** BUILDRIGHT-VENDOR-88\n\n**Materials Ordered:**\n1. Lumber - 2x4x8 Premium Grade Douglas Fir - SKU: LUMBER-2X4X8-DF - Price: 8.99 per piece - Quantity: 200 - Amount: 1798.00 USD\n2. Concrete Mix - Quikrete 80lb bags - SKU: CONCRETE-80LB-QK - Price: 6.49 per bag - Quantity: 100 - Amount: 649.00 USD - Weight: 80 pounds per bag\n3. Nails - 16d Common Galvanized - SKU: NAILS-16D-GAL-50LB - Price: 89.99 - Size: 50 pound box\n4. Paint - Sherwin-Williams ProClassic - Color: Warm White - SKU: SW-PROCLASSIC-WW-GAL - Price: 54.99 per gallon - Quantity: 20 - Amount: 1099.80 USD\n\n**Amount:** 3636.79\n**Tax Amount:** 290.94\n**Total:** 3927.73\n**Currency:** USD\n**Payment Method:** Net 30 Terms\n**Payment Status:** Pending - Due 2024-04-09",
+            "document_id": "ComprehensiveTestDocument",
+            "topics": "Construction Materials, Vendor Invoice, Payment Terms",
+            "keywords": "Lumber - 2x4x8 Premium Grade Douglas Fir, Concrete Mix - Quikrete 80lb bags, Nails - 16d Common Galvanized, Paint - Sherwin-Williams ProClassic, BuildRight Materials & Supply, LUMBER-2X4X8-DF, CONCRETE-80LB-QK, NAILS-16D-GAL-50LB, SW-PROCLASSIC-WW-GAL, transaction: 2024-03-10, due: 2024-04-09, payment-terms: Net 30, payment-status: Pending, invoice: BUILD-2024-3309, USD",
+            "summary": "An invoice from BuildRight Materials & Supply dated March 10, 2024, lists construction materials including lumber, concrete mix, nails, and paint. The total amount due is $3927.73 USD, with a payment status of pending and a due date of April 9, 2024, under Net 30 terms.",
+            "questions": "What materials were ordered?|Who is the vendor?|When is the payment due?"
+          }
+        ],
+        "stages": {
+          "search": {
+            "time_ms": 1482.6109409332275,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "results_count": 10,
+              "top_k": 10,
+              "metadata_boost_enabled": true
+            }
+          },
+          "reranking": {
+            "time_ms": 288.2051467895508,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "input_count": 10,
+              "output_count": 3,
+              "top_k": 3
+            }
+          },
+          "compression": {
+            "time_ms": 0.0,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "skipped": true
+            }
+          },
+          "intent_detection": {
+            "time_ms": 3192.82603263855,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "intent": "factual_retrieval",
+              "language": "en",
+              "complexity": "moderate",
+              "confidence": 0.95,
+              "recommended_model": "Meta-Llama-3.1-8B-Instruct",
+              "recommended_max_tokens": 1024,
+              "has_custom_prompt": true
+            }
+          },
+          "answer_generation": {
+            "time_ms": 2551.7380237579346,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "context_chunks": 3,
+              "citations": 0,
+              "model_used": "Meta-Llama-3.1-8B-Instruct",
+              "model_requested": null,
+              "max_tokens_used": 1024,
+              "temperature": 0.3,
+              "used_custom_prompt": true,
+              "used_recommended_model": true,
+              "used_recommended_max_tokens": true
+            }
+          }
+        },
+        "total_time_ms": 4322.983026504517,
+        "search_results_count": 10,
+        "reranked_count": 3,
+        "compressed_count": 3,
+        "context_count": 3,
+        "api_version": "1.0.0",
+        "timestamp": "2025-10-19T16:44:44.758113"
+      }
+    }
+  ]
+}

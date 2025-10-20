@@ -1,0 +1,504 @@
+#!/bin/bash
+# PipeLineServices Management Script
+# Unified command center for managing Ingestion and Retrieval pipelines
+
+set -e
+
+# Get the Tools directory
+TOOLS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Get the PipeLineServices root (one level up from Tools)
+PROJECT_ROOT="$(cd "$TOOLS_DIR/.." && pwd)"
+cd "$TOOLS_DIR"
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
+
+# Configuration
+SSH_KEY="$HOME/reku631_nebius"
+SSH_HOST="reku631@89.169.108.8"
+TUNNEL_PORTS="-L 19530:localhost:19530 -L 3000:localhost:3000 -L 8000:localhost:8000"
+
+print_header() {
+    echo -e "${PURPLE}╔═══════════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${PURPLE}║${CYAN}              PipeLineServices Management Console              ${PURPLE}║${NC}"
+    echo -e "${PURPLE}╚═══════════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+}
+
+print_menu() {
+    echo -e "${GREEN}Development Commands:${NC}"
+    echo -e "  ${CYAN}start${NC}         - Start all services (with SSH tunnel)"
+    echo -e "  ${CYAN}start-ingestion${NC}  - Start Ingestion pipeline only"
+    echo -e "  ${CYAN}start-retrieval${NC}  - Start Retrieval pipeline only"
+    echo -e "  ${CYAN}stop${NC}          - Stop all services"
+    echo -e "  ${CYAN}restart${NC}       - Restart all services"
+    echo -e "  ${CYAN}status${NC}        - Check status of all services"
+    echo -e "  ${CYAN}tunnel${NC}        - Start SSH tunnel only (for Milvus/LLM Gateway)"
+    echo ""
+    echo -e "${GREEN}Ingestion Pipeline (Ports 8070-8079):${NC}"
+    echo -e "  ${CYAN}storage${NC}       - Storage service (port 8074)"
+    echo -e "  ${CYAN}embeddings${NC}    - Embeddings service (port 8073)"
+    echo -e "  ${CYAN}metadata${NC}      - Metadata service (port 8072)"
+    echo -e "  ${CYAN}chunking${NC}      - Chunking service (port 8071)"
+    echo -e "  ${CYAN}ingestion${NC}     - Ingestion API (port 8070)"
+    echo -e "  ${CYAN}llm-gateway${NC}   - LLM Gateway (port 8075)"
+    echo ""
+    echo -e "${GREEN}Retrieval Pipeline (Ports 8090-8099):${NC}"
+    echo -e "  ${CYAN}search${NC}        - Search service (port 8091)"
+    echo -e "  ${CYAN}rerank${NC}        - Reranking service (port 8092)"
+    echo -e "  ${CYAN}compress${NC}      - Compression service (port 8093)"
+    echo -e "  ${CYAN}answer${NC}        - Answer generation service (port 8094)"
+    echo -e "  ${CYAN}intent${NC}        - Intent & prompt adaptation (port 8095)"
+    echo -e "  ${CYAN}retrieval${NC}     - Retrieval API (port 8090)"
+    echo ""
+    echo -e "${GREEN}Documentation:${NC}"
+    echo -e "  ${CYAN}docs${NC}          - Open complete documentation (README.md)"
+    echo ""
+    echo -e "${GREEN}Tools:${NC}"
+    echo -e "  ${CYAN}health${NC}        - Check health of all services"
+    echo -e "  ${CYAN}logs${NC}          - View logs (usage: pipeline logs <service>)"
+    echo -e "  ${CYAN}attu${NC}          - Open Attu UI (Milvus admin)"
+    echo -e "  ${CYAN}ingestion-docs${NC}   - Open Ingestion API documentation"
+    echo -e "  ${CYAN}retrieval-docs${NC}   - Open Retrieval API documentation"
+    echo ""
+    echo -e "${GREEN}Backup:${NC}"
+    echo -e "  ${CYAN}backup${NC}        - Run backups (see backup_scripts/README.md)"
+    echo ""
+    echo -e "${GREEN}Other:${NC}"
+    echo -e "  ${CYAN}help${NC}          - Show this help menu"
+    echo -e "  ${CYAN}version${NC}       - Show version information"
+    echo ""
+}
+
+check_ssh_key() {
+    if [ ! -f "$SSH_KEY" ]; then
+        echo -e "${RED}Error: SSH key not found at $SSH_KEY${NC}"
+        echo "Please update SSH_KEY in this script or place your key at the default location"
+        exit 1
+    fi
+}
+
+check_tunnel() {
+    if lsof -i :19530 > /dev/null 2>&1; then
+        return 0  # Tunnel is running
+    else
+        return 1  # Tunnel is not running
+    fi
+}
+
+start_tunnel() {
+    print_header
+    echo -e "${CYAN}Checking SSH Tunnel to Production Server...${NC}"
+    echo ""
+
+    if check_tunnel; then
+        echo -e "${GREEN}✓ SSH tunnel already running on port 19530${NC}"
+        return 0
+    fi
+
+    echo -e "${YELLOW}SSH tunnel NOT detected!${NC}"
+    echo ""
+    echo -e "Please open a terminal and run:"
+    echo -e "${CYAN}ssh -i ~/reku631_nebius -L 19530:localhost:19530 -L 3000:localhost:3000 -L 8000:localhost:8000 reku631@89.169.108.8${NC}"
+    echo ""
+    echo -e "Ports to tunnel:"
+    echo -e "  ${GREEN}19530${NC} - Milvus Vector Database"
+    echo -e "  ${GREEN}3000${NC}  - Attu UI (Milvus admin)"
+    echo -e "  ${GREEN}8000${NC}  - LLM Gateway"
+    echo ""
+    echo -e "${YELLOW}Waiting 10 seconds for you to start the tunnel...${NC}"
+    sleep 10
+
+    if check_tunnel; then
+        echo -e "${GREEN}✓ Tunnel detected successfully!${NC}"
+    else
+        echo -e "${RED}✗ Tunnel still not detected. Services may not work properly.${NC}"
+        echo -e "${YELLOW}Continuing anyway...${NC}"
+    fi
+}
+
+start_service() {
+    local service=$1
+    local port=$2
+    local script=$3
+    local filename=$4  # Optional: specific filename to run
+
+    echo -e "${CYAN}Starting $service on port $port...${NC}"
+
+    # Determine which file to run
+    local run_file="${filename:-*.py}"
+
+    # Create log file path
+    local log_file="/tmp/pipeline_$(echo $service | tr ' ' '_' | tr '[:upper:]' '[:lower:]').log"
+
+    # Use venv python if available, otherwise fall back to system python3
+    local PYTHON_CMD="python3"
+    if [ -f "$PROJECT_ROOT/../local_dev/venv/bin/python3" ]; then
+        PYTHON_CMD="$PROJECT_ROOT/../local_dev/venv/bin/python3"
+    fi
+
+    # Load environment variables from .env.dev and run service
+    # The .env file is symlinked to shared/.env.dev
+    # Set PORT explicitly for each service
+    cd "$PROJECT_ROOT/$script" && (set -a; source "$PROJECT_ROOT/.env"; set +a; PORT=$port nohup $PYTHON_CMD $run_file > "$log_file" 2>&1 &)
+    local pid=$!
+
+    echo -e "  ${GREEN}Started${NC} (PID: $pid, Log: $log_file)"
+
+    sleep 1
+}
+
+start_ingestion_pipeline() {
+    echo -e "${CYAN}Starting Ingestion Pipeline...${NC}"
+    echo ""
+
+    # Start shared services first
+    start_service "Storage Service" "8074" "Ingestion/services/storage/v1.0.0" "storage_api.py"
+    sleep 2
+
+    start_service "Embeddings Service" "8073" "Ingestion/services/embeddings/v1.0.0" "embeddings_api.py"
+    sleep 2
+
+    start_service "LLM Gateway" "8075" "Ingestion/services/llm_gateway/v1.0.0" "llm_gateway.py"
+    sleep 2
+
+    start_service "Metadata Service" "8072" "Ingestion/services/metadata/v1.0.0" "metadata_api.py"
+    sleep 2
+
+    start_service "Chunking Service" "8071" "Ingestion/services/chunking/v1.0.0" "chunking_orchestrator.py"
+    sleep 2
+
+    start_service "Ingestion API" "8070" "Ingestion/v1.0.0" "main_ingestion_api.py"
+    sleep 2
+
+    echo -e "${GREEN}✓ Ingestion Pipeline started!${NC}"
+}
+
+start_retrieval_pipeline() {
+    echo -e "${CYAN}Starting Retrieval Pipeline...${NC}"
+    echo ""
+
+    # Start Retrieval services
+    start_service "Search Service" "8091" "Retrieval/services/search/v1.0.0" "search_api.py"
+    sleep 2
+
+    start_service "Reranking Service" "8092" "Retrieval/services/reranking/v1.0.0" "reranking_api.py"
+    sleep 2
+
+    start_service "Compression Service" "8093" "Retrieval/services/compression/v1.0.0" "compression_api.py"
+    sleep 2
+
+    start_service "Answer Generation Service" "8094" "Retrieval/services/answer_generation/v1.0.0" "answer_api.py"
+    sleep 2
+
+    start_service "Intent & Prompt Adaptation Service" "8095" "Retrieval/services/intent/v1.0.0" "intent_api.py"
+    sleep 2
+
+    start_service "Retrieval API" "8090" "Retrieval/v1.0.0" "main_retrieval_api.py"
+    sleep 2
+
+    echo -e "${GREEN}✓ Retrieval Pipeline started!${NC}"
+}
+
+start_all() {
+    print_header
+    echo -e "${CYAN}Starting PipeLineServices (Both Pipelines)...${NC}"
+    echo ""
+
+    # Start tunnel
+    start_tunnel
+
+    echo ""
+
+    # Start Ingestion Pipeline
+    start_ingestion_pipeline
+
+    echo ""
+
+    # Start Retrieval Pipeline
+    start_retrieval_pipeline
+
+    echo ""
+    echo -e "${GREEN}✓ All services started!${NC}"
+    echo ""
+    echo -e "Check status with: ${CYAN}pipeline status${NC}"
+    echo -e "Ingestion API docs: ${CYAN}http://localhost:8070/docs${NC}"
+    echo -e "Retrieval API docs: ${CYAN}http://localhost:8090/docs${NC}"
+    echo -e "Attu UI: ${CYAN}http://localhost:3000${NC}"
+    echo ""
+}
+
+stop_all() {
+    print_header
+    echo -e "${CYAN}Stopping all services...${NC}"
+    echo ""
+
+    # Kill processes on all service ports (Ingestion 8070-8079 + Retrieval 8090-8099)
+    for port in 8070 8071 8072 8073 8074 8075 8090 8091 8092 8093 8094 8095; do
+        if lsof -i :$port > /dev/null 2>&1; then
+            echo -e "Stopping service on port $port..."
+            lsof -ti :$port | xargs kill -9 2>/dev/null || true
+        fi
+    done
+
+    # Note: SSH tunnel is managed manually and should NOT be killed
+    # Users start it with: ssh -i ~/reku631_nebius -L 19530:localhost:19530 ...
+    # It stays running across service restarts
+
+    echo ""
+    echo -e "${GREEN}✓ All services stopped${NC}"
+    echo -e "${YELLOW}Note: SSH tunnel left running (if active)${NC}"
+}
+
+check_status() {
+    print_header
+    echo -e "${CYAN}Service Status:${NC}"
+    echo ""
+
+    # Check tunnel
+    printf "%-40s" "SSH Tunnel (Milvus/LLM):"
+    if check_tunnel; then
+        echo -e "${GREEN}✓ Running${NC}"
+    else
+        echo -e "${RED}✗ Not running${NC}"
+    fi
+
+    echo ""
+    echo -e "${BLUE}Ingestion Pipeline:${NC}"
+    # Check Ingestion services
+    for service in "8074:Storage" "8073:Embeddings" "8075:LLM Gateway" "8072:Metadata" "8071:Chunking" "8070:Ingestion API"; do
+        port=$(echo $service | cut -d: -f1)
+        name=$(echo $service | cut -d: -f2)
+        printf "  %-38s" "$name (port $port):"
+        if lsof -i :$port > /dev/null 2>&1; then
+            echo -e "${GREEN}✓ Running${NC}"
+        else
+            echo -e "${RED}✗ Not running${NC}"
+        fi
+    done
+
+    echo ""
+    echo -e "${BLUE}Retrieval Pipeline:${NC}"
+    # Check Retrieval services
+    for service in "8091:Search" "8092:Reranking" "8093:Compression" "8094:Answer Generation" "8095:Intent & Prompt" "8090:Retrieval API"; do
+        port=$(echo $service | cut -d: -f1)
+        name=$(echo $service | cut -d: -f2)
+        printf "  %-38s" "$name (port $port):"
+        if lsof -i :$port > /dev/null 2>&1; then
+            echo -e "${GREEN}✓ Running${NC}"
+        else
+            echo -e "${RED}✗ Not running${NC}"
+        fi
+    done
+
+    echo ""
+}
+
+check_health() {
+    print_header
+    echo -e "${CYAN}Health Check:${NC}"
+    echo ""
+
+    # Check tunnel services
+    printf "%-40s" "Milvus (via tunnel):"
+    if curl -s http://localhost:9091/healthz > /dev/null 2>&1; then
+        echo -e "${GREEN}✓ Healthy${NC}"
+    else
+        echo -e "${RED}✗ Unhealthy${NC}"
+    fi
+
+    echo ""
+    echo -e "${BLUE}Ingestion Pipeline:${NC}"
+    # Check Ingestion services
+    for service in "8074:Storage" "8073:Embeddings" "8075:LLM Gateway" "8072:Metadata" "8071:Chunking" "8070:Ingestion API"; do
+        port=$(echo $service | cut -d: -f1)
+        name=$(echo $service | cut -d: -f2)
+        printf "  %-38s" "$name (port $port):"
+        if curl -s http://localhost:$port/health > /dev/null 2>&1; then
+            echo -e "${GREEN}✓ Healthy${NC}"
+        else
+            echo -e "${RED}✗ Unhealthy${NC}"
+        fi
+    done
+
+    echo ""
+    echo -e "${BLUE}Retrieval Pipeline:${NC}"
+    # Check Retrieval services
+    for service in "8091:Search" "8092:Reranking" "8093:Compression" "8094:Answer Generation" "8095:Intent & Prompt" "8090:Retrieval API"; do
+        port=$(echo $service | cut -d: -f1)
+        name=$(echo $service | cut -d: -f2)
+        printf "  %-38s" "$name (port $port):"
+        if curl -s http://localhost:$port/health > /dev/null 2>&1; then
+            echo -e "${GREEN}✓ Healthy${NC}"
+        else
+            echo -e "${RED}✗ Unhealthy${NC}"
+        fi
+    done
+
+    echo ""
+}
+
+open_docs() {
+    local doc=$1
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        open "$doc"
+    else
+        xdg-open "$doc" 2>/dev/null || less "$doc"
+    fi
+}
+
+# Main command handler
+case "$1" in
+    "")
+        print_header
+        print_menu
+        ;;
+    help)
+        print_header
+        print_menu
+        ;;
+    version)
+        print_header
+        echo "PipeLineServices v1.0.0"
+        echo "Ingestion Pipeline API v1.0.0"
+        echo "Retrieval Pipeline API v1.0.0"
+        echo ""
+        ;;
+    tunnel)
+        start_tunnel
+        ;;
+    start)
+        start_all
+        ;;
+    start-ingestion)
+        print_header
+        start_tunnel
+        echo ""
+        start_ingestion_pipeline
+        ;;
+    start-retrieval)
+        print_header
+        start_tunnel
+        echo ""
+        start_retrieval_pipeline
+        ;;
+    stop)
+        stop_all
+        ;;
+    restart)
+        stop_all
+        sleep 2
+        start_all
+        ;;
+    status)
+        check_status
+        ;;
+    health)
+        check_health
+        ;;
+    storage)
+        start_service "Storage Service" "8074" "Ingestion/services/storage/v1.0.0" "storage_api.py"
+        ;;
+    embeddings)
+        start_service "Embeddings Service" "8073" "Ingestion/services/embeddings/v1.0.0" "embeddings_api.py"
+        ;;
+    llm-gateway)
+        start_service "LLM Gateway" "8075" "Ingestion/services/llm_gateway/v1.0.0" "llm_gateway.py"
+        ;;
+    metadata)
+        start_service "Metadata Service" "8072" "Ingestion/services/metadata/v1.0.0" "metadata_api.py"
+        ;;
+    chunking)
+        start_service "Chunking Service" "8071" "Ingestion/services/chunking/v1.0.0" "chunking_orchestrator.py"
+        ;;
+    ingestion)
+        start_service "Ingestion API" "8070" "Ingestion/v1.0.0" "main_ingestion_api.py"
+        ;;
+    search)
+        start_service "Search Service" "8091" "Retrieval/services/search/v1.0.0" "search_api.py"
+        ;;
+    rerank)
+        start_service "Reranking Service" "8092" "Retrieval/services/reranking/v1.0.0" "reranking_api.py"
+        ;;
+    compress)
+        start_service "Compression Service" "8093" "Retrieval/services/compression/v1.0.0" "compression_api.py"
+        ;;
+    answer)
+        start_service "Answer Generation Service" "8094" "Retrieval/services/answer_generation/v1.0.0" "answer_api.py"
+        ;;
+    intent)
+        start_service "Intent & Prompt Adaptation Service" "8095" "Retrieval/services/intent/v1.0.0" "intent_api.py"
+        ;;
+    retrieval)
+        start_service "Retrieval API" "8090" "Retrieval/v1.0.0" "main_retrieval_api.py"
+        ;;
+    docs)
+        open_docs "$PROJECT_ROOT/README.md"
+        ;;
+    attu)
+        echo -e "${CYAN}Opening Attu UI...${NC}"
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            open "http://localhost:3000"
+        else
+            xdg-open "http://localhost:3000" 2>/dev/null
+        fi
+        ;;
+    ingestion-docs)
+        echo -e "${CYAN}Opening Ingestion API documentation...${NC}"
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            open "http://localhost:8070/docs"
+        else
+            xdg-open "http://localhost:8070/docs" 2>/dev/null
+        fi
+        ;;
+    retrieval-docs)
+        echo -e "${CYAN}Opening Retrieval API documentation...${NC}"
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            open "http://localhost:8090/docs"
+        else
+            xdg-open "http://localhost:8090/docs" 2>/dev/null
+        fi
+        ;;
+    api-docs)
+        echo -e "${CYAN}Opening API documentation...${NC}"
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            open "http://localhost:8070/docs"
+            open "http://localhost:8090/docs"
+        else
+            xdg-open "http://localhost:8070/docs" 2>/dev/null
+            xdg-open "http://localhost:8090/docs" 2>/dev/null
+        fi
+        ;;
+    logs)
+        if [ -z "$2" ]; then
+            echo -e "${RED}Usage: pipeline logs <service>${NC}"
+            echo "Ingestion services: storage, embeddings, llm-gateway, metadata, chunking, ingestion"
+            echo "Retrieval services: search, rerank, compress, answer, retrieval"
+        else
+            # Show logs for service (would need to be implemented with proper logging)
+            echo -e "${YELLOW}Log viewing not yet implemented${NC}"
+            echo "Check the terminal window where the service is running"
+        fi
+        ;;
+    backup)
+        echo -e "${CYAN}Backup Scripts:${NC}"
+        echo "See: $TOOLS_DIR/backup_scripts/README.md"
+        echo ""
+        echo "Available backups:"
+        echo "  - $TOOLS_DIR/backup_scripts/backup_milvus.sh"
+        echo "  - $TOOLS_DIR/backup_scripts/backup_postgres.sh"
+        echo "  - $TOOLS_DIR/backup_scripts/backup_redis.sh"
+        echo "  - $TOOLS_DIR/backup_scripts/backup_all.sh"
+        ;;
+    *)
+        echo -e "${RED}Unknown command: $1${NC}"
+        echo -e "Run ${CYAN}pipeline help${NC} to see available commands"
+        exit 1
+        ;;
+esac

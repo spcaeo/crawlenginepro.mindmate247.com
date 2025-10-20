@@ -1,0 +1,409 @@
+#!/usr/bin/env python3
+"""
+Ingestion CLI Tool
+Unified command-line interface for managing document ingestion
+
+Usage Examples:
+  # Ingest a single document
+  ./ingestion-cli ingest --file document.md --tenant tenant1 --doc-id doc1
+
+  # Delete a specific document
+  ./ingestion-cli delete-doc --tenant tenant1 --doc-id doc1
+
+  # Delete all documents for a tenant
+  ./ingestion-cli delete-tenant --tenant tenant1
+
+  # Delete all collections (entire database)
+  ./ingestion-cli delete-all --confirm
+
+  # Check ingestion status
+  ./ingestion-cli status --tenant tenant1 --doc-id doc1
+
+  # List all tenants
+  ./ingestion-cli list-tenants
+
+  # List all documents for a tenant
+  ./ingestion-cli list-docs --tenant tenant1
+"""
+
+import argparse
+import requests
+import json
+import sys
+import os
+import subprocess
+import time
+from pathlib import Path
+from typing import Optional
+
+# Configuration
+INGESTION_API_URL = "http://localhost:8060"
+DEFAULT_TENANT = "default_tenant"
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PIPELINE_MANAGER = os.path.join(os.path.dirname(SCRIPT_DIR), "Tools", "pipeline-manager")
+
+class Colors:
+    """ANSI color codes for terminal output"""
+    GREEN = '\033[92m'
+    RED = '\033[91m'
+    YELLOW = '\033[93m'
+    BLUE = '\033[94m'
+    CYAN = '\033[96m'
+    RESET = '\033[0m'
+    BOLD = '\033[1m'
+
+def print_success(message: str):
+    """Print success message in green"""
+    print(f"{Colors.GREEN}✓ {message}{Colors.RESET}")
+
+def print_error(message: str):
+    """Print error message in red"""
+    print(f"{Colors.RED}✗ {message}{Colors.RESET}", file=sys.stderr)
+
+def print_info(message: str):
+    """Print info message in blue"""
+    print(f"{Colors.BLUE}ℹ {message}{Colors.RESET}")
+
+def print_warning(message: str):
+    """Print warning message in yellow"""
+    print(f"{Colors.YELLOW}⚠ {message}{Colors.RESET}")
+
+def check_api_health() -> bool:
+    """Check if the ingestion API is running"""
+    try:
+        response = requests.get(f"{INGESTION_API_URL}/health", timeout=2)
+        return response.status_code == 200
+    except requests.exceptions.RequestException:
+        return False
+
+def restart_ingestion_services():
+    """Stop all old services and restart ingestion pipeline"""
+    print_warning("Services not running properly. Restarting ingestion pipeline...")
+
+    try:
+        # Stop all services
+        print_info("Stopping all old services...")
+        subprocess.run([PIPELINE_MANAGER, "stop"], check=False, capture_output=True)
+        time.sleep(2)
+
+        # Start ingestion pipeline
+        print_info("Starting ingestion pipeline...")
+        result = subprocess.run(
+            [PIPELINE_MANAGER, "start-ingestion"],
+            check=False,
+            capture_output=True,
+            text=True
+        )
+
+        if result.returncode != 0:
+            print_error(f"Failed to start services: {result.stderr}")
+            return False
+
+        # Wait for services to be ready
+        print_info("Waiting for services to start...")
+        max_wait = 60  # Maximum 60 seconds
+        wait_interval = 2
+
+        for i in range(0, max_wait, wait_interval):
+            time.sleep(wait_interval)
+            if check_api_health():
+                print_success("Ingestion pipeline started successfully!")
+                return True
+            print_info(f"Still waiting... ({i + wait_interval}s)")
+
+        print_error("Services did not start within timeout period")
+        return False
+
+    except Exception as e:
+        print_error(f"Error restarting services: {e}")
+        return False
+
+def ensure_services_running():
+    """Ensure all required services are running, restart if needed"""
+    print_info(f"Checking Ingestion API at {INGESTION_API_URL}...")
+
+    if check_api_health():
+        print_success("Ingestion API is running")
+        return True
+
+    # Services not running, attempt to restart
+    if not restart_ingestion_services():
+        print_error("Failed to start ingestion services")
+        print_info("Try manually: ./Tools/pipeline-manager start-ingestion")
+        return False
+
+    return True
+
+def ingest_document(file_path: str, tenant_id: str, document_id: Optional[str] = None) -> bool:
+    """
+    Ingest a document file
+
+    Args:
+        file_path: Path to the document file
+        tenant_id: Tenant identifier
+        document_id: Optional document ID (defaults to filename without extension)
+
+    Returns:
+        True if successful, False otherwise
+    """
+    # Check if file exists
+    if not os.path.exists(file_path):
+        print_error(f"File not found: {file_path}")
+        return False
+
+    # Read file content
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+    except Exception as e:
+        print_error(f"Error reading file: {e}")
+        return False
+
+    # Generate document_id from filename if not provided
+    if not document_id:
+        document_id = Path(file_path).stem
+
+    # Prepare request
+    # Collection name is the same as tenant_id
+    collection_name = tenant_id
+
+    payload = {
+        "text": content,
+        "document_id": document_id,
+        "collection_name": collection_name,
+        "tenant_id": tenant_id,
+        "chunking_mode": "comprehensive",
+        "metadata_mode": "basic"
+    }
+
+    print_info(f"Ingesting document: {document_id} for tenant: {tenant_id}")
+
+    try:
+        response = requests.post(
+            f"{INGESTION_API_URL}/v1/ingest",
+            json=payload,
+            timeout=300
+        )
+        response.raise_for_status()
+        result = response.json()
+
+        print_success(f"Document ingested successfully!")
+        print(f"  Tenant: {Colors.CYAN}{tenant_id}{Colors.RESET}")
+        print(f"  Collection: {Colors.CYAN}{result.get('collection_name', 'N/A')}{Colors.RESET}")
+        print(f"  Document ID: {Colors.CYAN}{result.get('document_id', document_id)}{Colors.RESET}")
+        print(f"  Chunks Created: {Colors.CYAN}{result.get('chunks_created', 'N/A')}{Colors.RESET}")
+        print(f"  Chunks Inserted: {Colors.CYAN}{result.get('chunks_inserted', 'N/A')}{Colors.RESET}")
+        print(f"  Processing Time: {Colors.CYAN}{result.get('processing_time_ms', 'N/A')/1000:.2f}s{Colors.RESET}")
+        return True
+
+    except requests.exceptions.HTTPError as e:
+        print_error(f"HTTP Error: {e.response.status_code}")
+        try:
+            error_detail = e.response.json()
+            print_error(f"Details: {error_detail}")
+        except:
+            print_error(f"Response: {e.response.text}")
+        return False
+    except Exception as e:
+        print_error(f"Error: {e}")
+        return False
+
+def delete_document(tenant_id: str, document_id: str) -> bool:
+    """Delete a specific document"""
+    print_info(f"Deleting document: {document_id} for tenant: {tenant_id}")
+
+    try:
+        response = requests.delete(
+            f"{INGESTION_API_URL}/delete/{tenant_id}/{document_id}",
+            timeout=30
+        )
+        response.raise_for_status()
+        result = response.json()
+
+        print_success(f"Document deleted successfully!")
+        print(f"  Deleted chunks: {Colors.CYAN}{result.get('deleted_count', 'N/A')}{Colors.RESET}")
+        return True
+
+    except requests.exceptions.HTTPError as e:
+        print_error(f"HTTP Error: {e.response.status_code}")
+        print_error(f"Response: {e.response.text}")
+        return False
+    except Exception as e:
+        print_error(f"Error: {e}")
+        return False
+
+def delete_tenant(tenant_id: str) -> bool:
+    """Delete all documents for a tenant"""
+    print_warning(f"This will delete ALL documents for tenant: {tenant_id}")
+    confirm = input(f"Type '{tenant_id}' to confirm: ")
+
+    if confirm != tenant_id:
+        print_error("Deletion cancelled - confirmation failed")
+        return False
+
+    print_info(f"Deleting all documents for tenant: {tenant_id}")
+
+    try:
+        response = requests.delete(
+            f"{INGESTION_API_URL}/delete/{tenant_id}",
+            timeout=60
+        )
+        response.raise_for_status()
+        result = response.json()
+
+        print_success(f"Tenant data deleted successfully!")
+        print(f"  Deleted chunks: {Colors.CYAN}{result.get('deleted_count', 'N/A')}{Colors.RESET}")
+        return True
+
+    except requests.exceptions.HTTPError as e:
+        print_error(f"HTTP Error: {e.response.status_code}")
+        print_error(f"Response: {e.response.text}")
+        return False
+    except Exception as e:
+        print_error(f"Error: {e}")
+        return False
+
+def delete_all(confirm_flag: bool) -> bool:
+    """Delete all collections (entire database)"""
+    if not confirm_flag:
+        print_error("This operation requires --confirm flag")
+        print_warning("This will DELETE ALL DATA from ALL TENANTS!")
+        return False
+
+    print_warning("⚠️  WARNING: This will DELETE ALL DATA from ALL TENANTS!")
+    confirm = input("Type 'DELETE ALL' to confirm: ")
+
+    if confirm != "DELETE ALL":
+        print_error("Deletion cancelled - confirmation failed")
+        return False
+
+    print_info("Deleting all collections...")
+
+    try:
+        response = requests.delete(
+            f"{INGESTION_API_URL}/delete-all",
+            timeout=120
+        )
+        response.raise_for_status()
+        result = response.json()
+
+        print_success("All collections deleted successfully!")
+        print(f"  Collections dropped: {Colors.CYAN}{result.get('collections_dropped', 'N/A')}{Colors.RESET}")
+        return True
+
+    except requests.exceptions.HTTPError as e:
+        print_error(f"HTTP Error: {e.response.status_code}")
+        print_error(f"Response: {e.response.text}")
+        return False
+    except Exception as e:
+        print_error(f"Error: {e}")
+        return False
+
+def get_status(tenant_id: str, document_id: Optional[str] = None) -> bool:
+    """Get ingestion status"""
+    params = {"tenant_id": tenant_id}
+    if document_id:
+        params["document_id"] = document_id
+
+    try:
+        response = requests.get(
+            f"{INGESTION_API_URL}/status",
+            params=params,
+            timeout=10
+        )
+        response.raise_for_status()
+        result = response.json()
+
+        print_success("Status retrieved successfully!")
+        print(json.dumps(result, indent=2))
+        return True
+
+    except requests.exceptions.HTTPError as e:
+        print_error(f"HTTP Error: {e.response.status_code}")
+        print_error(f"Response: {e.response.text}")
+        return False
+    except Exception as e:
+        print_error(f"Error: {e}")
+        return False
+
+def main():
+    parser = argparse.ArgumentParser(
+        description='Ingestion CLI - Unified tool for managing document ingestion',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=__doc__
+    )
+
+    subparsers = parser.add_subparsers(dest='command', help='Available commands')
+
+    # Ingest command
+    ingest_parser = subparsers.add_parser('ingest', help='Ingest a document file')
+    ingest_parser.add_argument('--file', required=True, help='Path to document file')
+    ingest_parser.add_argument('--tenant', default=DEFAULT_TENANT, help='Tenant ID')
+    ingest_parser.add_argument('--doc-id', help='Document ID (defaults to filename)')
+
+    # Delete document command
+    delete_doc_parser = subparsers.add_parser('delete-doc', help='Delete a specific document')
+    delete_doc_parser.add_argument('--tenant', required=True, help='Tenant ID')
+    delete_doc_parser.add_argument('--doc-id', required=True, help='Document ID')
+
+    # Delete tenant command
+    delete_tenant_parser = subparsers.add_parser('delete-tenant', help='Delete all documents for a tenant')
+    delete_tenant_parser.add_argument('--tenant', required=True, help='Tenant ID')
+
+    # Delete all command
+    delete_all_parser = subparsers.add_parser('delete-all', help='Delete all collections (DANGEROUS)')
+    delete_all_parser.add_argument('--confirm', action='store_true', help='Confirm deletion')
+
+    # Status command
+    status_parser = subparsers.add_parser('status', help='Check ingestion status')
+    status_parser.add_argument('--tenant', required=True, help='Tenant ID')
+    status_parser.add_argument('--doc-id', help='Document ID (optional)')
+
+    # List tenants command
+    list_tenants_parser = subparsers.add_parser('list-tenants', help='List all tenants')
+
+    # List documents command
+    list_docs_parser = subparsers.add_parser('list-docs', help='List all documents for a tenant')
+    list_docs_parser.add_argument('--tenant', required=True, help='Tenant ID')
+
+    args = parser.parse_args()
+
+    if not args.command:
+        parser.print_help()
+        sys.exit(1)
+
+    # Ensure services are running (auto-restart if needed)
+    if not ensure_services_running():
+        sys.exit(1)
+    print()
+
+    # Execute command
+    success = False
+
+    if args.command == 'ingest':
+        success = ingest_document(args.file, args.tenant, args.doc_id)
+
+    elif args.command == 'delete-doc':
+        success = delete_document(args.tenant, args.doc_id)
+
+    elif args.command == 'delete-tenant':
+        success = delete_tenant(args.tenant)
+
+    elif args.command == 'delete-all':
+        success = delete_all(args.confirm)
+
+    elif args.command == 'status':
+        success = get_status(args.tenant, args.doc_id)
+
+    elif args.command == 'list-tenants':
+        print_info("List tenants feature not yet implemented")
+        print_info("Use Milvus console or check storage API directly")
+
+    elif args.command == 'list-docs':
+        print_info("List documents feature not yet implemented")
+        print_info("Use Milvus console or check storage API directly")
+
+    sys.exit(0 if success else 1)
+
+if __name__ == "__main__":
+    main()

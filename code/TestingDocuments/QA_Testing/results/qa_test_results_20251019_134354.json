@@ -1,0 +1,221 @@
+{
+  "summary": {
+    "test_run_timestamp": "2025-10-19T13:43:54.113832",
+    "collection_name": "test_comprehensive_v4",
+    "total_questions": 18,
+    "successful_tests": 1,
+    "failed_tests": 0,
+    "total_test_duration_seconds": 6.658725738525391,
+    "service_configuration": {
+      "embeddings": {
+        "model": "jina-embeddings-v3",
+        "dimension": 1024,
+        "provider": "jina_api",
+        "device": "jina_cloud_gpu",
+        "cache_enabled": true,
+        "cache_entries": 0
+      },
+      "answer_generation": {
+        "cache_enabled": false
+      },
+      "reranking": {
+        "model": "jina-reranker-v2-base-multilingual",
+        "provider": "jina-api"
+      }
+    },
+    "average_metrics": {
+      "total_time_ms": 6658.448583009886,
+      "server_time_ms": 6653.980731964111,
+      "keyword_coverage_percentage": 60.0
+    },
+    "category_statistics": {
+      "Temporal Reasoning": {
+        "test_count": 1,
+        "avg_time_ms": 6658.448583009886,
+        "avg_keyword_coverage": 60.0
+      }
+    }
+  },
+  "test_results": [
+    {
+      "test_id": "5.2",
+      "category": "Temporal Reasoning",
+      "question": "For any invoice with net payment terms, what is the due date and current payment status?",
+      "difficulty": "medium",
+      "test_capability": "conditional filtering",
+      "timestamp": "2025-10-19T13:43:54.113724",
+      "success": true,
+      "answer": "## Invoices with Net Payment Terms: Due Dates & Status\n\n| **Invoice** | **Due Date** | **Payment Status** | **Source** |\n|-------------|--------------|--------------------|------------|\n| BuildRight Materials & Supply | 2024-04-09 (April 9, 2024) | **Pending** | [Source 1](#source-1), [Source 2](#source-2) |\n| MedTech Equipment Supply | 2024-03-30 (March 30, 2024) | **Pending** | [Source 3](#source-3) |\n\n---\n\n### Key Details:\n1. **BuildRight Materials & Supply Invoice**  \n   - **Net 30 Terms**: 30 days from transaction date (2024-03-10 → 2024-04-09).  \n   - **Status**: Payment remains **pending** as of the latest context.  \n\n2. **MedTech Equipment Supply Invoice**  \n   - **Net 30 Terms**: 30 days from transaction date",
+      "citations_count": 0,
+      "citations": [],
+      "performance": {
+        "total_time_ms": 6658.448583009886,
+        "server_time_ms": 6653.980731964111,
+        "network_latency_ms": 4.467851045774296,
+        "stage_times": {
+          "intent_detection_ms": 1951.866865158081,
+          "search_ms": 1318.4583187103271,
+          "reranking_ms": 633.1748962402344,
+          "compression_ms": 0.0,
+          "answer_generation_ms": 4701.999187469482
+        },
+        "stage_percentages": {
+          "intent_detection_pct": 29.333822019979493,
+          "search_pct": 19.814579750385704,
+          "reranking_pct": 9.515730834605751,
+          "compression_pct": 0.0,
+          "answer_generation_pct": 70.66445451039883
+        },
+        "bottleneck": {
+          "stage": "answer_generation",
+          "time_ms": 4701.999187469482,
+          "percentage_of_total": 70.66445451039883
+        }
+      },
+      "retrieval_metrics": {
+        "search_results_count": 10,
+        "reranked_count": 3,
+        "compressed_count": 3,
+        "context_count": 3
+      },
+      "models_used": {
+        "llm_requested": null,
+        "llm_used": "Qwen3-32B",
+        "llm_temperature": 0.3,
+        "used_recommended_model": true,
+        "used_custom_prompt": true
+      },
+      "intent_analysis": {
+        "detected_intent": "temporal",
+        "language": "en",
+        "complexity": "moderate",
+        "confidence": 0.93,
+        "recommended_model": "Qwen3-32B",
+        "has_custom_prompt": true
+      },
+      "keyword_analysis": {
+        "expected_keywords": [
+          "Medical Equipment",
+          "Net 30",
+          "2024-03-30",
+          "Construction",
+          "2024-04-09"
+        ],
+        "keywords_found": [
+          "Net 30",
+          "2024-03-30",
+          "2024-04-09"
+        ],
+        "keywords_missing": [
+          "Medical Equipment",
+          "Construction"
+        ],
+        "coverage_percentage": 60.0
+      },
+      "full_response": {
+        "success": true,
+        "query": "For any invoice with net payment terms, what is the due date and current payment status?",
+        "collection_name": "test_comprehensive_v4",
+        "tenant_id": "test_tenant",
+        "answer": "## Invoices with Net Payment Terms: Due Dates & Status\n\n| **Invoice** | **Due Date** | **Payment Status** | **Source** |\n|-------------|--------------|--------------------|------------|\n| BuildRight Materials & Supply | 2024-04-09 (April 9, 2024) | **Pending** | [Source 1](#source-1), [Source 2](#source-2) |\n| MedTech Equipment Supply | 2024-03-30 (March 30, 2024) | **Pending** | [Source 3](#source-3) |\n\n---\n\n### Key Details:\n1. **BuildRight Materials & Supply Invoice**  \n   - **Net 30 Terms**: 30 days from transaction date (2024-03-10 → 2024-04-09).  \n   - **Status**: Payment remains **pending** as of the latest context.  \n\n2. **MedTech Equipment Supply Invoice**  \n   - **Net 30 Terms**: 30 days from transaction date",
+        "citations": [],
+        "context_chunks": [
+          {
+            "chunk_id": "ComprehensiveTestDocument_chunk_0016",
+            "text": "## Construction Materials Invoice\n\n**Invoice Number:** BUILD-2024-3309\n**Transaction Date:** 2024-03-10\n**Vendor Name:** BuildRight Materials & Supply\n**Vendor ID:** BUILDRIGHT-VENDOR-88\n\n**Materials Ordered:**\n1. Lumber - 2x4x8 Premium Grade Douglas Fir - SKU: LUMBER-2X4X8-DF - Price: 8.99 per piece - Quantity: 200 - Amount: 1798.00 USD\n2. Concrete Mix - Quikrete 80lb bags - SKU: CONCRETE-80LB-QK - Price: 6.49 per bag - Quantity: 100 - Amount: 649.00 USD - Weight: 80 pounds per bag\n3. Nails - 16d Common Galvanized - SKU: NAILS-16D-GAL-50LB - Price: 89.99 - Size: 50 pound box\n4. Paint - Sherwin-Williams ProClassic - Color: Warm White - SKU: SW-PROCLASSIC-WW-GAL - Price: 54.99 per gallon - Quantity: 20 - Amount: 1099.80 USD\n\n**Amount:** 3636.79\n**Tax Amount:** 290.94\n**Total:** 3927.73\n**Currency:** USD\n**Payment Method:** Net 30 Terms\n**Payment Status:** Pending - Due 2024-04-09",
+            "document_id": "ComprehensiveTestDocument",
+            "topics": "Construction materials, Vendor information, Invoice details",
+            "keywords": "Lumber - 2x4x8 Premium Grade Douglas Fir, Concrete Mix - Quikrete 80lb bags, Nails - 16d Common Galvanized, Paint - Sherwin-Williams ProClassic, BuildRight Materials & Supply, LUMBER-2X4X8-DF, CONCRETE-80LB-QK, NAILS-16D-GAL-50LB, SW-PROCLASSIC-WW-GAL, 2024-03-10, 2024-04-09, Net 30 Terms, USD, 80 pounds per bag, Warm White",
+            "summary": "An invoice from BuildRight Materials & Supply dated 2024-03-10 lists construction materials including lumber, concrete mix, nails, and paint, with a total amount of 3927.73 USD due by 2024-04-09 under Net 30 Terms.",
+            "questions": "What materials were ordered?|Who is the vendor?|When is the payment due?"
+          },
+          {
+            "chunk_id": "ComprehensiveTestDocument_chunk_0017",
+            "text": "**Amount:** 3636.79\n**Tax Amount:** 290.94\n**Total:** 3927.73\n**Currency:** USD\n**Payment Method:** Net 30 Terms\n**Payment Status:** Pending - Due 2024-04-09\n\n**Specifications:** Douglas Fir lumber is kiln-dried, S4S (surfaced 4 sides), Grade #2 or better. Concrete mix achieves 4000 PSI at 28 days. Paint is interior/exterior acrylic latex, low-VOC, mildew-resistant.\n\n**Technical Terms:** Kiln-dried lumber, S4S (surfaced four sides), PSI (pounds per square inch), VOC (volatile organic compounds), acrylic latex, galvanized fasteners\n\n**Organizations:** BuildRight Materials & Supply (vendor), Greenfield Construction LLC (buyer), Quikrete Companies (manufacturer), Sherwin-Williams (manufacturer)\n\n**Contact:** orders@buildrightmaterials.com | +1-555-BUILD-99 | Warehouse: 789 Industrial Parkway, Houston, TX 77001",
+            "document_id": "ComprehensiveTestDocument",
+            "topics": "construction materials, payment terms, product specifications",
+            "keywords": "Douglas Fir lumber, Quikrete Companies, Sherwin-Williams, BuildRight Materials & Supply, Greenfield Construction LLC, 2024-04-09, due, kiln-dried lumber, S4S, PSI, VOC, acrylic latex, galvanized fasteners",
+            "summary": "A construction-related invoice for $3,636.79 with a tax amount of $290.94, totaling $3,927.73, is pending payment due on April 9, 2024. The order includes kiln-dried Douglas Fir lumber (S4S, Grade #2 or better), Quikrete concrete mix achieving 4000 PSI, and Sherwin-Williams low-VOC acrylic latex paint. BuildRight Materials & Supply is the vendor, and Greenfield Construction LLC is the buyer.",
+            "questions": "What is the payment status and due date?|What are the specifications for the lumber and paint?|Who are the vendor and buyer in this transaction?"
+          },
+          {
+            "chunk_id": "ComprehensiveTestDocument_chunk_0008",
+            "text": "## Medical Equipment Invoice\n\n**Invoice Number:** MED-INV-2024-1523\n**Transaction Date:** 2024-02-28\n**Vendor Name:** MedTech Equipment Supply\n**Vendor ID:** MEDTECH-SUPPLY-099\n\n**Items:**\n1. Philips IntelliVue MX40 Patient Monitor - Model: MX40 - SKU: PHIL-MX40-2024 - Price: 4500.00 USD - Year: 2024\n2. Welch Allyn Blood Pressure Cuff Set - SKU: WA-BP-CUFF-SET - Price: 189.99 USD\n3. Nonin Pulse Oximeter - Model: Onyx Vantage 9590 - SKU: NONIN-9590 - Price: 375.00 USD - Color: Black\n\n**Amount:** 5064.99\n**Tax Amount:** 405.20\n**Total:** 5470.19\n**Currency:** USD\n**Payment Method:** Purchase Order\n**Payment Status:** Net 30 - Due 2024-03-30\n\n**Technical Specifications:** Philips MX40 features ECG, SpO2, NBP monitoring, 8.4\" touchscreen display, 5-hour battery life, wireless connectivity, clinical measurements include heart rate, respiration rate, temperature",
+            "document_id": "ComprehensiveTestDocument",
+            "topics": "Medical Equipment, Healthcare Supplies, Invoice Details",
+            "keywords": "Philips IntelliVue MX40 Patient Monitor, Welch Allyn Blood Pressure Cuff Set, Nonin Pulse Oximeter, MedTech Equipment Supply, MEDTECH-SUPPLY-099, MX40, WA-BP-CUFF-SET, NONIN-9590, 2024-02-28, 2024-03-30, ECG, SpO2, NBP monitoring, 8.4\" touchscreen display, 5-hour battery life, wireless connectivity, heart rate, respiration rate, temperature",
+            "summary": "An invoice dated 2024-02-28 from MedTech Equipment Supply lists the purchase of medical equipment including a Philips IntelliVue MX40 Patient Monitor, Welch Allyn Blood Pressure Cuff Set, and Nonin Pulse Oximeter. Payment is due by 2024-03-30 via Purchase Order, with a total amount of 5470.19 USD.",
+            "questions": "What medical equipment was purchased?|When is the payment due?|What are the technical specifications of the Philips MX40?"
+          }
+        ],
+        "stages": {
+          "search": {
+            "time_ms": 1318.4583187103271,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "results_count": 10,
+              "top_k": 10,
+              "metadata_boost_enabled": true
+            }
+          },
+          "reranking": {
+            "time_ms": 633.1748962402344,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "input_count": 10,
+              "output_count": 3,
+              "top_k": 3
+            }
+          },
+          "compression": {
+            "time_ms": 0.0,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "skipped": true
+            }
+          },
+          "intent_detection": {
+            "time_ms": 1951.866865158081,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "intent": "temporal",
+              "language": "en",
+              "complexity": "moderate",
+              "confidence": 0.93,
+              "recommended_model": "Qwen3-32B",
+              "recommended_max_tokens": 1024,
+              "has_custom_prompt": true
+            }
+          },
+          "answer_generation": {
+            "time_ms": 4701.999187469482,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "context_chunks": 3,
+              "citations": 0,
+              "model_used": "Qwen3-32B",
+              "model_requested": null,
+              "max_tokens_used": 1024,
+              "temperature": 0.3,
+              "used_custom_prompt": true,
+              "used_recommended_model": true,
+              "used_recommended_max_tokens": true
+            }
+          }
+        },
+        "total_time_ms": 6653.980731964111,
+        "search_results_count": 10,
+        "reranked_count": 3,
+        "compressed_count": 3,
+        "context_count": 3,
+        "api_version": "1.0.0",
+        "timestamp": "2025-10-19T13:43:54.112540"
+      }
+    }
+  ]
+}

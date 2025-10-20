@@ -1,0 +1,220 @@
+{
+  "summary": {
+    "test_run_timestamp": "2025-10-19T14:27:35.037145",
+    "collection_name": "test_comprehensive_v4",
+    "total_questions": 18,
+    "successful_tests": 1,
+    "failed_tests": 0,
+    "total_test_duration_seconds": 5.606818675994873,
+    "service_configuration": {
+      "embeddings": {
+        "model": "jina-embeddings-v3",
+        "dimension": 1024,
+        "provider": "jina_api",
+        "device": "jina_cloud_gpu",
+        "cache_enabled": true,
+        "cache_entries": 0
+      },
+      "answer_generation": {
+        "cache_enabled": false
+      },
+      "reranking": {
+        "model": "jina-reranker-v2-base-multilingual",
+        "provider": "jina-api"
+      }
+    },
+    "average_metrics": {
+      "total_time_ms": 5606.659957993543,
+      "server_time_ms": 5601.743221282959,
+      "keyword_coverage_percentage": 100.0
+    },
+    "category_statistics": {
+      "Advanced Logic": {
+        "test_count": 1,
+        "avg_time_ms": 5606.659957993543,
+        "avg_keyword_coverage": 100.0
+      }
+    }
+  },
+  "test_results": [
+    {
+      "test_id": "7.1",
+      "category": "Advanced Logic",
+      "question": "Which product listed in any invoice is not paid, and which vendor is responsible for it?",
+      "difficulty": "hard",
+      "test_capability": "negative logic",
+      "timestamp": "2025-10-19T14:27:35.037070",
+      "success": true,
+      "answer": "<think>\nOkay, let's tackle this question. The user is asking which product listed in any invoice is not paid and which vendor is responsible. So first, I need to look through the provided sources to find invoices where the payment status is not paid.\n\nStarting with Source 1: The invoice from TechSupply Solutions has a payment status of \"Paid\". So all items here are paid. No issues there.\n\nSource 2: The invoice from BuildRight Materials & Supply has a payment status of \"Pending\" with a due date of 2024-04-09. The items listed here are construction materials. Since the payment is pending, these products are not yet paid. The vendor here is BuildRight Materials & Supply.\n\nSource 3: The invoice from MedTech Equipment Supply has a payment status of \"Net 30 - Due 2024-03-30\". The current date isn't specified, but assuming today is after March 30, it might be overdue. However, the status is still Net 30, which typically means payment is due within 30 days from the invoice date. Since the due date is March 30, and the invoice was on February 28, if today is after March 30, it's past due. But the problem is whether it's marked as \"Pending\" or \"Unpaid\". The source says \"Payment Status: Net 30 - Due 2024-03-30\" but doesn't explicitly say it's unpaid. However, since the due date has passed (assuming the current date is after March 30), it's possible that it's not paid yet. However, the user's context might not consider that. The question is about what's listed as not paid in the invoices. Source 2 clearly states \"Payment Status: Pending\", while Source 3's status is \"Net 30 - Due...\" without a clear \"Pending\" label. The user's instruction is to base the answer only on the provided context. Since Source 3's payment status is not explicitly stated as \"Pending\" or \"Unpaid\", we can't assume it's unpaid. Therefore, only Source 2's invoice is considered as not paid.\n\nSo the answer should list the products from Source 2's invoice and the vendor BuildRight Materials & Supply. The products are the Lumber, Concrete Mix, Nails, and Paint. The vendor is BuildRight Materials & Supply.",
+      "citations_count": 0,
+      "citations": [],
+      "performance": {
+        "total_time_ms": 5606.659957993543,
+        "server_time_ms": 5601.743221282959,
+        "network_latency_ms": 4.916736710583791,
+        "stage_times": {
+          "intent_detection_ms": 2705.4800987243652,
+          "search_ms": 1625.6651878356934,
+          "reranking_ms": 409.85703468322754,
+          "compression_ms": 0.0,
+          "answer_generation_ms": 3565.9661293029785
+        },
+        "stage_percentages": {
+          "intent_detection_pct": 48.29711023606564,
+          "search_pct": 29.020701656927606,
+          "reranking_pct": 7.316598039089671,
+          "compression_pct": 0.0,
+          "answer_generation_pct": 63.658150479919186
+        },
+        "bottleneck": {
+          "stage": "answer_generation",
+          "time_ms": 3565.9661293029785,
+          "percentage_of_total": 63.658150479919186
+        }
+      },
+      "retrieval_metrics": {
+        "search_results_count": 10,
+        "reranked_count": 3,
+        "compressed_count": 3,
+        "context_count": 3
+      },
+      "models_used": {
+        "llm_requested": null,
+        "llm_used": "Qwen3-32B",
+        "llm_temperature": 0.3,
+        "used_recommended_model": true,
+        "used_custom_prompt": true
+      },
+      "intent_analysis": {
+        "detected_intent": "negative_logic",
+        "language": "en",
+        "complexity": "moderate",
+        "confidence": 0.95,
+        "recommended_model": "Qwen3-32B",
+        "has_custom_prompt": true
+      },
+      "keyword_analysis": {
+        "expected_keywords": [
+          "Construction Materials",
+          "BuildRight",
+          "Pending",
+          "2024-04-09",
+          "not paid"
+        ],
+        "keywords_found": [
+          "Construction Materials",
+          "BuildRight",
+          "Pending",
+          "2024-04-09",
+          "not paid"
+        ],
+        "keywords_missing": [],
+        "coverage_percentage": 100.0
+      },
+      "full_response": {
+        "success": true,
+        "query": "Which product listed in any invoice is not paid, and which vendor is responsible for it?",
+        "collection_name": "test_comprehensive_v4",
+        "tenant_id": "test_tenant",
+        "answer": "<think>\nOkay, let's tackle this question. The user is asking which product listed in any invoice is not paid and which vendor is responsible. So first, I need to look through the provided sources to find invoices where the payment status is not paid.\n\nStarting with Source 1: The invoice from TechSupply Solutions has a payment status of \"Paid\". So all items here are paid. No issues there.\n\nSource 2: The invoice from BuildRight Materials & Supply has a payment status of \"Pending\" with a due date of 2024-04-09. The items listed here are construction materials. Since the payment is pending, these products are not yet paid. The vendor here is BuildRight Materials & Supply.\n\nSource 3: The invoice from MedTech Equipment Supply has a payment status of \"Net 30 - Due 2024-03-30\". The current date isn't specified, but assuming today is after March 30, it might be overdue. However, the status is still Net 30, which typically means payment is due within 30 days from the invoice date. Since the due date is March 30, and the invoice was on February 28, if today is after March 30, it's past due. But the problem is whether it's marked as \"Pending\" or \"Unpaid\". The source says \"Payment Status: Net 30 - Due 2024-03-30\" but doesn't explicitly say it's unpaid. However, since the due date has passed (assuming the current date is after March 30), it's possible that it's not paid yet. However, the user's context might not consider that. The question is about what's listed as not paid in the invoices. Source 2 clearly states \"Payment Status: Pending\", while Source 3's status is \"Net 30 - Due...\" without a clear \"Pending\" label. The user's instruction is to base the answer only on the provided context. Since Source 3's payment status is not explicitly stated as \"Pending\" or \"Unpaid\", we can't assume it's unpaid. Therefore, only Source 2's invoice is considered as not paid.\n\nSo the answer should list the products from Source 2's invoice and the vendor BuildRight Materials & Supply. The products are the Lumber, Concrete Mix, Nails, and Paint. The vendor is BuildRight Materials & Supply.",
+        "citations": [],
+        "context_chunks": [
+          {
+            "chunk_id": "ComprehensiveTestDocument_chunk_0004",
+            "text": "## Invoice Document - Technology Purchase\n\n**Invoice Number:** INV-2024-00789\n**Transaction Date:** 2024-03-15\n**Vendor Name:** TechSupply Solutions\n**Vendor ID:** VENDOR-TS-001\n\n**Items Purchased:**\n1. Dell XPS 15 Laptop - Model: XPS-15-9530 - SKU: DELL-XPS15-9530-I7 - Price: 2299.00 USD - Year: 2024\n2. Samsung 34\" Ultrawide Monitor - Model: S34C502 - SKU: SAMSUNG-S34C502 - Price: 449.99 USD\n3. Logitech MX Master 3S Mouse - SKU: LOGI-MX-MASTER-3S - Price: 99.99 USD - Color: Graphite\n\n**Amount:** 2848.98\n**Tax Amount:** 227.92\n**Total Amount:** 3076.90\n**Currency:** USD\n**Payment Method:** Corporate Credit Card\n**Payment Status:** Paid\n\n**Vendor Contact:** orders@techsupplysolutions.com | +1-555-TECH-BUY | Account Manager: John Smith\n**Customer:** Acme Corporation, 123 Business Park Dr, San Jose, CA 95110\n\n**Technical Specifications:** Dell XPS 15 features Intel Core i7-13700H processor, 32GB DDR5 RAM, 1TB NVMe SSD, NVIDIA GeForce RTX 4050 GPU, 15.6\" 3.5K OLED display, Windows 11 Pro",
+            "document_id": "ComprehensiveTestDocument",
+            "topics": "Technology Purchase, Corporate Procurement, Hardware Specifications",
+            "keywords": "Dell XPS 15 Laptop, Samsung 34\" Ultrawide Monitor, Logitech MX Master 3S Mouse, TechSupply Solutions, VENDOR-TS-001, transaction: 2024-03-15, payment-status: Paid, payment-method: Corporate Credit Card, invoice: INV-2024-00789, Intel Core i7-13700H, 32GB DDR5 RAM, 1TB NVMe SSD, NVIDIA GeForce RTX 4050 GPU, 15.6\" 3.5K OLED display, Windows 11 Pro",
+            "summary": "Acme Corporation purchased a Dell XPS 15 Laptop, Samsung 34\" Ultrawide Monitor, and Logitech MX Master 3S Mouse from TechSupply Solutions on 2024-03-15. The total amount of $3076.90 was paid via corporate credit card.",
+            "questions": "What items were purchased?|Who is the vendor?|What is the payment status?"
+          },
+          {
+            "chunk_id": "ComprehensiveTestDocument_chunk_0016",
+            "text": "## Construction Materials Invoice\n\n**Invoice Number:** BUILD-2024-3309\n**Transaction Date:** 2024-03-10\n**Vendor Name:** BuildRight Materials & Supply\n**Vendor ID:** BUILDRIGHT-VENDOR-88\n\n**Materials Ordered:**\n1. Lumber - 2x4x8 Premium Grade Douglas Fir - SKU: LUMBER-2X4X8-DF - Price: 8.99 per piece - Quantity: 200 - Amount: 1798.00 USD\n2. Concrete Mix - Quikrete 80lb bags - SKU: CONCRETE-80LB-QK - Price: 6.49 per bag - Quantity: 100 - Amount: 649.00 USD - Weight: 80 pounds per bag\n3. Nails - 16d Common Galvanized - SKU: NAILS-16D-GAL-50LB - Price: 89.99 - Size: 50 pound box\n4. Paint - Sherwin-Williams ProClassic - Color: Warm White - SKU: SW-PROCLASSIC-WW-GAL - Price: 54.99 per gallon - Quantity: 20 - Amount: 1099.80 USD\n\n**Amount:** 3636.79\n**Tax Amount:** 290.94\n**Total:** 3927.73\n**Currency:** USD\n**Payment Method:** Net 30 Terms\n**Payment Status:** Pending - Due 2024-04-09",
+            "document_id": "ComprehensiveTestDocument",
+            "topics": "Construction Materials, Vendor Invoice, Payment Terms",
+            "keywords": "Lumber - 2x4x8 Premium Grade Douglas Fir, Concrete Mix - Quikrete 80lb bags, Nails - 16d Common Galvanized, Paint - Sherwin-Williams ProClassic, BuildRight Materials & Supply, LUMBER-2X4X8-DF, CONCRETE-80LB-QK, NAILS-16D-GAL-50LB, SW-PROCLASSIC-WW-GAL, transaction: 2024-03-10, due: 2024-04-09, payment-terms: Net 30, payment-status: Pending, invoice: BUILD-2024-3309, USD",
+            "summary": "An invoice from BuildRight Materials & Supply dated March 10, 2024, lists construction materials including lumber, concrete mix, nails, and paint. The total amount due is $3927.73 USD, with a payment status of pending and a due date of April 9, 2024, under Net 30 terms.",
+            "questions": "What materials were ordered?|Who is the vendor?|When is the payment due?"
+          },
+          {
+            "chunk_id": "ComprehensiveTestDocument_chunk_0008",
+            "text": "## Medical Equipment Invoice\n\n**Invoice Number:** MED-INV-2024-1523\n**Transaction Date:** 2024-02-28\n**Vendor Name:** MedTech Equipment Supply\n**Vendor ID:** MEDTECH-SUPPLY-099\n\n**Items:**\n1. Philips IntelliVue MX40 Patient Monitor - Model: MX40 - SKU: PHIL-MX40-2024 - Price: 4500.00 USD - Year: 2024\n2. Welch Allyn Blood Pressure Cuff Set - SKU: WA-BP-CUFF-SET - Price: 189.99 USD\n3. Nonin Pulse Oximeter - Model: Onyx Vantage 9590 - SKU: NONIN-9590 - Price: 375.00 USD - Color: Black\n\n**Amount:** 5064.99\n**Tax Amount:** 405.20\n**Total:** 5470.19\n**Currency:** USD\n**Payment Method:** Purchase Order\n**Payment Status:** Net 30 - Due 2024-03-30\n\n**Technical Specifications:** Philips MX40 features ECG, SpO2, NBP monitoring, 8.4\" touchscreen display, 5-hour battery life, wireless connectivity, clinical measurements include heart rate, respiration rate, temperature",
+            "document_id": "ComprehensiveTestDocument",
+            "topics": "Medical Equipment, Invoice, Healthcare Technology",
+            "keywords": "Philips IntelliVue MX40 Patient Monitor, Welch Allyn Blood Pressure Cuff Set, Nonin Pulse Oximeter, MedTech Equipment Supply, MED-INV-2024-1523, transaction: 2024-02-28, due: 2024-03-30, payment-terms: Net 30, payment-method: Purchase Order, ECG, SpO2, NBP monitoring",
+            "summary": "This invoice from MedTech Equipment Supply details the purchase of medical equipment including a Philips IntelliVue MX40 Patient Monitor, Welch Allyn Blood Pressure Cuff Set, and Nonin Pulse Oximeter. The transaction occurred on 2024-02-28, with payment terms of Net 30, due by 2024-03-30.",
+            "questions": "What medical equipment was purchased?|When is the payment due?|What are the technical specifications of the Philips MX40?"
+          }
+        ],
+        "stages": {
+          "search": {
+            "time_ms": 1625.6651878356934,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "results_count": 10,
+              "top_k": 10,
+              "metadata_boost_enabled": true
+            }
+          },
+          "reranking": {
+            "time_ms": 409.85703468322754,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "input_count": 10,
+              "output_count": 3,
+              "top_k": 3
+            }
+          },
+          "compression": {
+            "time_ms": 0.0,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "skipped": true
+            }
+          },
+          "intent_detection": {
+            "time_ms": 2705.4800987243652,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "intent": "negative_logic",
+              "language": "en",
+              "complexity": "moderate",
+              "confidence": 0.95,
+              "recommended_model": "Qwen3-32B",
+              "recommended_max_tokens": 512,
+              "has_custom_prompt": true
+            }
+          },
+          "answer_generation": {
+            "time_ms": 3565.9661293029785,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "context_chunks": 3,
+              "citations": 0,
+              "model_used": "Qwen3-32B",
+              "model_requested": null,
+              "max_tokens_used": 512,
+              "temperature": 0.3,
+              "used_custom_prompt": true,
+              "used_recommended_model": true,
+              "used_recommended_max_tokens": true
+            }
+          }
+        },
+        "total_time_ms": 5601.743221282959,
+        "search_results_count": 10,
+        "reranked_count": 3,
+        "compressed_count": 3,
+        "context_count": 3,
+        "api_version": "1.0.0",
+        "timestamp": "2025-10-19T14:27:35.036496"
+      }
+    }
+  ]
+}

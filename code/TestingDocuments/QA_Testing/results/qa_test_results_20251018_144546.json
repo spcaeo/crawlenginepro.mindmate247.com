@@ -1,0 +1,220 @@
+{
+  "summary": {
+    "test_run_timestamp": "2025-10-18T14:45:46.947753",
+    "collection_name": "jina_v3_test",
+    "total_questions": 18,
+    "successful_tests": 1,
+    "failed_tests": 0,
+    "total_test_duration_seconds": 2.449247360229492,
+    "service_configuration": {
+      "embeddings": {
+        "model": "jina-embeddings-v3",
+        "dimension": 1024,
+        "provider": "jina_api",
+        "device": "jina_cloud_gpu",
+        "cache_enabled": true,
+        "cache_entries": 0
+      },
+      "answer_generation": {
+        "cache_enabled": false
+      },
+      "reranking": {
+        "model": "jina-reranker-v2-base-multilingual",
+        "provider": "jina-api"
+      }
+    },
+    "average_metrics": {
+      "total_time_ms": 2448.9040830085287,
+      "server_time_ms": 2445.481061935425,
+      "keyword_coverage_percentage": 100.0
+    },
+    "category_statistics": {
+      "Standard Ecommerce": {
+        "test_count": 1,
+        "avg_time_ms": 2448.9040830085287,
+        "avg_keyword_coverage": 100.0
+      }
+    }
+  },
+  "test_results": [
+    {
+      "test_id": "3.1",
+      "category": "Standard Ecommerce",
+      "question": "What is the price and key specifications of the Apple iPhone 15 Pro Max listed in the catalog?",
+      "difficulty": "easy",
+      "test_capability": "basic retrieval",
+      "timestamp": "2025-10-18T14:45:46.947612",
+      "success": true,
+      "answer": "## Apple iPhone 15 Pro Max Specifications and Price\n\n### Key Specifications:\n\n* **Model:** iPhone 15 Pro Max\n* **Price:** **$1,199 USD**\n* **Year:** 2024\n* **Color:** Natural Titanium Blue\n* **Size:** 6.7 inches\n* **Weight:** 221 grams\n* **Dimensions:** 159.9 x 76.7 x 8.25 mm\n* **Storage:** 256GB\n* **Chip:** A17 Pro chip\n* **Display:** 6.7\" ProMotion display with 120Hz refresh rate\n* **Camera:** Triple camera system (48MP Main, 12MP Ultra Wide, 12MP Telephoto with 5x optical zoom)\n* **Connectivity:** 5G capable\n* **Operating System:** iOS 17\n* **Biometric Authentication:** Face ID\n\n### Key Features:\n\n* Revolutionary titanium design makes this the lightest Pro model ever\n* The A17 Pro chip delivers unprecedented performance for gaming and professional applications\n* Advanced camera system captures stunning photos in any lighting condition\n\n### Contact Information:\n\n* sales@apple.com\n* +1-800-MY-APPLE\n* https://www.apple.com/iphone-15-pro",
+      "citations_count": 0,
+      "citations": [],
+      "performance": {
+        "total_time_ms": 2448.9040830085287,
+        "server_time_ms": 2445.481061935425,
+        "network_latency_ms": 3.4230210731038824,
+        "stage_times": {
+          "intent_detection_ms": 1723.43111038208,
+          "search_ms": 1455.7509422302246,
+          "reranking_ms": 267.5292491912842,
+          "compression_ms": 0.0,
+          "answer_generation_ms": 721.9738960266113
+        },
+        "stage_percentages": {
+          "intent_detection_pct": 70.47411395687139,
+          "search_pct": 59.52820346431557,
+          "reranking_pct": 10.939739152163124,
+          "compression_pct": 0.0,
+          "answer_generation_pct": 29.52277599954997
+        },
+        "bottleneck": {
+          "stage": "intent_detection",
+          "time_ms": 1723.43111038208,
+          "percentage_of_total": 70.47411395687139
+        }
+      },
+      "retrieval_metrics": {
+        "search_results_count": 10,
+        "reranked_count": 3,
+        "compressed_count": 3,
+        "context_count": 3
+      },
+      "models_used": {
+        "llm_requested": null,
+        "llm_used": "Meta-Llama-3.1-8B-Instruct",
+        "llm_temperature": 0.3,
+        "used_recommended_model": true,
+        "used_custom_prompt": true
+      },
+      "intent_analysis": {
+        "detected_intent": "factual_retrieval",
+        "language": "en",
+        "complexity": "moderate",
+        "confidence": 0.95,
+        "recommended_model": "Meta-Llama-3.1-8B-Instruct",
+        "has_custom_prompt": true
+      },
+      "keyword_analysis": {
+        "expected_keywords": [
+          "$1,199",
+          "A17 Pro",
+          "256GB",
+          "48MP",
+          "titanium"
+        ],
+        "keywords_found": [
+          "$1,199",
+          "A17 Pro",
+          "256GB",
+          "48MP",
+          "titanium"
+        ],
+        "keywords_missing": [],
+        "coverage_percentage": 100.0
+      },
+      "full_response": {
+        "success": true,
+        "query": "What is the price and key specifications of the Apple iPhone 15 Pro Max listed in the catalog?",
+        "collection_name": "jina_v3_test",
+        "tenant_id": "default",
+        "answer": "## Apple iPhone 15 Pro Max Specifications and Price\n\n### Key Specifications:\n\n* **Model:** iPhone 15 Pro Max\n* **Price:** **$1,199 USD**\n* **Year:** 2024\n* **Color:** Natural Titanium Blue\n* **Size:** 6.7 inches\n* **Weight:** 221 grams\n* **Dimensions:** 159.9 x 76.7 x 8.25 mm\n* **Storage:** 256GB\n* **Chip:** A17 Pro chip\n* **Display:** 6.7\" ProMotion display with 120Hz refresh rate\n* **Camera:** Triple camera system (48MP Main, 12MP Ultra Wide, 12MP Telephoto with 5x optical zoom)\n* **Connectivity:** 5G capable\n* **Operating System:** iOS 17\n* **Biometric Authentication:** Face ID\n\n### Key Features:\n\n* Revolutionary titanium design makes this the lightest Pro model ever\n* The A17 Pro chip delivers unprecedented performance for gaming and professional applications\n* Advanced camera system captures stunning photos in any lighting condition\n\n### Contact Information:\n\n* sales@apple.com\n* +1-800-MY-APPLE\n* https://www.apple.com/iphone-15-pro",
+        "citations": [],
+        "context_chunks": [
+          {
+            "chunk_id": "comprehensive_test_doc_v1_chunk_1",
+            "text": "### Apple iPhone 15 Pro Max\n**Brand:** Apple\n**Manufacturer:** Apple Inc.\n**Model:** iPhone 15 Pro Max\n**SKU:** IPHONE-15-PRO-MAX-256GB-BLUE\n**Price:** 1199.00\n**Currency:** USD\n**Year:** 2024\n**Color:** Natural Titanium Blue\n**Size:** 6.7 inches\n**Weight:** 221 grams\n**Dimensions:** 159.9 x 76.7 x 8.25 mm\n\n**Specifications:** A17 Pro chip, 256GB storage, Triple camera system (48MP Main, 12MP Ultra Wide, 12MP Telephoto with 5x optical zoom), ProMotion display with 120Hz refresh rate, Titanium design, USB-C connector, Face ID, 5G capable, iOS 17\n\n**Key Features:** Revolutionary titanium design makes this the lightest Pro model ever. The A17 Pro chip delivers unprecedented performance for gaming and professional applications. Advanced camera system captures stunning photos in any lighting condition.\n\n**Contact:** sales@apple.com | +1-800-MY-APPLE | https://www.apple.com/iphone-15-pro\n\n---\n\n## Product Information - Fashion & Apparel",
+            "document_id": "comprehensive_test_doc_v1",
+            "topics": "Smartphones, Technology, Mobile Devices, Camera Systems, Design Innovation",
+            "keywords": "Apple, iPhone 15 Pro Max, A17 Pro chip, 256GB, Natural Titanium Blue, 6.7 inches, 5G, iOS 17, Face ID, USB-C",
+            "summary": "The Apple iPhone 15 Pro Max is a high-end smartphone featuring a revolutionary titanium design, A17 Pro chip, 256GB storage, and an advanced triple camera system. It offers 5G connectivity, a 6.7-inch ProMotion display, and runs on iOS 17.",
+            "questions": "What are the key features of the iPhone 15 Pro Max?|How does the A17 Pro chip enhance performance?|Why is the titanium design significant?|What camera capabilities does it offer?|What is the price and storage capacity?"
+          },
+          {
+            "chunk_id": "comprehensive_test_doc_v1_chunk_4",
+            "text": "## Invoice Document - Technology Purchase\n\n**Invoice Number:** INV-2024-00789\n**Transaction Date:** 2024-03-15\n**Vendor Name:** TechSupply Solutions\n**Vendor ID:** VENDOR-TS-001\n\n**Items Purchased:**\n1. Dell XPS 15 Laptop - Model: XPS-15-9530 - SKU: DELL-XPS15-9530-I7 - Price: 2299.00 USD - Year: 2024\n2. Samsung 34\" Ultrawide Monitor - Model: S34C502 - SKU: SAMSUNG-S34C502 - Price: 449.99 USD\n3. Logitech MX Master 3S Mouse - SKU: LOGI-MX-MASTER-3S - Price: 99.99 USD - Color: Graphite\n\n**Amount:** 2848.98\n**Tax Amount:** 227.92\n**Total Amount:** 3076.90\n**Currency:** USD\n**Payment Method:** Corporate Credit Card\n**Payment Status:** Paid\n\n**Vendor Contact:** orders@techsupplysolutions.com | +1-555-TECH-BUY | Account Manager: John Smith\n**Customer:** Acme Corporation, 123 Business Park Dr, San Jose, CA 95110\n\n**Technical Specifications:** Dell XPS 15 features Intel Core i7-13700H processor, 32GB DDR5 RAM, 1TB NVMe SSD, NVIDIA GeForce RTX 4050 GPU, 15.6\" 3.5K OLED display, Windows 11 Pro",
+            "document_id": "comprehensive_test_doc_v1",
+            "topics": "Technology Purchase, Invoice Details, Vendor Information, Payment Status, Hardware Specifications",
+            "keywords": "Invoice, Dell XPS 15, Samsung, Logitech MX Master 3S, TechSupply Solutions, Acme Corporation, USD, Payment Method, Corporate Credit Card, Intel Core i7-13700H",
+            "summary": "Acme Corporation purchased a Dell XPS 15 laptop, a Samsung ultrawide monitor, and a Logitech MX Master 3S mouse from TechSupply Solutions for a total of $3076.90 using a corporate credit card.",
+            "questions": "What items were purchased?|Who is the vendor?|What is the total amount paid?|What payment method was used?|What are the technical specifications of the Dell XPS 15?"
+          },
+          {
+            "chunk_id": "comprehensive_test_doc_v1_chunk_0",
+            "text": "# Comprehensive Product Catalog & Business Documents Test\n\n## Product Information - Electronics",
+            "document_id": "comprehensive_test_doc_v1",
+            "topics": "product management, business documentation, electronics industry",
+            "keywords": "product catalog, business documents, electronics, test, information",
+            "summary": "This document provides a comprehensive overview of product and business information related to electronics, structured for clarity and testing purposes.",
+            "questions": "What is included in the product catalog?|How is business information organized?|Why is this test important?"
+          }
+        ],
+        "stages": {
+          "search": {
+            "time_ms": 1455.7509422302246,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "results_count": 10,
+              "top_k": 10,
+              "metadata_boost_enabled": true
+            }
+          },
+          "reranking": {
+            "time_ms": 267.5292491912842,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "input_count": 10,
+              "output_count": 3,
+              "top_k": 3
+            }
+          },
+          "compression": {
+            "time_ms": 0.0,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "skipped": true
+            }
+          },
+          "intent_detection": {
+            "time_ms": 1723.43111038208,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "intent": "factual_retrieval",
+              "language": "en",
+              "complexity": "moderate",
+              "confidence": 0.95,
+              "recommended_model": "Meta-Llama-3.1-8B-Instruct",
+              "recommended_max_tokens": 1024,
+              "has_custom_prompt": true
+            }
+          },
+          "answer_generation": {
+            "time_ms": 721.9738960266113,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "context_chunks": 3,
+              "citations": 0,
+              "model_used": "Meta-Llama-3.1-8B-Instruct",
+              "model_requested": null,
+              "max_tokens_used": 1024,
+              "temperature": 0.3,
+              "used_custom_prompt": true,
+              "used_recommended_model": true,
+              "used_recommended_max_tokens": true
+            }
+          }
+        },
+        "total_time_ms": 2445.481061935425,
+        "search_results_count": 10,
+        "reranked_count": 3,
+        "compressed_count": 3,
+        "context_count": 3,
+        "api_version": "1.0.0",
+        "timestamp": "2025-10-18T14:45:46.946358"
+      }
+    }
+  ]
+}

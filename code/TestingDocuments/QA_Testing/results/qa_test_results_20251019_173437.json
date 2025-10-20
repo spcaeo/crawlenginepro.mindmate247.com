@@ -1,0 +1,225 @@
+{
+  "summary": {
+    "test_run_timestamp": "2025-10-19T17:34:37.040274",
+    "collection_name": "test_comprehensive_v4",
+    "total_questions": 18,
+    "successful_tests": 1,
+    "failed_tests": 0,
+    "total_test_duration_seconds": 4.905672073364258,
+    "service_configuration": {
+      "embeddings": {
+        "model": "jina-embeddings-v3",
+        "dimension": 1024,
+        "provider": "jina_api",
+        "device": "jina_cloud_gpu",
+        "cache_enabled": true,
+        "cache_entries": 0
+      },
+      "answer_generation": {
+        "cache_enabled": false
+      },
+      "reranking": {
+        "model": "jina-reranker-v2-base-multilingual",
+        "provider": "jina-api"
+      }
+    },
+    "average_metrics": {
+      "total_time_ms": 4905.292458992335,
+      "server_time_ms": 4900.859832763672,
+      "keyword_coverage_percentage": 28.57142857142857
+    },
+    "category_statistics": {
+      "Advanced Logic": {
+        "test_count": 1,
+        "avg_time_ms": 4905.292458992335,
+        "avg_keyword_coverage": 28.57142857142857
+      }
+    }
+  },
+  "test_results": [
+    {
+      "test_id": "7.7",
+      "category": "Advanced Logic",
+      "question": "List all products whose manufacturer is not the same as the listed vendor—and summarize each instance briefly.",
+      "difficulty": "hard",
+      "test_capability": "relationship graph understanding",
+      "timestamp": "2025-10-19T17:34:37.040082",
+      "success": true,
+      "answer": "## Introduction to Relationship Mapping\nThe task at hand involves identifying products where the manufacturer is not the same as the listed vendor. This requires analyzing the provided context from three different sources, each discussing various products and their respective manufacturers and vendors.\n\n## Source Analysis\n- **Source 1** discusses the **CardioHealth Plus Daily Supplement**, a pharmaceutical product manufactured by **VitaLife Laboratories Inc.** and branded by **VitaLife Sciences**. There is no explicit mention of a vendor different from the manufacturer.\n- **Source 2** also talks about the **CardioHealth Plus Daily Supplement**, with the same manufacturer (**VitaLife Laboratories Inc.**) and brand (**VitaLife Sciences**). Again, there's no mention of a vendor that differs from the manufacturer.\n- **Source 3** provides information on restaurant equipment, including a **Hobart Commercial Dishwasher**, **Vulcan Gas Range**, and **True Refrigerator**, all supplied by **ChefPro Restaurant Supply Co.** Here, the vendors are **Hobart**, **Vulcan**, and **True**, respectively, for each piece of equipment, and the vendor of these products is **ChefPro Restaurant Supply Co.**\n\n## Identifying Manufacturer-Vendor Differences\nBased on the provided context:\n- For the **CardioHealth Plus Daily Supplement** in both **Source 1** and **Source 2**, the manufacturer (**VitaLife Laboratories Inc.**) and the brand (**VitaLife Sciences**) are mentioned, but there is no indication of a vendor that is different from the manufacturer or brand.\n- In **Source 3**, the equipment (**Hobart Commercial Dishwasher**, **Vulcan Gas Range**, **True Refrigerator**) is manufactured by **Hobart**, **Vulcan**, and **True**, respectively, but is supplied (or vendored) by **ChefPro Restaurant Supply Co.** This indicates a clear difference between the manufacturers and the vendor for each of these products.\n\n## Summary of Instances\n- **CardioHealth Plus Daily Supplement**: No difference mentioned between manufacturer (**VitaLife Laboratories Inc.**) and vendor (not explicitly stated but implied to be the same as the brand or manufacturer).\n- **Hobart Commercial Dishwasher**: Manufacturer is **Hobart**, and vendor is **ChefPro Restaurant Supply Co.** (Different)\n- **Vulcan Gas Range**: Manufacturer is **Vulcan**, and vendor is **ChefPro Restaurant Supply Co.** (Different)\n- **True Refrigerator**: Manufacturer is **True**, and vendor is **ChefPro Restaurant Supply Co.** (Different)\n\n## Relationship Diagram\n1. **VitaLife Laboratories Inc.** (Manufacturer) → **CardioHealth Plus Daily Supplement** (Product) → No explicit vendor mentioned\n2. **Hobart** (Manufacturer) → **Hobart Commercial Dishwasher** (Product) → **ChefPro Restaurant Supply Co.** (Vendor)\n3. **Vulcan** (Manufacturer) → **Vulcan Gas Range** (Product) → **ChefPro Restaurant Supply Co.** (Vendor)\n4. **True** (Manufacturer) → **True Refrigerator** (Product) → **ChefPro Restaurant Supply Co.** (Vendor)\n\n## Conclusion\nThe products whose manufacturer is not the same as the listed vendor are the **Hobart Commercial Dishwasher**, **Vulcan Gas Range**, and **True Refrigerator**, all of which are manufactured by different companies (**Hobart**, **Vulcan**, and **True**, respectively) but vendored by **ChefPro Restaurant Supply Co.**",
+      "citations_count": 0,
+      "citations": [],
+      "performance": {
+        "total_time_ms": 4905.292458992335,
+        "server_time_ms": 4900.859832763672,
+        "network_latency_ms": 4.432626228663139,
+        "stage_times": {
+          "intent_detection_ms": 2136.943817138672,
+          "search_ms": 1471.264123916626,
+          "reranking_ms": 665.4677391052246,
+          "compression_ms": 0.0,
+          "answer_generation_ms": 2763.8630867004395
+        },
+        "stage_percentages": {
+          "intent_detection_pct": 43.603446947259776,
+          "search_pct": 30.02053056242902,
+          "reranking_pct": 13.578591549515034,
+          "compression_pct": 0.0,
+          "answer_generation_pct": 56.39547306011921
+        },
+        "bottleneck": {
+          "stage": "answer_generation",
+          "time_ms": 2763.8630867004395,
+          "percentage_of_total": 56.39547306011921
+        }
+      },
+      "retrieval_metrics": {
+        "search_results_count": 10,
+        "reranked_count": 3,
+        "compressed_count": 3,
+        "context_count": 3
+      },
+      "models_used": {
+        "llm_requested": null,
+        "llm_used": "Meta-Llama-3.3-70B-Instruct",
+        "llm_temperature": 0.3,
+        "used_recommended_model": true,
+        "used_custom_prompt": true
+      },
+      "intent_analysis": {
+        "detected_intent": "relationship_mapping",
+        "language": "en",
+        "complexity": "moderate",
+        "confidence": 1.0,
+        "recommended_model": "Meta-Llama-3.3-70B-Instruct",
+        "has_custom_prompt": true
+      },
+      "keyword_analysis": {
+        "expected_keywords": [
+          "Dell XPS",
+          "TechSupply",
+          "Michelin",
+          "Philips",
+          "VitaLife",
+          "Hobart",
+          "third-party vendors"
+        ],
+        "keywords_found": [
+          "VitaLife",
+          "Hobart"
+        ],
+        "keywords_missing": [
+          "Dell XPS",
+          "TechSupply",
+          "Michelin",
+          "Philips",
+          "third-party vendors"
+        ],
+        "coverage_percentage": 28.57142857142857
+      },
+      "full_response": {
+        "success": true,
+        "query": "List all products whose manufacturer is not the same as the listed vendor—and summarize each instance briefly.",
+        "collection_name": "test_comprehensive_v4",
+        "tenant_id": "test_tenant",
+        "answer": "## Introduction to Relationship Mapping\nThe task at hand involves identifying products where the manufacturer is not the same as the listed vendor. This requires analyzing the provided context from three different sources, each discussing various products and their respective manufacturers and vendors.\n\n## Source Analysis\n- **Source 1** discusses the **CardioHealth Plus Daily Supplement**, a pharmaceutical product manufactured by **VitaLife Laboratories Inc.** and branded by **VitaLife Sciences**. There is no explicit mention of a vendor different from the manufacturer.\n- **Source 2** also talks about the **CardioHealth Plus Daily Supplement**, with the same manufacturer (**VitaLife Laboratories Inc.**) and brand (**VitaLife Sciences**). Again, there's no mention of a vendor that differs from the manufacturer.\n- **Source 3** provides information on restaurant equipment, including a **Hobart Commercial Dishwasher**, **Vulcan Gas Range**, and **True Refrigerator**, all supplied by **ChefPro Restaurant Supply Co.** Here, the vendors are **Hobart**, **Vulcan**, and **True**, respectively, for each piece of equipment, and the vendor of these products is **ChefPro Restaurant Supply Co.**\n\n## Identifying Manufacturer-Vendor Differences\nBased on the provided context:\n- For the **CardioHealth Plus Daily Supplement** in both **Source 1** and **Source 2**, the manufacturer (**VitaLife Laboratories Inc.**) and the brand (**VitaLife Sciences**) are mentioned, but there is no indication of a vendor that is different from the manufacturer or brand.\n- In **Source 3**, the equipment (**Hobart Commercial Dishwasher**, **Vulcan Gas Range**, **True Refrigerator**) is manufactured by **Hobart**, **Vulcan**, and **True**, respectively, but is supplied (or vendored) by **ChefPro Restaurant Supply Co.** This indicates a clear difference between the manufacturers and the vendor for each of these products.\n\n## Summary of Instances\n- **CardioHealth Plus Daily Supplement**: No difference mentioned between manufacturer (**VitaLife Laboratories Inc.**) and vendor (not explicitly stated but implied to be the same as the brand or manufacturer).\n- **Hobart Commercial Dishwasher**: Manufacturer is **Hobart**, and vendor is **ChefPro Restaurant Supply Co.** (Different)\n- **Vulcan Gas Range**: Manufacturer is **Vulcan**, and vendor is **ChefPro Restaurant Supply Co.** (Different)\n- **True Refrigerator**: Manufacturer is **True**, and vendor is **ChefPro Restaurant Supply Co.** (Different)\n\n## Relationship Diagram\n1. **VitaLife Laboratories Inc.** (Manufacturer) → **CardioHealth Plus Daily Supplement** (Product) → No explicit vendor mentioned\n2. **Hobart** (Manufacturer) → **Hobart Commercial Dishwasher** (Product) → **ChefPro Restaurant Supply Co.** (Vendor)\n3. **Vulcan** (Manufacturer) → **Vulcan Gas Range** (Product) → **ChefPro Restaurant Supply Co.** (Vendor)\n4. **True** (Manufacturer) → **True Refrigerator** (Product) → **ChefPro Restaurant Supply Co.** (Vendor)\n\n## Conclusion\nThe products whose manufacturer is not the same as the listed vendor are the **Hobart Commercial Dishwasher**, **Vulcan Gas Range**, and **True Refrigerator**, all of which are manufactured by different companies (**Hobart**, **Vulcan**, and **True**, respectively) but vendored by **ChefPro Restaurant Supply Co.**",
+        "citations": [],
+        "context_chunks": [
+          {
+            "chunk_id": "ComprehensiveTestDocument_chunk_0014",
+            "text": "## Pharmaceutical Product Information\n\n**Product Name:** CardioHealth Plus Daily Supplement\n**Brand:** VitaLife Sciences\n**Manufacturer:** VitaLife Laboratories Inc.\n**Model:** CardioHealth Plus 120ct\n**SKU:** VITA-CARDIO-PLUS-120\n**Price:** 34.99\n**Currency:** USD\n**Year:** 2024\n**Size:** 120 capsules (60-day supply)\n**Weight:** 180 grams (bottle with capsules)\n**Color:** White capsules in amber bottle\n\n**Specifications:** Each capsule contains: Omega-3 Fish Oil (1000mg), CoQ10 (100mg), Vitamin D3 (2000 IU), Magnesium (200mg), Potassium (99mg). Non-GMO, gluten-free, third-party tested, manufactured in FDA-registered facility.\n\n**Technical Terms:** Omega-3 fatty acids (EPA/DHA), Coenzyme Q10 (ubiquinone), Cholecalciferol (Vitamin D3), cardiovascular support, bioavailability, enteric-coated\n\n**Key Numbers:** 120 capsules, 60-day supply, 2 capsules daily, 1000mg omega-3 per serving, Expires 2026-12-31",
+            "document_id": "ComprehensiveTestDocument",
+            "topics": "Pharmaceutical Products, Health Supplements, Cardiovascular Health",
+            "keywords": "CardioHealth Plus Daily Supplement, VitaLife Sciences, VitaLife Laboratories Inc., VITA-CARDIO-PLUS-120, expiration: 2026-12-31",
+            "summary": "CardioHealth Plus Daily Supplement by VitaLife Sciences is a 60-day supply of capsules containing Omega-3 Fish Oil, CoQ10, Vitamin D3, Magnesium, and Potassium, manufactured by VitaLife Laboratories Inc. and expires on December 31, 2026.",
+            "questions": "What is CardioHealth Plus Daily Supplement?|What are the key ingredients in CardioHealth Plus?|When does CardioHealth Plus expire?"
+          },
+          {
+            "chunk_id": "ComprehensiveTestDocument_chunk_0015",
+            "text": "**Technical Terms:** Omega-3 fatty acids (EPA/DHA), Coenzyme Q10 (ubiquinone), Cholecalciferol (Vitamin D3), cardiovascular support, bioavailability, enteric-coated\n\n**Key Numbers:** 120 capsules, 60-day supply, 2 capsules daily, 1000mg omega-3 per serving, Expires 2026-12-31\n\n**Contact:** customercare@vitalifesciences.com | +1-888-VITA-LIFE | https://www.vitalifesciences.com\n\n**Organizations:** VitaLife Sciences (brand), VitaLife Laboratories Inc. (manufacturer), NSF International (certification), USP Verified (quality seal)\n\n**Dates:** Manufacturing date: 2024-01-15, Expiration date: 2026-12-31, Best before: 2026-12-31",
+            "document_id": "ComprehensiveTestDocument",
+            "topics": "Health Supplements, Cardiovascular Health, Nutritional Ingredients",
+            "keywords": "CardioHealth Plus Daily Supplement, VitaLife Sciences, VitaLife Laboratories Inc., NSF International, USP Verified, expiration: 2026-12-31, best-before: 2026-12-31, manufactured: 2024-01-15, Omega-3 fatty acids (EPA/DHA), Coenzyme Q10 (ubiquinone), Cholecalciferol (Vitamin D3)",
+            "summary": "CardioHealth Plus Daily Supplement by VitaLife Sciences is a 60-day supply of 120 enteric-coated capsules containing 1000mg of Omega-3 fatty acids (EPA/DHA), Coenzyme Q10, and Vitamin D3, manufactured by VitaLife Laboratories Inc. and certified by NSF International and USP Verified. The product expires on December 31, 2026.",
+            "questions": "What is the product name?|What are the key ingredients?|When does the product expire?"
+          },
+          {
+            "chunk_id": "ComprehensiveTestDocument_chunk_0012",
+            "text": "## Restaurant Supply Order\n\n**Invoice Number:** REST-2024-0445\n**Transaction Date:** 2024-01-20\n**Vendor Name:** ChefPro Restaurant Supply Co.\n**Vendor ID:** CHEFPRO-VENDOR-2024\n\n**Equipment Ordered:**\n1. Hobart Commercial Dishwasher - Model: LXeR-2 - SKU: HOBART-LXER2 - Price: 8999.00 USD - Year: 2024 - Dimensions: 24.5 x 25 x 34 inches\n2. Vulcan Gas Range - Model: 60SS-10B - SKU: VULCAN-60SS-10B - Price: 5499.00 USD - Color: Stainless Steel - Size: 60 inches wide\n3. True Refrigerator - Model: T-49-HC - SKU: TRUE-T49-HC - Price: 3299.00 USD - Dimensions: 54 x 31 x 83 inches\n\n**Amount:** 17797.00\n**Tax Amount:** 1423.76\n**Total:** 19220.76\n**Currency:** USD\n**Payment Method:** Commercial Loan Financing\n**Payment Status:** Financed - 36 monthly payments",
+            "document_id": "ComprehensiveTestDocument",
+            "topics": "Restaurant Equipment, Commercial Financing, Vendor Transactions",
+            "keywords": "Hobart Commercial Dishwasher, Vulcan Gas Range, True Refrigerator, ChefPro Restaurant Supply Co., HOBART-LXER2, VULCAN-60SS-10B, TRUE-T49-HC, transaction: 2024-01-20, payment-method: Commercial Loan Financing, payment-status: Financed - 36 monthly payments",
+            "summary": "An invoice for restaurant equipment from ChefPro Restaurant Supply Co. includes a Hobart Commercial Dishwasher, Vulcan Gas Range, and True Refrigerator, totaling $19,220.76, with payment structured as a 36-month commercial loan.",
+            "questions": "What restaurant equipment was ordered?|Who is the vendor for the restaurant supply order?|How is the payment structured for this order?"
+          }
+        ],
+        "stages": {
+          "search": {
+            "time_ms": 1471.264123916626,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "results_count": 10,
+              "top_k": 10,
+              "metadata_boost_enabled": true
+            }
+          },
+          "reranking": {
+            "time_ms": 665.4677391052246,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "input_count": 10,
+              "output_count": 3,
+              "top_k": 3
+            }
+          },
+          "compression": {
+            "time_ms": 0.0,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "skipped": true
+            }
+          },
+          "intent_detection": {
+            "time_ms": 2136.943817138672,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "intent": "relationship_mapping",
+              "language": "en",
+              "complexity": "moderate",
+              "confidence": 1.0,
+              "recommended_model": "Meta-Llama-3.3-70B-Instruct",
+              "recommended_max_tokens": 2048,
+              "has_custom_prompt": true
+            }
+          },
+          "answer_generation": {
+            "time_ms": 2763.8630867004395,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "context_chunks": 3,
+              "citations": 0,
+              "model_used": "Meta-Llama-3.3-70B-Instruct",
+              "model_requested": null,
+              "max_tokens_used": 2048,
+              "temperature": 0.3,
+              "used_custom_prompt": true,
+              "used_recommended_model": true,
+              "used_recommended_max_tokens": true
+            }
+          }
+        },
+        "total_time_ms": 4900.859832763672,
+        "search_results_count": 10,
+        "reranked_count": 3,
+        "compressed_count": 3,
+        "context_count": 3,
+        "api_version": "1.0.0",
+        "timestamp": "2025-10-19T17:34:37.039171"
+      }
+    }
+  ]
+}

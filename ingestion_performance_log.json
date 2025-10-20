@@ -1,0 +1,114 @@
+{
+  "test_started_at": "2025-10-20T10:59:02.013974",
+  "document_path": "/Users/rakesh/Desktop/crawlenginepro.mindmate247.com/code/TestingDocuments/ComprehensiveTestDocument.md",
+  "collection_name": "test_comprehensive_detailed",
+  "stages": {
+    "service_health": {
+      "Main Ingestion API": {
+        "status": "healthy",
+        "version": "1.0.0",
+        "response_time_ms": 441.7119026184082
+      },
+      "Chunking Service": {
+        "status": "healthy",
+        "version": "1.0.0",
+        "response_time_ms": 9.119987487792969
+      },
+      "Metadata Service": {
+        "status": "healthy",
+        "version": "1.0.0",
+        "response_time_ms": 182.9519271850586
+      },
+      "Embeddings Service": {
+        "status": "healthy",
+        "version": "1.0.0",
+        "response_time_ms": 60.10913848876953
+      },
+      "Storage Service": {
+        "status": "healthy",
+        "version": "1.0.0",
+        "response_time_ms": 257.42197036743164
+      },
+      "LLM Gateway": {
+        "status": "healthy",
+        "version": "1.0.0",
+        "response_time_ms": 214.63465690612793
+      }
+    },
+    "milvus_connection": {
+      "status": "connected",
+      "connection_time_ms": 373.33202362060547,
+      "existing_collections": []
+    },
+    "document_loading": {
+      "status": "success",
+      "file_path": "/Users/rakesh/Desktop/crawlenginepro.mindmate247.com/code/TestingDocuments/ComprehensiveTestDocument.md",
+      "char_count": 11577,
+      "line_count": 258,
+      "word_count": 1456,
+      "estimated_tokens": 2894,
+      "section_count": 10,
+      "subsection_count": 3,
+      "read_time_ms": 0.24175643920898438
+    },
+    "ingestion": {
+      "status": "success",
+      "total_request_time_ms": 14717.73910522461,
+      "pipeline_time_ms": 14712.484121322632,
+      "chunks_created": 18,
+      "chunks_inserted": 18,
+      "avg_time_per_chunk_ms": 817.3602289623684,
+      "throughput_chunks_per_second": 1.2234507681753628,
+      "stages": {
+        "chunking": {
+          "time_ms": 0.82,
+          "chunks_created": 18
+        },
+        "metadata": {
+          "time_ms": 4744.91,
+          "generated": true
+        },
+        "embeddings": {
+          "time_ms": 2829.64,
+          "generated": true,
+          "model": "E5-Mistral-7B-Instruct"
+        },
+        "storage": {
+          "time_ms": 7033.21,
+          "stored": true,
+          "collection_name": "test_comprehensive_detailed"
+        }
+      },
+      "full_response": {
+        "success": true,
+        "document_id": "ComprehensiveTestDocument",
+        "collection_name": "test_comprehensive_detailed",
+        "tenant_id": "default",
+        "chunks_created": 18,
+        "chunks_inserted": 18,
+        "processing_time_ms": 14712.484121322632,
+        "stages": {
+          "chunking": {
+            "time_ms": 0.82,
+            "chunks_created": 18
+          },
+          "metadata": {
+            "time_ms": 4744.91,
+            "generated": true
+          },
+          "embeddings": {
+            "time_ms": 2829.64,
+            "generated": true,
+            "model": "E5-Mistral-7B-Instruct"
+          },
+          "storage": {
+            "time_ms": 7033.21,
+            "stored": true,
+            "collection_name": "test_comprehensive_detailed"
+          }
+        }
+      }
+    }
+  },
+  "test_completed_at": "2025-10-20T10:59:20.157068"
+}

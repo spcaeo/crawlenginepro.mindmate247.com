@@ -1,0 +1,237 @@
+{
+  "summary": {
+    "test_run_timestamp": "2025-10-17T21:27:07.900059",
+    "collection_name": "jina_v3_test",
+    "total_questions": 18,
+    "successful_tests": 1,
+    "failed_tests": 0,
+    "total_test_duration_seconds": 3.4415018558502197,
+    "service_configuration": {
+      "embeddings": {
+        "model": "jina-embeddings-v3",
+        "dimension": 1024,
+        "provider": "jina_api",
+        "device": "jina_cloud_gpu",
+        "cache_enabled": false,
+        "cache_entries": 0
+      },
+      "answer_generation": {
+        "cache_enabled": false
+      },
+      "reranking": {
+        "model": "jina-reranker-v2-base-multilingual",
+        "provider": "jina-api"
+      }
+    },
+    "average_metrics": {
+      "total_time_ms": 3441.267542002606,
+      "server_time_ms": 3438.687801361084,
+      "keyword_coverage_percentage": 100.0
+    },
+    "category_statistics": {
+      "Cross-Section Synthesis": {
+        "test_count": 1,
+        "avg_time_ms": 3441.267542002606,
+        "avg_keyword_coverage": 100.0
+      }
+    }
+  },
+  "test_results": [
+    {
+      "test_id": "1.1",
+      "category": "Cross-Section Synthesis",
+      "question": "Compare the technical terms used in the Nike Air Zoom Pegasus 40 and Michelin Pilot Sport 4S Tire sections; what technologies do they share?",
+      "difficulty": "hard",
+      "test_capability": "cross-domain synthesis",
+      "timestamp": "2025-10-17T21:27:07.899978",
+      "success": true,
+      "answer": "## Comparison: Nike Air Zoom Pegasus 40 and Michelin Pilot Sport 4S Tire\n\n### Features\n\n| Feature | Nike Air Zoom Pegasus 40 | Michelin Pilot Sport 4S Tire |\n|---------|---------------------------|-------------------------------|\n| **Brand** | Nike | Michelin |\n| **Model** | Air Zoom Pegasus 40 | Pilot Sport 4S |\n| **Price** | $139.99 | $289.99 |\n| **Currency** | USD | USD |\n| **Year** | 2023 | 2024 |\n| **Size** | US Men's 10.5 | 245/40R18 |\n| **Weight** | 283 grams (per shoe) | 11.5 kg |\n| **Dimensions** | Standard running shoe fit | 245mm width, 40% aspect ratio, 18\" rim diameter |\n| **Specifications** | React foam midsole, Zoom Air unit in forefoot, engineered mesh upper, rubber outsole with waffle pattern | Max speed rating Y (186 mph), Load index 97, Summer performance tire, Asymmetric tread pattern, Bi-compound tread, Dynamic Response Technology, Premium Touch Design |\n| **Technical Terms** | React foam technology, Zoom Air cushioning, engineered mesh, waffle-pattern traction | Bi-compound technology, Dynamic Response Technology, Variable Contact Patch 3.0, Hybrid Aramid/Nylon belt package |\n\n### Similarities\n\n- Both feature advanced technologies for performance and comfort.\n- Both have a focus on durability and long-lasting performance.\n\n### Differences\n\n- **Purpose**: The Nike Air Zoom Pegasus 40 is a running shoe designed for everyday runs, while the Michelin Pilot Sport 4S Tire is an ultra-high performance summer tire designed for sports cars and high-performance sedans.\n- **Design**: The Nike Air Zoom Pegasus 40 has a standard running shoe fit, while the Michelin Pilot Sport 4S Tire has a specific size and dimensions for a 245/40R18 tire.\n- **Technical Terms**: While both feature advanced technologies, the Nike Air Zoom Pegasus 40 uses React foam technology, Zoom Air cushioning, and engineered mesh, while the Michelin Pilot Sport 4S Tire uses Bi-compound technology, Dynamic Response Technology, and Variable Contact Patch 3.0.\n\n### Shared Concepts\n\n- Both the Nike Air Zoom Pegasus 40 and the Michelin Pilot Sport 4S Tire feature advanced technologies for performance and comfort.\n- Both have a focus on durability and long-lasting performance.\n\n### Functional Equivalents\n\n- The Nike Air Zoom Pegasus 40 and the Michelin Pilot Sport 4S Tire both provide a smooth ride and responsive feel, but through different means (cushioning and traction vs. tire technology).\n- Both products are designed for high-performance applications, but in different contexts (running shoes vs. tires).\n\n### Thematic Connections\n\n- Both the Nike and Michelin are well-known brands in their respective industries (footwear and automotive).\n- Both products feature advanced technologies and a focus on performance and comfort.\n\n### Contrasting Approaches\n\n- The Nike Air Zoom Pegasus 40 and the Michelin Pilot Sport 4S Tire take different approaches to achieving performance and comfort.\n- The Nike Air Zoom Pegasus 40 uses cushioning and traction to provide a smooth ride, while the Michelin Pilot Sport 4S Tire uses tire technology to provide a responsive feel.\n\n[Source 1, Source 2]",
+      "citations_count": 0,
+      "citations": [],
+      "performance": {
+        "total_time_ms": 3441.267542002606,
+        "server_time_ms": 3438.687801361084,
+        "network_latency_ms": 2.5797406415222213,
+        "stage_times": {
+          "intent_detection_ms": 1744.2407608032227,
+          "search_ms": 1357.4719429016113,
+          "reranking_ms": 386.6240978240967,
+          "compression_ms": 0.0,
+          "answer_generation_ms": 1694.3790912628174
+        },
+        "stage_percentages": {
+          "intent_detection_pct": 50.72402211427354,
+          "search_pct": 39.47645210374445,
+          "reranking_pct": 11.243361426154044,
+          "compression_pct": 0.0,
+          "answer_generation_pct": 49.27400186176125
+        },
+        "bottleneck": {
+          "stage": "intent_detection",
+          "time_ms": 1744.2407608032227,
+          "percentage_of_total": 50.72402211427354
+        }
+      },
+      "retrieval_metrics": {
+        "search_results_count": 18,
+        "reranked_count": 10,
+        "compressed_count": 10,
+        "context_count": 5
+      },
+      "models_used": {
+        "llm_requested": "meta-llama/Llama-3.3-70B-Instruct-fast",
+        "llm_used": "Meta-Llama-3.1-8B-Instruct",
+        "llm_temperature": 0.3,
+        "used_recommended_model": true,
+        "used_custom_prompt": true
+      },
+      "intent_analysis": {
+        "detected_intent": "comparison",
+        "language": "en",
+        "complexity": "moderate",
+        "confidence": 0.95,
+        "recommended_model": "Meta-Llama-3.1-8B-Instruct",
+        "has_custom_prompt": true
+      },
+      "keyword_analysis": {
+        "expected_keywords": [
+          "React foam",
+          "Zoom Air",
+          "engineered mesh",
+          "bi-compound",
+          "traction",
+          "performance"
+        ],
+        "keywords_found": [
+          "React foam",
+          "Zoom Air",
+          "engineered mesh",
+          "bi-compound",
+          "traction",
+          "performance"
+        ],
+        "keywords_missing": [],
+        "coverage_percentage": 100.0
+      },
+      "full_response": {
+        "success": true,
+        "query": "Compare the technical terms used in the Nike Air Zoom Pegasus 40 and Michelin Pilot Sport 4S Tire sections; what technologies do they share?",
+        "collection_name": "jina_v3_test",
+        "tenant_id": "default",
+        "answer": "## Comparison: Nike Air Zoom Pegasus 40 and Michelin Pilot Sport 4S Tire\n\n### Features\n\n| Feature | Nike Air Zoom Pegasus 40 | Michelin Pilot Sport 4S Tire |\n|---------|---------------------------|-------------------------------|\n| **Brand** | Nike | Michelin |\n| **Model** | Air Zoom Pegasus 40 | Pilot Sport 4S |\n| **Price** | $139.99 | $289.99 |\n| **Currency** | USD | USD |\n| **Year** | 2023 | 2024 |\n| **Size** | US Men's 10.5 | 245/40R18 |\n| **Weight** | 283 grams (per shoe) | 11.5 kg |\n| **Dimensions** | Standard running shoe fit | 245mm width, 40% aspect ratio, 18\" rim diameter |\n| **Specifications** | React foam midsole, Zoom Air unit in forefoot, engineered mesh upper, rubber outsole with waffle pattern | Max speed rating Y (186 mph), Load index 97, Summer performance tire, Asymmetric tread pattern, Bi-compound tread, Dynamic Response Technology, Premium Touch Design |\n| **Technical Terms** | React foam technology, Zoom Air cushioning, engineered mesh, waffle-pattern traction | Bi-compound technology, Dynamic Response Technology, Variable Contact Patch 3.0, Hybrid Aramid/Nylon belt package |\n\n### Similarities\n\n- Both feature advanced technologies for performance and comfort.\n- Both have a focus on durability and long-lasting performance.\n\n### Differences\n\n- **Purpose**: The Nike Air Zoom Pegasus 40 is a running shoe designed for everyday runs, while the Michelin Pilot Sport 4S Tire is an ultra-high performance summer tire designed for sports cars and high-performance sedans.\n- **Design**: The Nike Air Zoom Pegasus 40 has a standard running shoe fit, while the Michelin Pilot Sport 4S Tire has a specific size and dimensions for a 245/40R18 tire.\n- **Technical Terms**: While both feature advanced technologies, the Nike Air Zoom Pegasus 40 uses React foam technology, Zoom Air cushioning, and engineered mesh, while the Michelin Pilot Sport 4S Tire uses Bi-compound technology, Dynamic Response Technology, and Variable Contact Patch 3.0.\n\n### Shared Concepts\n\n- Both the Nike Air Zoom Pegasus 40 and the Michelin Pilot Sport 4S Tire feature advanced technologies for performance and comfort.\n- Both have a focus on durability and long-lasting performance.\n\n### Functional Equivalents\n\n- The Nike Air Zoom Pegasus 40 and the Michelin Pilot Sport 4S Tire both provide a smooth ride and responsive feel, but through different means (cushioning and traction vs. tire technology).\n- Both products are designed for high-performance applications, but in different contexts (running shoes vs. tires).\n\n### Thematic Connections\n\n- Both the Nike and Michelin are well-known brands in their respective industries (footwear and automotive).\n- Both products feature advanced technologies and a focus on performance and comfort.\n\n### Contrasting Approaches\n\n- The Nike Air Zoom Pegasus 40 and the Michelin Pilot Sport 4S Tire take different approaches to achieving performance and comfort.\n- The Nike Air Zoom Pegasus 40 uses cushioning and traction to provide a smooth ride, while the Michelin Pilot Sport 4S Tire uses tire technology to provide a responsive feel.\n\n[Source 1, Source 2]",
+        "citations": [],
+        "context_chunks": [
+          {
+            "chunk_id": "hanuman_doc_jina_v3_test_1760720127_chunk_6",
+            "text": "### Michelin Pilot Sport 4S Tire\n**Brand:** Michelin\n**Manufacturer:** Michelin North America Inc.\n**Model:** Pilot Sport 4S\n**SKU:** MICH-PS4S-245-40-R18\n**Price:** 289.99\n**Currency:** USD\n**Year:** 2024\n**Size:** 245/40R18\n**Weight:** 11.5 kg\n**Dimensions:** 245mm width, 40% aspect ratio, 18\" rim diameter\n\n**Specifications:** Max speed rating Y (186 mph), Load index 97, Summer performance tire, Asymmetric tread pattern, Bi-compound tread, Dynamic Response Technology, Premium Touch Design\n\n**Technical Terms:** Bi-compound technology, Dynamic Response Technology, Variable Contact Patch 3.0, Hybrid Aramid/Nylon belt package\n\n**Description:** The Michelin Pilot Sport 4S is an ultra-high performance summer tire designed for sports cars and high-performance sedans. Features exceptional dry and wet grip, precise handling, and long tread life.\n\n**Contact:** customer.service@michelin.com | +1-888-622-2306\n\n---",
+            "document_id": "hanuman_doc_jina_v3_test_1760720127",
+            "topics": "Automotive tires, Performance driving, Tire technology, Vehicle safety, Tire specifications",
+            "keywords": "Michelin, Pilot Sport 4S, summer tire, sports cars, high-performance sedans, Bi-compound technology, Dynamic Response Technology, Variable Contact Patch 3.0, Hybrid Aramid/Nylon belt package, Michelin North America Inc.",
+            "summary": "The Michelin Pilot Sport 4S is an ultra-high performance summer tire designed for sports cars and high-performance sedans, offering exceptional dry and wet grip, precise handling, and long tread life through advanced technologies like Bi-compound tread and Dynamic Response Technology.",
+            "questions": "What is the Michelin Pilot Sport 4S?|Why choose a summer performance tire?|How does Bi-compound technology improve tire performance?|What vehicles is the Pilot Sport 4S suitable for?|What are the key features of the Michelin Pilot Sport 4S?"
+          },
+          {
+            "chunk_id": "hanuman_doc_jina_v3_test_1760720127_chunk_2",
+            "text": "### Nike Air Zoom Pegasus 40\n**Brand:** Nike\n**Manufacturer:** Nike Inc.\n**Model:** Air Zoom Pegasus 40\n**SKU:** NIKE-PEGASUS-40-MEN-10.5-BLACK\n**Price:** 139.99\n**Currency:** USD\n**Year:** 2023\n**Color:** Black/White/Anthracite\n**Size:** US Men's 10.5\n**Weight:** 283 grams (per shoe)\n**Dimensions:** Standard running shoe fit\n\n**Specifications:** React foam midsole, Zoom Air unit in forefoot, engineered mesh upper, rubber outsole with waffle pattern, heel collar for Achilles comfort, reflective elements for low-light visibility\n\n**Technical Terms:** React foam technology, Zoom Air cushioning, engineered mesh, waffle-pattern traction\n\n**Product Description:** The Nike Air Zoom Pegasus 40 continues the legacy of this iconic running shoe. Responsive cushioning provides a smooth ride for everyday runs. The mesh upper is breathable and lightweight, while the Zoom Air unit in the forefoot delivers propulsive feel.",
+            "document_id": "hanuman_doc_jina_v3_test_1760720127",
+            "topics": "Running shoes, Athletic footwear technology, Nike products, Footwear design",
+            "keywords": "Nike, Air Zoom Pegasus 40, React foam, Zoom Air, engineered mesh, waffle-pattern traction, running shoes, black/white/anthracite, US Men's 10.5, 2023",
+            "summary": "The Nike Air Zoom Pegasus 40 is a 2023 running shoe featuring React foam midsole and Zoom Air cushioning for a responsive ride. It includes a breathable engineered mesh upper and a waffle-pattern rubber outsole for traction, available in black/white/anthracite for US Men's size 10.5 at a price of $139.99.",
+            "questions": "What are the key features of the Nike Air Zoom Pegasus 40?|How does the Zoom Air unit enhance performance?|What is the weight of the Nike Air Zoom Pegasus 40?|What color options are available for the Nike Air Zoom Pegasus 40?|What is the price of the Nike Air Zoom Pegasus 40?"
+          },
+          {
+            "chunk_id": "hanuman_doc_jina_v3_test_1760720127_chunk_11",
+            "text": "**Topics:** Machine learning, deep learning, neural networks, natural language processing, computer vision, ethics in AI, future trends, transformer models, GPT architecture, reinforcement learning\n\n**Technical Terms:** Transformer architecture, attention mechanisms, backpropagation, gradient descent, convolutional neural networks (CNN), recurrent neural networks (RNN), large language models (LLM), fine-tuning, prompt engineering\n\n**Key Numbers:** 487 pages, 15 chapters, 50+ illustrations, 200+ references, Published March 2024\n\n**Contact:** orders@techpress.com | +1-555-TECH-BOOK | https://www.techpress.com/ai-future-guide\n\n**Organizations:** TechPress Publishing, Stanford AI Lab (institutional affiliation), MIT Press (distribution partner)",
+            "document_id": "hanuman_doc_jina_v3_test_1760720127",
+            "topics": "Artificial Intelligence, Machine Learning, Neural Networks, Ethics in AI, Future Trends",
+            "keywords": "Machine learning, deep learning, neural networks, natural language processing, computer vision, ethics in AI, transformer models, GPT architecture, reinforcement learning, TechPress Publishing",
+            "summary": "This comprehensive guide explores the fundamentals and advancements in AI, covering topics like machine learning, neural networks, and ethics, with insights into future trends and practical applications.",
+            "questions": "What are the key concepts in AI and machine learning?|How do transformer models work?|Why is ethics important in AI?|What are the future trends in AI?|How are neural networks applied in real-world scenarios?"
+          },
+          {
+            "chunk_id": "hanuman_doc_jina_v3_test_1760720127_chunk_3",
+            "text": "**Contact:** customerservice@nike.com | +1-800-806-6453 | https://www.nike.com",
+            "document_id": "hanuman_doc_jina_v3_test_1760720127",
+            "topics": "Customer service, Contact details, Brand information",
+            "keywords": "Nike, customerservice@nike.com, +1-800-806-6453, https://www.nike.com, contact information",
+            "summary": "This provides contact details for Nike, including their customer service email, phone number, and official website.",
+            "questions": "What is Nike's customer service email?|What is Nike's phone number?|What is Nike's website?"
+          },
+          {
+            "chunk_id": "hanuman_doc_jina_v3_test_1760720127_chunk_5",
+            "text": "## Product Information - Automotive Parts",
+            "document_id": "hanuman_doc_jina_v3_test_1760720127",
+            "topics": "automotive repair, vehicle parts, mechanical systems, car maintenance",
+            "keywords": "automotive parts, engine components, brake systems, suspension parts, exhaust systems, fuel system, transmission parts, electrical components, cooling system, vehicle maintenance",
+            "summary": "This information provides an overview of various automotive parts and their roles in vehicle systems, emphasizing the importance of maintenance and repair for optimal performance.",
+            "questions": "What are common automotive parts and their functions?|How do different mechanical systems work in a vehicle?|Why is regular vehicle maintenance important?|What are the key components of a car's engine?"
+          }
+        ],
+        "stages": {
+          "search": {
+            "time_ms": 1357.4719429016113,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "results_count": 18,
+              "top_k": 20,
+              "metadata_boost_enabled": true
+            }
+          },
+          "reranking": {
+            "time_ms": 386.6240978240967,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "input_count": 18,
+              "output_count": 10,
+              "top_k": 10
+            }
+          },
+          "compression": {
+            "time_ms": 0.0,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "skipped": true
+            }
+          },
+          "intent_detection": {
+            "time_ms": 1744.2407608032227,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "intent": "comparison",
+              "language": "en",
+              "complexity": "moderate",
+              "confidence": 0.95,
+              "recommended_model": "Meta-Llama-3.1-8B-Instruct",
+              "has_custom_prompt": true
+            }
+          },
+          "answer_generation": {
+            "time_ms": 1694.3790912628174,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "context_chunks": 5,
+              "citations": 0,
+              "model_used": "Meta-Llama-3.1-8B-Instruct",
+              "model_requested": "meta-llama/Llama-3.3-70B-Instruct-fast",
+              "temperature": 0.3,
+              "used_custom_prompt": true,
+              "used_recommended_model": true
+            }
+          }
+        },
+        "total_time_ms": 3438.687801361084,
+        "search_results_count": 18,
+        "reranked_count": 10,
+        "compressed_count": 10,
+        "context_count": 5,
+        "api_version": "1.0.0",
+        "timestamp": "2025-10-17T21:27:07.898970"
+      }
+    }
+  ]
+}

@@ -1,0 +1,405 @@
+{
+  "summary": {
+    "test_run_timestamp": "2025-10-19T12:26:51.354375",
+    "collection_name": "test_comprehensive_v4",
+    "total_questions": 18,
+    "successful_tests": 2,
+    "failed_tests": 0,
+    "total_test_duration_seconds": 18.175649881362915,
+    "service_configuration": {
+      "embeddings": {
+        "model": "jina-embeddings-v3",
+        "dimension": 1024,
+        "provider": "jina_api",
+        "device": "jina_cloud_gpu",
+        "cache_enabled": true,
+        "cache_entries": 0
+      },
+      "answer_generation": {
+        "cache_enabled": false
+      },
+      "reranking": {
+        "model": "jina-reranker-v2-base-multilingual",
+        "provider": "jina-api"
+      }
+    },
+    "average_metrics": {
+      "total_time_ms": 8835.978062008508,
+      "server_time_ms": 8830.39104938507,
+      "keyword_coverage_percentage": 87.5
+    },
+    "category_statistics": {
+      "Cross-Section Synthesis": {
+        "test_count": 1,
+        "avg_time_ms": 4405.878208010108,
+        "avg_keyword_coverage": 100.0
+      },
+      "Certification & Compliance": {
+        "test_count": 1,
+        "avg_time_ms": 13266.077916006907,
+        "avg_keyword_coverage": 75.0
+      }
+    }
+  },
+  "test_results": [
+    {
+      "test_id": "1.1",
+      "category": "Cross-Section Synthesis",
+      "question": "Compare the technical terms used in the Nike Air Zoom Pegasus 40 and Michelin Pilot Sport 4S Tire sections; what technologies do they share?",
+      "difficulty": "hard",
+      "test_capability": "cross-domain synthesis",
+      "timestamp": "2025-10-19T12:26:37.584718",
+      "success": true,
+      "answer": "## Comparison: Nike Air Zoom Pegasus 40 vs Michelin Pilot Sport 4S Tire\n\n### Technical Terms Comparison\n\n| Technical Term | Nike Air Zoom Pegasus 40 | Michelin Pilot Sport 4S Tire |\n|----------------|-------------------------|-------------------------------|\n| **Cushioning** | Zoom Air unit, React foam midsole | Dynamic Response Technology |\n| **Traction** | Waffle-pattern rubber outsole | Bi-compound tread, Asymmetric tread pattern |\n| **Upper Material** | Engineered mesh | Premium Touch Design |\n| **Reflective Elements** | Reflective elements for low-light visibility | N/A |\n\n### Shared Technologies\n\n- **Bi-compound Compound Technology**: Although not explicitly mentioned in the Nike Air Zoom Pegasus 40 context, the concept of using different materials for different parts of the shoe (e.g., React foam midsole and Zoom Air unit) can be seen as analogous to the Bi-compound technology used in the Michelin Pilot Sport 4S Tire.\n- **Dynamic Response Technology**: The Nike Air Zoom Pegasus 40 features Zoom Air cushioning, which provides a dynamic response to impact, similar to the Dynamic Response Technology used in the Michelin Pilot Sport 4S Tire.\n\n### Unique Technologies\n\n- **Zoom Air Cushioning**: The Nike Air Zoom Pegasus 40 features Zoom Air cushioning, which provides a dynamic response to impact.\n- **React Foam Technology**: The Nike Air Zoom Pegasus 40 features a React foam midsole, which provides enhanced comfort and performance.\n- **Variable Contact Patch 3.0**: The Michelin Pilot Sport 4S Tire features Variable Contact Patch 3.0, which provides improved traction and handling.\n- **Hybrid Aramid/Nylon Belt Package**: The Michelin Pilot Sport 4S Tire features a Hybrid Aramid/Nylon belt package, which provides improved strength and durability.\n\n### Similarities\n\n- Both the Nike Air Zoom Pegasus 40 and the Michelin Pilot Sport 4S Tire feature advanced technologies that provide improved performance and comfort.\n- Both products feature dynamic response technologies that provide a responsive feel to impact.\n\n### Differences\n\n- The Nike Air Zoom Pegasus 40 is a shoe designed for athletic performance, while the Michelin Pilot Sport 4S Tire is a tire designed for high-performance vehicles.\n- The technologies used in the two products are tailored to their specific applications and provide different benefits.",
+      "citations_count": 0,
+      "citations": [],
+      "performance": {
+        "total_time_ms": 4405.878208010108,
+        "server_time_ms": 4401.181936264038,
+        "network_latency_ms": 4.696271746070124,
+        "stage_times": {
+          "intent_detection_ms": 3505.3367614746094,
+          "search_ms": 1232.0990562438965,
+          "reranking_ms": 2272.9032039642334,
+          "compression_ms": 0.0,
+          "answer_generation_ms": 895.8008289337158
+        },
+        "stage_percentages": {
+          "intent_detection_pct": 79.64535009543661,
+          "search_pct": 27.994731280974243,
+          "reranking_pct": 51.643018554547574,
+          "compression_pct": 0.0,
+          "answer_generation_pct": 20.353642314866903
+        },
+        "bottleneck": {
+          "stage": "intent_detection",
+          "time_ms": 3505.3367614746094,
+          "percentage_of_total": 79.64535009543661
+        }
+      },
+      "retrieval_metrics": {
+        "search_results_count": 10,
+        "reranked_count": 3,
+        "compressed_count": 3,
+        "context_count": 3
+      },
+      "models_used": {
+        "llm_requested": null,
+        "llm_used": "Meta-Llama-3.1-8B-Instruct",
+        "llm_temperature": 0.3,
+        "used_recommended_model": true,
+        "used_custom_prompt": true
+      },
+      "intent_analysis": {
+        "detected_intent": "comparison",
+        "language": "en",
+        "complexity": "moderate",
+        "confidence": 0.95,
+        "recommended_model": "Meta-Llama-3.1-8B-Instruct",
+        "has_custom_prompt": true
+      },
+      "keyword_analysis": {
+        "expected_keywords": [
+          "React foam",
+          "Zoom Air",
+          "engineered mesh",
+          "bi-compound",
+          "traction",
+          "performance"
+        ],
+        "keywords_found": [
+          "React foam",
+          "Zoom Air",
+          "engineered mesh",
+          "bi-compound",
+          "traction",
+          "performance"
+        ],
+        "keywords_missing": [],
+        "coverage_percentage": 100.0
+      },
+      "full_response": {
+        "success": true,
+        "query": "Compare the technical terms used in the Nike Air Zoom Pegasus 40 and Michelin Pilot Sport 4S Tire sections; what technologies do they share?",
+        "collection_name": "test_comprehensive_v4",
+        "tenant_id": "test_tenant",
+        "answer": "## Comparison: Nike Air Zoom Pegasus 40 vs Michelin Pilot Sport 4S Tire\n\n### Technical Terms Comparison\n\n| Technical Term | Nike Air Zoom Pegasus 40 | Michelin Pilot Sport 4S Tire |\n|----------------|-------------------------|-------------------------------|\n| **Cushioning** | Zoom Air unit, React foam midsole | Dynamic Response Technology |\n| **Traction** | Waffle-pattern rubber outsole | Bi-compound tread, Asymmetric tread pattern |\n| **Upper Material** | Engineered mesh | Premium Touch Design |\n| **Reflective Elements** | Reflective elements for low-light visibility | N/A |\n\n### Shared Technologies\n\n- **Bi-compound Compound Technology**: Although not explicitly mentioned in the Nike Air Zoom Pegasus 40 context, the concept of using different materials for different parts of the shoe (e.g., React foam midsole and Zoom Air unit) can be seen as analogous to the Bi-compound technology used in the Michelin Pilot Sport 4S Tire.\n- **Dynamic Response Technology**: The Nike Air Zoom Pegasus 40 features Zoom Air cushioning, which provides a dynamic response to impact, similar to the Dynamic Response Technology used in the Michelin Pilot Sport 4S Tire.\n\n### Unique Technologies\n\n- **Zoom Air Cushioning**: The Nike Air Zoom Pegasus 40 features Zoom Air cushioning, which provides a dynamic response to impact.\n- **React Foam Technology**: The Nike Air Zoom Pegasus 40 features a React foam midsole, which provides enhanced comfort and performance.\n- **Variable Contact Patch 3.0**: The Michelin Pilot Sport 4S Tire features Variable Contact Patch 3.0, which provides improved traction and handling.\n- **Hybrid Aramid/Nylon Belt Package**: The Michelin Pilot Sport 4S Tire features a Hybrid Aramid/Nylon belt package, which provides improved strength and durability.\n\n### Similarities\n\n- Both the Nike Air Zoom Pegasus 40 and the Michelin Pilot Sport 4S Tire feature advanced technologies that provide improved performance and comfort.\n- Both products feature dynamic response technologies that provide a responsive feel to impact.\n\n### Differences\n\n- The Nike Air Zoom Pegasus 40 is a shoe designed for athletic performance, while the Michelin Pilot Sport 4S Tire is a tire designed for high-performance vehicles.\n- The technologies used in the two products are tailored to their specific applications and provide different benefits.",
+        "citations": [],
+        "context_chunks": [
+          {
+            "chunk_id": "ComprehensiveTestDocument_chunk_0013",
+            "text": "**Technical Terms:** Bi-compound technology, Dynamic Response Technology, Variable Contact Patch 3.0, Hybrid Aramid/Nylon belt package\n\n**Description:** The Michelin Pilot Sport 4S is an ultra-high performance summer tire designed for sports cars and high-performance sedans. Features exceptional dry and wet grip, precise handling, and long tread life.\n\n**Contact:** customer.service@michelin.com | +1-888-622-2306",
+            "document_id": "ComprehensiveTestDocument",
+            "topics": "Automotive, Tires, Performance, Technology, Customer Service",
+            "keywords": "Michelin Pilot Sport 4S, Michelin, Hybrid Aramid/Nylon belt package, Bi-compound technology, Dynamic Response Technology, Variable Contact Patch 3.0, ultra-high performance summer tire, sports cars, high-performance sedans, customer.service@michelin.com",
+            "summary": "The Michelin Pilot Sport 4S is an ultra-high performance summer tire designed for sports cars and high-performance sedans, offering exceptional dry and wet grip, precise handling, and long tread life through advanced technologies like Bi-compound technology and Variable Contact Patch 3.0.",
+            "questions": "What is the Michelin Pilot Sport 4S?|Why is the Michelin Pilot Sport 4S suitable for sports cars?|How does the Hybrid Aramid/Nylon belt package enhance performance?|Who is the manufacturer of the Michelin Pilot Sport 4S?|Where can I contact Michelin for more information?"
+          },
+          {
+            "chunk_id": "ComprehensiveTestDocument_chunk_0006",
+            "text": "**Specifications:** React foam midsole, Zoom Air unit in forefoot, engineered mesh upper, rubber outsole with waffle pattern, heel collar for Achilles comfort, reflective elements for low-light visibility\n\n**Technical Terms:** React foam technology, Zoom Air cushioning, engineered mesh, waffle-pattern traction",
+            "document_id": "ComprehensiveTestDocument",
+            "topics": "Footwear technology, Athletic shoe design, Cushioning systems, Traction patterns, Visibility features",
+            "keywords": "React foam midsole, Zoom Air unit, engineered mesh upper, rubber outsole with waffle pattern, heel collar, reflective elements, React foam technology, Zoom Air cushioning, waffle-pattern traction, engineered mesh",
+            "summary": "This product features a React foam midsole and Zoom Air cushioning in the forefoot for enhanced comfort and performance. The engineered mesh upper, waffle-pattern rubber outsole, and reflective elements add to its functionality and visibility in low-light conditions.",
+            "questions": "What materials are used in the midsole?|What technologies provide cushioning?|What features enhance visibility?|What is the design of the outsole?|What components improve comfort?"
+          },
+          {
+            "chunk_id": "ComprehensiveTestDocument_chunk_0012",
+            "text": "### Michelin Pilot Sport 4S Tire\n**Brand:** Michelin\n**Manufacturer:** Michelin North America Inc.\n**Model:** Pilot Sport 4S\n**SKU:** MICH-PS4S-245-40-R18\n**Price:** 289.99\n**Currency:** USD\n**Year:** 2024\n**Size:** 245/40R18\n**Weight:** 11.5 kg\n**Dimensions:** 245mm width, 40% aspect ratio, 18\" rim diameter\n\n**Specifications:** Max speed rating Y (186 mph), Load index 97, Summer performance tire, Asymmetric tread pattern, Bi-compound tread, Dynamic Response Technology, Premium Touch Design",
+            "document_id": "ComprehensiveTestDocument",
+            "topics": "",
+            "keywords": "",
+            "summary": "",
+            "questions": ""
+          }
+        ],
+        "stages": {
+          "search": {
+            "time_ms": 1232.0990562438965,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "results_count": 10,
+              "top_k": 10,
+              "metadata_boost_enabled": true
+            }
+          },
+          "reranking": {
+            "time_ms": 2272.9032039642334,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "input_count": 10,
+              "output_count": 3,
+              "top_k": 3
+            }
+          },
+          "compression": {
+            "time_ms": 0.0,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "skipped": true
+            }
+          },
+          "intent_detection": {
+            "time_ms": 3505.3367614746094,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "intent": "comparison",
+              "language": "en",
+              "complexity": "moderate",
+              "confidence": 0.95,
+              "recommended_model": "Meta-Llama-3.1-8B-Instruct",
+              "recommended_max_tokens": 2048,
+              "has_custom_prompt": true
+            }
+          },
+          "answer_generation": {
+            "time_ms": 895.8008289337158,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "context_chunks": 3,
+              "citations": 0,
+              "model_used": "Meta-Llama-3.1-8B-Instruct",
+              "model_requested": null,
+              "max_tokens_used": 2048,
+              "temperature": 0.3,
+              "used_custom_prompt": true,
+              "used_recommended_model": true,
+              "used_recommended_max_tokens": true
+            }
+          }
+        },
+        "total_time_ms": 4401.181936264038,
+        "search_results_count": 10,
+        "reranked_count": 3,
+        "compressed_count": 3,
+        "context_count": 3,
+        "api_version": "1.0.0",
+        "timestamp": "2025-10-19T12:26:37.583948"
+      }
+    },
+    {
+      "test_id": "4.1",
+      "category": "Certification & Compliance",
+      "question": "Which products in the catalog are certified by third-party organizations, and which organizations are involved in their certification?",
+      "difficulty": "easy",
+      "test_capability": "certification extraction",
+      "timestamp": "2025-10-19T12:26:51.354167",
+      "success": true,
+      "answer": "## Third-Party Certifications in the Catalog\n\n### Overview\n\nThe catalog includes products certified by third-party organizations. The following products have been certified by NSF International and USP Verified.\n\n### Products with Third-Party Certifications\n\n| Product Name | Manufacturer | Certification |\n| --- | --- | --- |\n| CardioHealth Plus Daily Supplement | VitaLife Laboratories Inc. | NSF International, USP Verified |\n\n### Organizations Involved in Certification\n\n| Organization | Type |\n| --- | --- |\n| NSF International | Third-party certification |\n| USP Verified | Quality seal |\n\n### Notes\n\n* CardioHealth Plus Daily Supplement is a 60-day supply of 120 capsules, providing 1000mg of omega-3 per serving.\n* Manufactured by VitaLife Laboratories Inc., it is certified by NSF International and USP Verified.\n* The certification details are as follows:\n\t+ NSF International: third-party certification\n\t+ USP Verified: quality seal\n\n### Conclusion\n\nThe catalog includes products certified by third-party organizations, specifically NSF International and USP Verified. The CardioHealth Plus Daily Supplement by VitaLife Laboratories Inc. is one such product that has been certified by these organizations.",
+      "citations_count": 0,
+      "citations": [],
+      "performance": {
+        "total_time_ms": 13266.077916006907,
+        "server_time_ms": 13259.600162506104,
+        "network_latency_ms": 6.477753500803374,
+        "stage_times": {
+          "intent_detection_ms": 12574.464082717896,
+          "search_ms": 1229.6321392059326,
+          "reranking_ms": 1384.896993637085,
+          "compression_ms": 0.0,
+          "answer_generation_ms": 10644.643068313599
+        },
+        "stage_percentages": {
+          "intent_detection_pct": 94.83290543160152,
+          "search_pct": 9.27352351606301,
+          "reranking_pct": 10.44448532884973,
+          "compression_pct": 0.0,
+          "answer_generation_pct": 80.27876359660705
+        },
+        "bottleneck": {
+          "stage": "intent_detection",
+          "time_ms": 12574.464082717896,
+          "percentage_of_total": 94.83290543160152
+        }
+      },
+      "retrieval_metrics": {
+        "search_results_count": 10,
+        "reranked_count": 3,
+        "compressed_count": 3,
+        "context_count": 3
+      },
+      "models_used": {
+        "llm_requested": null,
+        "llm_used": "Meta-Llama-3.1-8B-Instruct",
+        "llm_temperature": 0.3,
+        "used_recommended_model": true,
+        "used_custom_prompt": true
+      },
+      "intent_analysis": {
+        "detected_intent": "factual_retrieval",
+        "language": "en",
+        "complexity": "moderate",
+        "confidence": 0.5,
+        "recommended_model": "Meta-Llama-3.1-8B-Instruct",
+        "has_custom_prompt": true
+      },
+      "keyword_analysis": {
+        "expected_keywords": [
+          "CardioHealth",
+          "FDA-registered",
+          "NSF International",
+          "USP Verified"
+        ],
+        "keywords_found": [
+          "CardioHealth",
+          "NSF International",
+          "USP Verified"
+        ],
+        "keywords_missing": [
+          "FDA-registered"
+        ],
+        "coverage_percentage": 75.0
+      },
+      "full_response": {
+        "success": true,
+        "query": "Which products in the catalog are certified by third-party organizations, and which organizations are involved in their certification?",
+        "collection_name": "test_comprehensive_v4",
+        "tenant_id": "test_tenant",
+        "answer": "## Third-Party Certifications in the Catalog\n\n### Overview\n\nThe catalog includes products certified by third-party organizations. The following products have been certified by NSF International and USP Verified.\n\n### Products with Third-Party Certifications\n\n| Product Name | Manufacturer | Certification |\n| --- | --- | --- |\n| CardioHealth Plus Daily Supplement | VitaLife Laboratories Inc. | NSF International, USP Verified |\n\n### Organizations Involved in Certification\n\n| Organization | Type |\n| --- | --- |\n| NSF International | Third-party certification |\n| USP Verified | Quality seal |\n\n### Notes\n\n* CardioHealth Plus Daily Supplement is a 60-day supply of 120 capsules, providing 1000mg of omega-3 per serving.\n* Manufactured by VitaLife Laboratories Inc., it is certified by NSF International and USP Verified.\n* The certification details are as follows:\n\t+ NSF International: third-party certification\n\t+ USP Verified: quality seal\n\n### Conclusion\n\nThe catalog includes products certified by third-party organizations, specifically NSF International and USP Verified. The CardioHealth Plus Daily Supplement by VitaLife Laboratories Inc. is one such product that has been certified by these organizations.",
+        "citations": [],
+        "context_chunks": [
+          {
+            "chunk_id": "ComprehensiveTestDocument_chunk_0030",
+            "text": "**Key Numbers:** 120 capsules, 60-day supply, 2 capsules daily, 1000mg omega-3 per serving, Expires 2026-12-31\n\n**Contact:** customercare@vitalifesciences.com | +1-888-VITA-LIFE | https://www.vitalifesciences.com\n\n**Organizations:** VitaLife Sciences (brand), VitaLife Laboratories Inc. (manufacturer), NSF International (certification), USP Verified (quality seal)\n\n**Dates:** Manufacturing date: 2024-01-15, Expiration date: 2026-12-31, Best before: 2026-12-31",
+            "document_id": "ComprehensiveTestDocument",
+            "topics": "Health Supplements, Omega-3 Fatty Acids, Product Specifications, Company Information, Certification",
+            "keywords": "CardioHealth Plus Daily Supplement, VitaLife Sciences, VitaLife Laboratories Inc., NSF International, USP Verified, 1000mg omega-3, 2 capsules daily, 60-day supply, 120 capsules, 2024-01-15",
+            "summary": "CardioHealth Plus Daily Supplement by VitaLife Sciences is a 60-day supply of 120 capsules, providing 1000mg of omega-3 per serving. Manufactured by VitaLife Laboratories Inc., it is certified by NSF International and USP Verified, with a manufacturing date of January 15, 2024, and an expiration date of December 31, 2026.",
+            "questions": "What is the product name?|Who is the manufacturer?|What is the omega-3 dosage per serving?|When does the product expire?|Where can I contact customer care?"
+          },
+          {
+            "chunk_id": "ComprehensiveTestDocument_chunk_0035",
+            "text": "**Technical Terms:** Kiln-dried lumber, S4S (surfaced four sides), PSI (pounds per square inch), VOC (volatile organic compounds), acrylic latex, galvanized fasteners\n\n**Organizations:** BuildRight Materials & Supply (vendor), Greenfield Construction LLC (buyer), Quikrete Companies (manufacturer), Sherwin-Williams (manufacturer)\n\n**Contact:** orders@buildrightmaterials.com | +1-555-BUILD-99 | Warehouse: 789 Industrial Parkway, Houston, TX 77001",
+            "document_id": "ComprehensiveTestDocument",
+            "topics": "Construction materials, Building supplies, Technical specifications, Manufacturers, Vendors",
+            "keywords": "Kiln-dried lumber, S4S, PSI, VOC, acrylic latex, galvanized fasteners, BuildRight Materials & Supply, Greenfield Construction LLC, Quikrete Companies, Sherwin-Williams",
+            "summary": "The text provides information about construction materials, technical terms, and companies involved in a supply chain, including contact details for a vendor and warehouse location.",
+            "questions": "What materials are mentioned?|Which companies are involved?|What technical terms are used?|Where is the warehouse located?|What is the contact information?"
+          },
+          {
+            "chunk_id": "ComprehensiveTestDocument_chunk_0033",
+            "text": "4. Paint - Sherwin-Williams ProClassic - Color: Warm White - SKU: SW-PROCLASSIC-WW-GAL - Price: 54.99 per gallon - Quantity: 20 - Amount: 1099.80 USD",
+            "document_id": "ComprehensiveTestDocument",
+            "topics": "Paint Products, Home Improvement, Retail Pricing, Inventory Management, Brand-Specific Items",
+            "keywords": "Sherwin-Williams ProClassic, Warm White, SW-PROCLASSIC-WW-GAL, Paint, Sherwin-Williams, 54.99, 20, 1099.80 USD, Gallon, ProClassic",
+            "summary": "The text mentions the purchase of 20 gallons of Sherwin-Williams ProClassic paint in Warm White, with a total cost of 1099.80 USD.",
+            "questions": "What paint product is mentioned?|What is the color of the paint?|What is the SKU for the paint?|What is the price per gallon?|What is the total amount for the quantity purchased?"
+          }
+        ],
+        "stages": {
+          "search": {
+            "time_ms": 1229.6321392059326,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "results_count": 10,
+              "top_k": 10,
+              "metadata_boost_enabled": true
+            }
+          },
+          "reranking": {
+            "time_ms": 1384.896993637085,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "input_count": 10,
+              "output_count": 3,
+              "top_k": 3
+            }
+          },
+          "compression": {
+            "time_ms": 0.0,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "skipped": true
+            }
+          },
+          "intent_detection": {
+            "time_ms": 12574.464082717896,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "intent": "factual_retrieval",
+              "language": "en",
+              "complexity": "moderate",
+              "confidence": 0.5,
+              "recommended_model": "Meta-Llama-3.1-8B-Instruct",
+              "recommended_max_tokens": 1024,
+              "has_custom_prompt": true
+            }
+          },
+          "answer_generation": {
+            "time_ms": 10644.643068313599,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "context_chunks": 3,
+              "citations": 0,
+              "model_used": "Meta-Llama-3.1-8B-Instruct",
+              "model_requested": null,
+              "max_tokens_used": 1024,
+              "temperature": 0.3,
+              "used_custom_prompt": true,
+              "used_recommended_model": true,
+              "used_recommended_max_tokens": true
+            }
+          }
+        },
+        "total_time_ms": 13259.600162506104,
+        "search_results_count": 10,
+        "reranked_count": 3,
+        "compressed_count": 3,
+        "context_count": 3,
+        "api_version": "1.0.0",
+        "timestamp": "2025-10-19T12:26:51.352101"
+      }
+    }
+  ]
+}

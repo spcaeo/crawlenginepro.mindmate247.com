@@ -1,0 +1,219 @@
+{
+  "summary": {
+    "test_run_timestamp": "2025-10-19T11:30:07.354106",
+    "collection_name": "jina_v3_test",
+    "total_questions": 18,
+    "successful_tests": 1,
+    "failed_tests": 0,
+    "total_test_duration_seconds": 9.688691854476929,
+    "service_configuration": {
+      "embeddings": {
+        "model": "jina-embeddings-v3",
+        "dimension": 1024,
+        "provider": "jina_api",
+        "device": "jina_cloud_gpu",
+        "cache_enabled": true,
+        "cache_entries": 0
+      },
+      "answer_generation": {
+        "cache_enabled": false
+      },
+      "reranking": {
+        "model": "jina-reranker-v2-base-multilingual",
+        "provider": "jina-api"
+      }
+    },
+    "average_metrics": {
+      "total_time_ms": 9686.15012500959,
+      "server_time_ms": 9683.026313781738,
+      "keyword_coverage_percentage": 75.0
+    },
+    "category_statistics": {
+      "Certification & Compliance": {
+        "test_count": 1,
+        "avg_time_ms": 9686.15012500959,
+        "avg_keyword_coverage": 75.0
+      }
+    }
+  },
+  "test_results": [
+    {
+      "test_id": "4.1",
+      "category": "Certification & Compliance",
+      "question": "Which products in the catalog are certified by third-party organizations, and which organizations are involved in their certification?",
+      "difficulty": "easy",
+      "test_capability": "certification extraction",
+      "timestamp": "2025-10-19T11:30:07.354006",
+      "success": true,
+      "answer": "## Relationship Mapping: Certified Products and Third-Party Organizations\n\n### **Certified Products Overview**\nTwo products in the catalog are explicitly certified by third-party organizations:\n1. **Omega-3 Supplement** (Source 1)\n2. **Hobart LXeR-2** (Source 3)\n\nA third product, **CardioHealth Plus** (Source 2), mentions \"third-party tested\" but does **not specify the certifying organization**, so it is excluded from the final mapping.\n\n---\n\n### **Certified Products and Organizations**\n\n| **Product**                | **Manufacturer**           | **Certifying Organizations**       | **Certification Type**       |\n|----------------------------|----------------------------|------------------------------------|------------------------------|\n| **Omega-3 Supplement**     | VitaLife Laboratories Inc. | NSF International, USP Verified    | Quality & Safety Certification |\n| **Hobart LXeR-2**          | Hobart Corporation         | Energy Star                        | Energy Efficiency Certification |\n\n---\n\n### **Relationship Pathways**\n#### **1. Omega-3 Supplement**\n- **Manufacturer → Product → Certification:**\n  - **VitaLife Laboratories Inc.** → **Omega-3 Supplement** (120 capsules, 1000mg omega-3) → **NSF International** and **USP Verified**.\n- **Certification Details:**\n  - **NSF International**: Ensures product safety, quality, and labeling accuracy.\n  - **USP Verified**: Validates compliance with identity, strength, quality, and purity standards.\n\n#### **2. Hobart LXeR-2**\n- **Manufacturer → Product → Certification:**\n  - **Hobart Corporation** → **Hobart LXeR-2** (commercial restaurant equipment) → **Energy Star**.\n- **Certification Details:**\n  - **Energy Star**: Certifies energy efficiency, reducing environmental impact and operating costs.\n\n#### **3. CardioHealth Plus (Unclear Certification)**\n- **Manufacturer → Product → Third-Party Testing:**\n  - **VitaLife Laboratories Inc.** → **CardioHealth Plus** (120ct, cardiovascular supplement) → **Third-party tested** (no organization named).\n- **Note**: FDA registration is a regulatory requirement, not a third-party certification.\n\n---\n\n### **Key Observations**\n1. **Shared Brand/Manufacturer**:\n   - Both **Omega-3 Supplement** and **CardioHealth Plus** are manufactured by **VitaLife Laboratories Inc.** and branded under **VitaLife Sciences**.\n   - However, only the Omega-3 Supplement has explicit third-party certifications.\n\n2. **Cross-Industry Certifications**:\n   - **NSF International** and **USP Verified** are health supplement certifications.\n   - **Energy Star** is an energy efficiency certification for commercial equipment.\n\n3. **Missing Information**:\n   - **CardioHealth Plus** lacks a named certifying organization for its \"third-party tested\" claim.\n   - **Vulcan range** (Source 3) has no certification mentioned.\n\n---\n\n### **Certification Organizations Overview**\n\n| **Organization**       | **Industry Focus**               | **Certified Products in Catalog**         |\n|------------------------|----------------------------------|-------------------------------------------|\n| **NSF International**  | Health & dietary supplements     | Omega-3 Supplement                        |\n| **USP Verified**       | Pharmaceutical & supplement quality | Omega-3 Supplement                        |\n| **Energy Star**        | Energy-efficient equipment       | Hobart LXeR-2                             |\n\n---\n\n### **Conclusion**\n- **Certified Products**: Omega-3 Supplement (NSF, USP) and Hobart LXeR-2 (Energy Star).\n- **Uncertified/Incomplete**: CardioHealth Plus (third-party testing unspecified).\n- **No Certification**: Vulcan range (Source 3).\n\nThis mapping highlights the importance of explicit certification naming in product documentation to ensure transparency and consumer trust.",
+      "citations_count": 0,
+      "citations": [],
+      "performance": {
+        "total_time_ms": 9686.15012500959,
+        "server_time_ms": 9683.026313781738,
+        "network_latency_ms": 3.1238112278515473,
+        "stage_times": {
+          "intent_detection_ms": 3941.148281097412,
+          "search_ms": 1659.5940589904785,
+          "reranking_ms": 459.4752788543701,
+          "compression_ms": 0.0,
+          "answer_generation_ms": 7563.184022903442
+        },
+        "stage_percentages": {
+          "intent_detection_pct": 40.70161696749726,
+          "search_pct": 17.139208396329543,
+          "reranking_pct": 4.7451619355862364,
+          "compression_pct": 0.0,
+          "answer_generation_pct": 78.10764711171807
+        },
+        "bottleneck": {
+          "stage": "answer_generation",
+          "time_ms": 7563.184022903442,
+          "percentage_of_total": 78.10764711171807
+        }
+      },
+      "retrieval_metrics": {
+        "search_results_count": 10,
+        "reranked_count": 3,
+        "compressed_count": 3,
+        "context_count": 3
+      },
+      "models_used": {
+        "llm_requested": null,
+        "llm_used": "Qwen3-32B",
+        "llm_temperature": 0.3,
+        "used_recommended_model": true,
+        "used_custom_prompt": true
+      },
+      "intent_analysis": {
+        "detected_intent": "relationship_mapping",
+        "language": "en",
+        "complexity": "moderate",
+        "confidence": 0.95,
+        "recommended_model": "Qwen3-32B",
+        "has_custom_prompt": true
+      },
+      "keyword_analysis": {
+        "expected_keywords": [
+          "CardioHealth",
+          "FDA-registered",
+          "NSF International",
+          "USP Verified"
+        ],
+        "keywords_found": [
+          "CardioHealth",
+          "NSF International",
+          "USP Verified"
+        ],
+        "keywords_missing": [
+          "FDA-registered"
+        ],
+        "coverage_percentage": 75.0
+      },
+      "full_response": {
+        "success": true,
+        "query": "Which products in the catalog are certified by third-party organizations, and which organizations are involved in their certification?",
+        "collection_name": "jina_v3_test",
+        "tenant_id": "default",
+        "answer": "## Relationship Mapping: Certified Products and Third-Party Organizations\n\n### **Certified Products Overview**\nTwo products in the catalog are explicitly certified by third-party organizations:\n1. **Omega-3 Supplement** (Source 1)\n2. **Hobart LXeR-2** (Source 3)\n\nA third product, **CardioHealth Plus** (Source 2), mentions \"third-party tested\" but does **not specify the certifying organization**, so it is excluded from the final mapping.\n\n---\n\n### **Certified Products and Organizations**\n\n| **Product**                | **Manufacturer**           | **Certifying Organizations**       | **Certification Type**       |\n|----------------------------|----------------------------|------------------------------------|------------------------------|\n| **Omega-3 Supplement**     | VitaLife Laboratories Inc. | NSF International, USP Verified    | Quality & Safety Certification |\n| **Hobart LXeR-2**          | Hobart Corporation         | Energy Star                        | Energy Efficiency Certification |\n\n---\n\n### **Relationship Pathways**\n#### **1. Omega-3 Supplement**\n- **Manufacturer → Product → Certification:**\n  - **VitaLife Laboratories Inc.** → **Omega-3 Supplement** (120 capsules, 1000mg omega-3) → **NSF International** and **USP Verified**.\n- **Certification Details:**\n  - **NSF International**: Ensures product safety, quality, and labeling accuracy.\n  - **USP Verified**: Validates compliance with identity, strength, quality, and purity standards.\n\n#### **2. Hobart LXeR-2**\n- **Manufacturer → Product → Certification:**\n  - **Hobart Corporation** → **Hobart LXeR-2** (commercial restaurant equipment) → **Energy Star**.\n- **Certification Details:**\n  - **Energy Star**: Certifies energy efficiency, reducing environmental impact and operating costs.\n\n#### **3. CardioHealth Plus (Unclear Certification)**\n- **Manufacturer → Product → Third-Party Testing:**\n  - **VitaLife Laboratories Inc.** → **CardioHealth Plus** (120ct, cardiovascular supplement) → **Third-party tested** (no organization named).\n- **Note**: FDA registration is a regulatory requirement, not a third-party certification.\n\n---\n\n### **Key Observations**\n1. **Shared Brand/Manufacturer**:\n   - Both **Omega-3 Supplement** and **CardioHealth Plus** are manufactured by **VitaLife Laboratories Inc.** and branded under **VitaLife Sciences**.\n   - However, only the Omega-3 Supplement has explicit third-party certifications.\n\n2. **Cross-Industry Certifications**:\n   - **NSF International** and **USP Verified** are health supplement certifications.\n   - **Energy Star** is an energy efficiency certification for commercial equipment.\n\n3. **Missing Information**:\n   - **CardioHealth Plus** lacks a named certifying organization for its \"third-party tested\" claim.\n   - **Vulcan range** (Source 3) has no certification mentioned.\n\n---\n\n### **Certification Organizations Overview**\n\n| **Organization**       | **Industry Focus**               | **Certified Products in Catalog**         |\n|------------------------|----------------------------------|-------------------------------------------|\n| **NSF International**  | Health & dietary supplements     | Omega-3 Supplement                        |\n| **USP Verified**       | Pharmaceutical & supplement quality | Omega-3 Supplement                        |\n| **Energy Star**        | Energy-efficient equipment       | Hobart LXeR-2                             |\n\n---\n\n### **Conclusion**\n- **Certified Products**: Omega-3 Supplement (NSF, USP) and Hobart LXeR-2 (Energy Star).\n- **Uncertified/Incomplete**: CardioHealth Plus (third-party testing unspecified).\n- **No Certification**: Vulcan range (Source 3).\n\nThis mapping highlights the importance of explicit certification naming in product documentation to ensure transparency and consumer trust.",
+        "citations": [],
+        "context_chunks": [
+          {
+            "chunk_id": "comprehensive_test_doc_v1_chunk_15",
+            "text": "**Key Numbers:** 120 capsules, 60-day supply, 2 capsules daily, 1000mg omega-3 per serving, Expires 2026-12-31\n\n**Contact:** customercare@vitalifesciences.com | +1-888-VITA-LIFE | https://www.vitalifesciences.com\n\n**Organizations:** VitaLife Sciences (brand), VitaLife Laboratories Inc. (manufacturer), NSF International (certification), USP Verified (quality seal)\n\n**Dates:** Manufacturing date: 2024-01-15, Expiration date: 2026-12-31, Best before: 2026-12-31",
+            "document_id": "comprehensive_test_doc_v1",
+            "topics": "Health Supplements, Product Specifications, Quality Certification, Expiration Dates",
+            "keywords": "VitaLife Sciences, VitaLife Laboratories Inc., NSF International, USP Verified, omega-3, 1000mg, 120 capsules, 60-day supply, 2026-12-31, 2024-01-15",
+            "summary": "This product is a 60-day supply of omega-3 supplements containing 120 capsules, with 1000mg of omega-3 per serving. Manufactured by VitaLife Laboratories Inc. and certified by NSF International and USP Verified, it expires on December 31, 2026.",
+            "questions": "What is the omega-3 content per serving?|How long does the supply last?|Who is the manufacturer?|When does the product expire?|What certifications does the product have?"
+          },
+          {
+            "chunk_id": "comprehensive_test_doc_v1_chunk_14",
+            "text": "## Pharmaceutical Product Information\n\n**Product Name:** CardioHealth Plus Daily Supplement\n**Brand:** VitaLife Sciences\n**Manufacturer:** VitaLife Laboratories Inc.\n**Model:** CardioHealth Plus 120ct\n**SKU:** VITA-CARDIO-PLUS-120\n**Price:** 34.99\n**Currency:** USD\n**Year:** 2024\n**Size:** 120 capsules (60-day supply)\n**Weight:** 180 grams (bottle with capsules)\n**Color:** White capsules in amber bottle\n\n**Specifications:** Each capsule contains: Omega-3 Fish Oil (1000mg), CoQ10 (100mg), Vitamin D3 (2000 IU), Magnesium (200mg), Potassium (99mg). Non-GMO, gluten-free, third-party tested, manufactured in FDA-registered facility.\n\n**Technical Terms:** Omega-3 fatty acids (EPA/DHA), Coenzyme Q10 (ubiquinone), Cholecalciferol (Vitamin D3), cardiovascular support, bioavailability, enteric-coated\n\n**Key Numbers:** 120 capsules, 60-day supply, 2 capsules daily, 1000mg omega-3 per serving, Expires 2026-12-31",
+            "document_id": "comprehensive_test_doc_v1",
+            "topics": "Cardiovascular Health, Dietary Supplements, Nutritional Ingredients, Health and Wellness",
+            "keywords": "CardioHealth Plus, VitaLife Sciences, Omega-3 Fish Oil, CoQ10, Vitamin D3, Magnesium, Potassium, Non-GMO, FDA-registered, 120ct",
+            "summary": "CardioHealth Plus Daily Supplement by VitaLife Sciences is a 60-day supply of 120 capsules designed to support cardiovascular health with ingredients like Omega-3 Fish Oil, CoQ10, Vitamin D3, Magnesium, and Potassium. Manufactured in an FDA-registered facility, it is Non-GMO, gluten-free, and expires on December 31, 2026.",
+            "questions": "What are the key ingredients in CardioHealth Plus?|Why is CardioHealth Plus recommended for cardiovascular support?|How many capsules are included in the 120ct bottle?|What is the shelf life of CardioHealth Plus?|Who manufactures CardioHealth Plus?"
+          },
+          {
+            "chunk_id": "comprehensive_test_doc_v1_chunk_13",
+            "text": "**Amount:** 17797.00\n**Tax Amount:** 1423.76\n**Total:** 19220.76\n**Currency:** USD\n**Payment Method:** Commercial Loan Financing\n**Payment Status:** Financed - 36 monthly payments\n\n**Specifications:** Hobart LXeR-2 features high-temperature sanitizing, 40 racks/hour capacity, Energy Star certified, chemical/solid waste pumping system. Vulcan range includes 10 burners, 2 standard ovens, standing pilot ignition, 300,000 BTU total output.\n\n**Organizations:** ChefPro Restaurant Supply Co. (vendor), Bella Italia Restaurant (buyer), Hobart Corporation (manufacturer), ITW Food Equipment Group (parent company)\n\n**Contact:** sales@chefprosupply.com | +1-800-CHEF-PRO | Account Manager: Lisa Rodriguez | lisa.r@chefprosupply.com",
+            "document_id": "comprehensive_test_doc_v1",
+            "topics": "Restaurant Equipment Financing, Commercial Loans, Kitchen Equipment Specifications, Restaurant Supply Chain",
+            "keywords": "Hobart LXeR-2, Commercial Loan Financing, ChefPro Restaurant Supply Co., Bella Italia Restaurant, Energy Star, Vulcan range, ITW Food Equipment Group, 36 monthly payments, 40 racks/hour, 300,000 BTU",
+            "summary": "Bella Italia Restaurant financed the purchase of a Hobart LXeR-2 and a Vulcan range from ChefPro Restaurant Supply Co. through a 36-month commercial loan, totaling $19,220.76 including tax. The equipment includes high-temperature sanitizing, a 40 racks/hour capacity, and a 300,000 BTU output range.",
+            "questions": "What equipment was financed?|Who are the involved organizations?|What are the payment terms?|What are the key features of the Hobart LXeR-2?|What is the total cost including tax?"
+          }
+        ],
+        "stages": {
+          "search": {
+            "time_ms": 1659.5940589904785,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "results_count": 10,
+              "top_k": 10,
+              "metadata_boost_enabled": true
+            }
+          },
+          "reranking": {
+            "time_ms": 459.4752788543701,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "input_count": 10,
+              "output_count": 3,
+              "top_k": 3
+            }
+          },
+          "compression": {
+            "time_ms": 0.0,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "skipped": true
+            }
+          },
+          "intent_detection": {
+            "time_ms": 3941.148281097412,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "intent": "relationship_mapping",
+              "language": "en",
+              "complexity": "moderate",
+              "confidence": 0.95,
+              "recommended_model": "Qwen3-32B",
+              "recommended_max_tokens": 2048,
+              "has_custom_prompt": true
+            }
+          },
+          "answer_generation": {
+            "time_ms": 7563.184022903442,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "context_chunks": 3,
+              "citations": 0,
+              "model_used": "Qwen3-32B",
+              "model_requested": null,
+              "max_tokens_used": 2048,
+              "temperature": 0.3,
+              "used_custom_prompt": true,
+              "used_recommended_model": true,
+              "used_recommended_max_tokens": true
+            }
+          }
+        },
+        "total_time_ms": 9683.026313781738,
+        "search_results_count": 10,
+        "reranked_count": 3,
+        "compressed_count": 3,
+        "context_count": 3,
+        "api_version": "1.0.0",
+        "timestamp": "2025-10-19T11:30:07.352082"
+      }
+    }
+  ]
+}

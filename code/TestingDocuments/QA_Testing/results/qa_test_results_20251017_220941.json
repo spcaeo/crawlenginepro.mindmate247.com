@@ -1,0 +1,279 @@
+{
+  "summary": {
+    "test_run_timestamp": "2025-10-17T22:09:41.115003",
+    "collection_name": "jina_v3_test",
+    "total_questions": 18,
+    "successful_tests": 1,
+    "failed_tests": 0,
+    "total_test_duration_seconds": 6.926375150680542,
+    "service_configuration": {
+      "embeddings": {
+        "model": "jina-embeddings-v3",
+        "dimension": 1024,
+        "provider": "jina_api",
+        "device": "jina_cloud_gpu",
+        "cache_enabled": false,
+        "cache_entries": 0
+      },
+      "answer_generation": {
+        "cache_enabled": false
+      },
+      "reranking": {
+        "model": "jina-reranker-v2-base-multilingual",
+        "provider": "jina-api"
+      }
+    },
+    "average_metrics": {
+      "total_time_ms": 6926.046375003352,
+      "server_time_ms": 6922.234058380127,
+      "keyword_coverage_percentage": 50.0
+    },
+    "category_statistics": {
+      "Cross-Section Synthesis": {
+        "test_count": 1,
+        "avg_time_ms": 6926.046375003352,
+        "avg_keyword_coverage": 50.0
+      }
+    }
+  },
+  "test_results": [
+    {
+      "test_id": "1.3",
+      "category": "Cross-Section Synthesis",
+      "question": "Find the highest-priced product listed across all invoices and describe its key features and technical specifications.",
+      "difficulty": "medium",
+      "test_capability": "aggregation and ranking",
+      "timestamp": "2025-10-17T22:09:41.114901",
+      "success": true,
+      "answer": "## Highest-Priced Product Analysis\n\n**Product:** Hobart Commercial Dishwasher (Model: LXeR-2)  \n**Price:** **$8,999.00 USD** [Source 4]  \n**Invoice Source:** REST-2024-0445 (Restaurant Equipment Purchase)  \n\n---\n\n### Key Features and Technical Specifications:\n1. **Model & Year:**  \n   - Model: LXeR-2 [Source 4]  \n   - Year: 2024 [Source 4]  \n\n2. **Physical Dimensions:**  \n   - Size: 24.5\" (W) × 25\" (D) × 34\" (H) [Source 4]  \n\n3. **Commercial-Grade Functionality:**  \n   - Designed for high-volume restaurant operations (implied by \"Commercial Dishwasher\" designation) [Source 4].  \n   - Likely includes heavy-duty stainless steel construction and industrial-grade sanitization cycles (standard for commercial models, though not explicitly stated in context).  \n\n4. **Vendor Information:**  \n   - Supplied by ChefPro Restaurant Supply Co. [Source 4].  \n\n---\n\n### Comparative Pricing Context:\n- **Second-Highest Priced Product:** Philips IntelliVue MX40 Patient Monitor ($4,500.00) [Source 1]  \n- **Third-Highest Priced Product:** Dell XPS 15 Laptop ($2,299.00) [Source 2]  \n\n**Calculation of Ranking:**  \n```\n1. Hobart Dishwasher: $8,999.00 [Source 4]  \n2. Philips MX40: $4,500.00 [Source 1]  \n3. Dell XPS 15: $2,299.00 [Source 2]  \n```\n\n---\n\n### Notes on Missing Information:\n- The context does not provide detailed technical specifications (e.g., water capacity, energy efficiency, cycle duration) for the Hobart LXeR-2 beyond dimensions and price. Additional details would typically be found in manufacturer datasheets or vendor product descriptions.  \n\n**Final Answer:** The **Hobart Commercial Dishwasher (LXeR-2)** is the highest-priced product at **$8,999.00 USD**, with key features including commercial-grade durability and dimensions optimized for restaurant use [Source 4].",
+      "citations_count": 3,
+      "citations": [
+        {
+          "source_id": 4,
+          "chunk_id": "hanuman_doc_jina_v3_test_1760720127_chunk_12",
+          "document_id": "hanuman_doc_jina_v3_test_1760720127",
+          "text_preview": null
+        },
+        {
+          "source_id": 1,
+          "chunk_id": "hanuman_doc_jina_v3_test_1760720127_chunk_8",
+          "document_id": "hanuman_doc_jina_v3_test_1760720127",
+          "text_preview": null
+        },
+        {
+          "source_id": 2,
+          "chunk_id": "hanuman_doc_jina_v3_test_1760720127_chunk_4",
+          "document_id": "hanuman_doc_jina_v3_test_1760720127",
+          "text_preview": null
+        }
+      ],
+      "performance": {
+        "total_time_ms": 6926.046375003352,
+        "server_time_ms": 6922.234058380127,
+        "network_latency_ms": 3.8123166232253425,
+        "stage_times": {
+          "intent_detection_ms": 1997.9300498962402,
+          "search_ms": 1511.5900039672852,
+          "reranking_ms": 486.069917678833,
+          "compression_ms": 0.0,
+          "answer_generation_ms": 4924.190282821655
+        },
+        "stage_percentages": {
+          "intent_detection_pct": 28.862503536376753,
+          "search_pct": 21.83673639491197,
+          "reranking_pct": 7.021864813865862,
+          "compression_pct": 0.0,
+          "answer_generation_pct": 71.1358535595944
+        },
+        "bottleneck": {
+          "stage": "answer_generation",
+          "time_ms": 4924.190282821655,
+          "percentage_of_total": 71.1358535595944
+        }
+      },
+      "retrieval_metrics": {
+        "search_results_count": 18,
+        "reranked_count": 10,
+        "compressed_count": 10,
+        "context_count": 5
+      },
+      "models_used": {
+        "llm_requested": "meta-llama/Llama-3.3-70B-Instruct-fast",
+        "llm_used": "Qwen3-32B",
+        "llm_temperature": 0.3,
+        "used_recommended_model": true,
+        "used_custom_prompt": true
+      },
+      "intent_analysis": {
+        "detected_intent": "aggregation",
+        "language": "en",
+        "complexity": "moderate",
+        "confidence": 0.95,
+        "recommended_model": "Qwen3-32B",
+        "has_custom_prompt": true
+      },
+      "keyword_analysis": {
+        "expected_keywords": [
+          "Hobart",
+          "Dishwasher",
+          "$8,999",
+          "sanitizing",
+          "40 racks/hour",
+          "Energy Star"
+        ],
+        "keywords_found": [
+          "Hobart",
+          "Dishwasher",
+          "$8,999"
+        ],
+        "keywords_missing": [
+          "sanitizing",
+          "40 racks/hour",
+          "Energy Star"
+        ],
+        "coverage_percentage": 50.0
+      },
+      "full_response": {
+        "success": true,
+        "query": "Find the highest-priced product listed across all invoices and describe its key features and technical specifications.",
+        "collection_name": "jina_v3_test",
+        "tenant_id": "default",
+        "answer": "## Highest-Priced Product Analysis\n\n**Product:** Hobart Commercial Dishwasher (Model: LXeR-2)  \n**Price:** **$8,999.00 USD** [Source 4]  \n**Invoice Source:** REST-2024-0445 (Restaurant Equipment Purchase)  \n\n---\n\n### Key Features and Technical Specifications:\n1. **Model & Year:**  \n   - Model: LXeR-2 [Source 4]  \n   - Year: 2024 [Source 4]  \n\n2. **Physical Dimensions:**  \n   - Size: 24.5\" (W) × 25\" (D) × 34\" (H) [Source 4]  \n\n3. **Commercial-Grade Functionality:**  \n   - Designed for high-volume restaurant operations (implied by \"Commercial Dishwasher\" designation) [Source 4].  \n   - Likely includes heavy-duty stainless steel construction and industrial-grade sanitization cycles (standard for commercial models, though not explicitly stated in context).  \n\n4. **Vendor Information:**  \n   - Supplied by ChefPro Restaurant Supply Co. [Source 4].  \n\n---\n\n### Comparative Pricing Context:\n- **Second-Highest Priced Product:** Philips IntelliVue MX40 Patient Monitor ($4,500.00) [Source 1]  \n- **Third-Highest Priced Product:** Dell XPS 15 Laptop ($2,299.00) [Source 2]  \n\n**Calculation of Ranking:**  \n```\n1. Hobart Dishwasher: $8,999.00 [Source 4]  \n2. Philips MX40: $4,500.00 [Source 1]  \n3. Dell XPS 15: $2,299.00 [Source 2]  \n```\n\n---\n\n### Notes on Missing Information:\n- The context does not provide detailed technical specifications (e.g., water capacity, energy efficiency, cycle duration) for the Hobart LXeR-2 beyond dimensions and price. Additional details would typically be found in manufacturer datasheets or vendor product descriptions.  \n\n**Final Answer:** The **Hobart Commercial Dishwasher (LXeR-2)** is the highest-priced product at **$8,999.00 USD**, with key features including commercial-grade durability and dimensions optimized for restaurant use [Source 4].",
+        "citations": [
+          {
+            "source_id": 4,
+            "chunk_id": "hanuman_doc_jina_v3_test_1760720127_chunk_12",
+            "document_id": "hanuman_doc_jina_v3_test_1760720127",
+            "text_preview": null
+          },
+          {
+            "source_id": 1,
+            "chunk_id": "hanuman_doc_jina_v3_test_1760720127_chunk_8",
+            "document_id": "hanuman_doc_jina_v3_test_1760720127",
+            "text_preview": null
+          },
+          {
+            "source_id": 2,
+            "chunk_id": "hanuman_doc_jina_v3_test_1760720127_chunk_4",
+            "document_id": "hanuman_doc_jina_v3_test_1760720127",
+            "text_preview": null
+          }
+        ],
+        "context_chunks": [
+          {
+            "chunk_id": "hanuman_doc_jina_v3_test_1760720127_chunk_8",
+            "text": "## Medical Equipment Invoice\n\n**Invoice Number:** MED-INV-2024-1523\n**Transaction Date:** 2024-02-28\n**Vendor Name:** MedTech Equipment Supply\n**Vendor ID:** MEDTECH-SUPPLY-099\n\n**Items:**\n1. Philips IntelliVue MX40 Patient Monitor - Model: MX40 - SKU: PHIL-MX40-2024 - Price: 4500.00 USD - Year: 2024\n2. Welch Allyn Blood Pressure Cuff Set - SKU: WA-BP-CUFF-SET - Price: 189.99 USD\n3. Nonin Pulse Oximeter - Model: Onyx Vantage 9590 - SKU: NONIN-9590 - Price: 375.00 USD - Color: Black\n\n**Amount:** 5064.99\n**Tax Amount:** 405.20\n**Total:** 5470.19\n**Currency:** USD\n**Payment Method:** Purchase Order\n**Payment Status:** Net 30 - Due 2024-03-30\n\n**Technical Specifications:** Philips MX40 features ECG, SpO2, NBP monitoring, 8.4\" touchscreen display, 5-hour battery life, wireless connectivity, clinical measurements include heart rate, respiration rate, temperature",
+            "document_id": "hanuman_doc_jina_v3_test_1760720127",
+            "topics": "Medical Equipment, Invoice, Healthcare Supplies, Purchase Order",
+            "keywords": "Philips IntelliVue MX40, MedTech Equipment Supply, MED-INV-2024-1523, Welch Allyn, Nonin Pulse Oximeter",
+            "summary": "This invoice details the purchase of medical equipment from MedTech Equipment Supply, including a Philips IntelliVue MX40 Patient Monitor, Welch Allyn Blood Pressure Cuff Set, and a Nonin Pulse Oximeter, with a total amount of 5470.19 USD due by March 30, 2024.",
+            "questions": "What medical equipment was purchased?|Who is the vendor for the invoice?|What is the total amount due?|When is the payment due?|What are the technical specifications of the Philips MX40?"
+          },
+          {
+            "chunk_id": "hanuman_doc_jina_v3_test_1760720127_chunk_4",
+            "text": "## Invoice Document - Technology Purchase\n\n**Invoice Number:** INV-2024-00789\n**Transaction Date:** 2024-03-15\n**Vendor Name:** TechSupply Solutions\n**Vendor ID:** VENDOR-TS-001\n\n**Items Purchased:**\n1. Dell XPS 15 Laptop - Model: XPS-15-9530 - SKU: DELL-XPS15-9530-I7 - Price: 2299.00 USD - Year: 2024\n2. Samsung 34\" Ultrawide Monitor - Model: S34C502 - SKU: SAMSUNG-S34C502 - Price: 449.99 USD\n3. Logitech MX Master 3S Mouse - SKU: LOGI-MX-MASTER-3S - Price: 99.99 USD - Color: Graphite\n\n**Amount:** 2848.98\n**Tax Amount:** 227.92\n**Total Amount:** 3076.90\n**Currency:** USD\n**Payment Method:** Corporate Credit Card\n**Payment Status:** Paid\n\n**Vendor Contact:** orders@techsupplysolutions.com | +1-555-TECH-BUY | Account Manager: John Smith\n**Customer:** Acme Corporation, 123 Business Park Dr, San Jose, CA 95110\n\n**Technical Specifications:** Dell XPS 15 features Intel Core i7-13700H processor, 32GB DDR5 RAM, 1TB NVMe SSD, NVIDIA GeForce RTX 4050 GPU, 15.6\" 3.5K OLED display, Windows 11 Pro",
+            "document_id": "hanuman_doc_jina_v3_test_1760720127",
+            "topics": "Technology Purchase, Invoice Details, Vendor Information, Payment Status, Hardware Specifications",
+            "keywords": "Invoice, Dell XPS 15, Samsung, Logitech MX Master 3S, TechSupply Solutions, Acme Corporation, USD, Payment Method, Corporate Credit Card, Intel Core i7-13700H",
+            "summary": "Acme Corporation purchased technology equipment from TechSupply Solutions, including a Dell XPS 15 laptop, a Samsung monitor, and a Logitech mouse, with a total amount of $3076.90 paid via corporate credit card.",
+            "questions": "What items were purchased?|Who is the vendor?|How was the payment made?|What is the total amount?|What are the technical specifications of the Dell XPS 15?"
+          },
+          {
+            "chunk_id": "hanuman_doc_jina_v3_test_1760720127_chunk_1",
+            "text": "### Apple iPhone 15 Pro Max\n**Brand:** Apple\n**Manufacturer:** Apple Inc.\n**Model:** iPhone 15 Pro Max\n**SKU:** IPHONE-15-PRO-MAX-256GB-BLUE\n**Price:** 1199.00\n**Currency:** USD\n**Year:** 2024\n**Color:** Natural Titanium Blue\n**Size:** 6.7 inches\n**Weight:** 221 grams\n**Dimensions:** 159.9 x 76.7 x 8.25 mm\n\n**Specifications:** A17 Pro chip, 256GB storage, Triple camera system (48MP Main, 12MP Ultra Wide, 12MP Telephoto with 5x optical zoom), ProMotion display with 120Hz refresh rate, Titanium design, USB-C connector, Face ID, 5G capable, iOS 17\n\n**Key Features:** Revolutionary titanium design makes this the lightest Pro model ever. The A17 Pro chip delivers unprecedented performance for gaming and professional applications. Advanced camera system captures stunning photos in any lighting condition.\n\n**Contact:** sales@apple.com | +1-800-MY-APPLE | https://www.apple.com/iphone-15-pro\n\n---\n\n## Product Information - Fashion & Apparel",
+            "document_id": "hanuman_doc_jina_v3_test_1760720127",
+            "topics": "Smartphones, Technology, Mobile Devices, Camera Systems, Design Innovation",
+            "keywords": "Apple, iPhone 15 Pro Max, A17 Pro chip, 256GB, Natural Titanium Blue, 6.7 inches, 5G, iOS 17, Face ID, USB-C",
+            "summary": "The Apple iPhone 15 Pro Max features a revolutionary titanium design, A17 Pro chip, and advanced triple camera system, offering top-tier performance and photography in a 6.7-inch display with 256GB storage for $1199.",
+            "questions": "What are the key features of the iPhone 15 Pro Max?|How does the A17 Pro chip enhance performance?|Why is the titanium design significant?|What camera capabilities does it offer?|What is the price and storage capacity?"
+          },
+          {
+            "chunk_id": "hanuman_doc_jina_v3_test_1760720127_chunk_12",
+            "text": "## Restaurant Supply Order\n\n**Invoice Number:** REST-2024-0445\n**Transaction Date:** 2024-01-20\n**Vendor Name:** ChefPro Restaurant Supply Co.\n**Vendor ID:** CHEFPRO-VENDOR-2024\n\n**Equipment Ordered:**\n1. Hobart Commercial Dishwasher - Model: LXeR-2 - SKU: HOBART-LXER2 - Price: 8999.00 USD - Year: 2024 - Dimensions: 24.5 x 25 x 34 inches\n2. Vulcan Gas Range - Model: 60SS-10B - SKU: VULCAN-60SS-10B - Price: 5499.00 USD - Color: Stainless Steel - Size: 60 inches wide\n3. True Refrigerator - Model: T-49-HC - SKU: TRUE-T49-HC - Price: 3299.00 USD - Dimensions: 54 x 31 x 83 inches\n\n**Amount:** 17797.00\n**Tax Amount:** 1423.76\n**Total:** 19220.76\n**Currency:** USD\n**Payment Method:** Commercial Loan Financing\n**Payment Status:** Financed - 36 monthly payments",
+            "document_id": "hanuman_doc_jina_v3_test_1760720127",
+            "topics": "Restaurant Equipment Purchase, Invoice Details, Commercial Financing",
+            "keywords": "Restaurant Supply Order, ChefPro Restaurant Supply Co, Hobart Commercial Dishwasher, Vulcan Gas Range, True Refrigerator, REST-2024-0445, Commercial Loan Financing",
+            "summary": "An invoice for restaurant equipment from ChefPro Restaurant Supply Co includes a dishwasher, gas range, and refrigerator, totaling $19,220.76 with financing through a commercial loan.",
+            "questions": "What restaurant equipment was ordered?|How much is the total amount including tax?|What payment method was used?|Which vendor supplied the equipment?|What are the key details of the invoice?"
+          },
+          {
+            "chunk_id": "hanuman_doc_jina_v3_test_1760720127_chunk_14",
+            "text": "## Pharmaceutical Product Information\n\n**Product Name:** CardioHealth Plus Daily Supplement\n**Brand:** VitaLife Sciences\n**Manufacturer:** VitaLife Laboratories Inc.\n**Model:** CardioHealth Plus 120ct\n**SKU:** VITA-CARDIO-PLUS-120\n**Price:** 34.99\n**Currency:** USD\n**Year:** 2024\n**Size:** 120 capsules (60-day supply)\n**Weight:** 180 grams (bottle with capsules)\n**Color:** White capsules in amber bottle\n\n**Specifications:** Each capsule contains: Omega-3 Fish Oil (1000mg), CoQ10 (100mg), Vitamin D3 (2000 IU), Magnesium (200mg), Potassium (99mg). Non-GMO, gluten-free, third-party tested, manufactured in FDA-registered facility.\n\n**Technical Terms:** Omega-3 fatty acids (EPA/DHA), Coenzyme Q10 (ubiquinone), Cholecalciferol (Vitamin D3), cardiovascular support, bioavailability, enteric-coated\n\n**Key Numbers:** 120 capsules, 60-day supply, 2 capsules daily, 1000mg omega-3 per serving, Expires 2026-12-31",
+            "document_id": "hanuman_doc_jina_v3_test_1760720127",
+            "topics": "Cardiovascular Health, Dietary Supplements, Nutritional Ingredients, Health and Wellness",
+            "keywords": "CardioHealth Plus, VitaLife Sciences, Omega-3 Fish Oil, CoQ10, Vitamin D3, Magnesium, Potassium, FDA-registered, Non-GMO, 120ct",
+            "summary": "CardioHealth Plus is a daily supplement by VitaLife Sciences designed to support cardiovascular health, containing Omega-3 Fish Oil, CoQ10, Vitamin D3, Magnesium, and Potassium. It provides a 60-day supply and is manufactured in an FDA-registered facility.",
+            "questions": "What is CardioHealth Plus?|What are the key ingredients in CardioHealth Plus?|How long does a bottle of CardioHealth Plus last?|Why choose CardioHealth Plus for heart health?|What are the benefits of Omega-3 and CoQ10?"
+          }
+        ],
+        "stages": {
+          "search": {
+            "time_ms": 1511.5900039672852,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "results_count": 18,
+              "top_k": 20,
+              "metadata_boost_enabled": true
+            }
+          },
+          "reranking": {
+            "time_ms": 486.069917678833,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "input_count": 18,
+              "output_count": 10,
+              "top_k": 10
+            }
+          },
+          "compression": {
+            "time_ms": 0.0,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "skipped": true
+            }
+          },
+          "intent_detection": {
+            "time_ms": 1997.9300498962402,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "intent": "aggregation",
+              "language": "en",
+              "complexity": "moderate",
+              "confidence": 0.95,
+              "recommended_model": "Qwen3-32B",
+              "recommended_max_tokens": 2048,
+              "has_custom_prompt": true
+            }
+          },
+          "answer_generation": {
+            "time_ms": 4924.190282821655,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "context_chunks": 5,
+              "citations": 3,
+              "model_used": "Qwen3-32B",
+              "model_requested": "meta-llama/Llama-3.3-70B-Instruct-fast",
+              "max_tokens_used": 2048,
+              "temperature": 0.3,
+              "used_custom_prompt": true,
+              "used_recommended_model": true,
+              "used_recommended_max_tokens": true
+            }
+          }
+        },
+        "total_time_ms": 6922.234058380127,
+        "search_results_count": 18,
+        "reranked_count": 10,
+        "compressed_count": 10,
+        "context_count": 5,
+        "api_version": "1.0.0",
+        "timestamp": "2025-10-17T22:09:41.113279"
+      }
+    }
+  ]
+}

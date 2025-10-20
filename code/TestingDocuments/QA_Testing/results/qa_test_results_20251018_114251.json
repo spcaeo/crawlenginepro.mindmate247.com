@@ -1,0 +1,48 @@
+{
+  "summary": {
+    "test_run_timestamp": "2025-10-18T11:42:51.398136",
+    "collection_name": "jina_v3_test",
+    "total_questions": 18,
+    "successful_tests": 0,
+    "failed_tests": 1,
+    "total_test_duration_seconds": 14.879065036773682,
+    "service_configuration": {
+      "embeddings": {
+        "model": "jina-embeddings-v3",
+        "dimension": 1024,
+        "provider": "jina_api",
+        "device": "jina_cloud_gpu",
+        "cache_enabled": true,
+        "cache_entries": 0
+      },
+      "answer_generation": {
+        "cache_enabled": false
+      },
+      "reranking": {
+        "model": "jina-reranker-v2-base-multilingual",
+        "provider": "jina-api"
+      }
+    },
+    "average_metrics": {
+      "total_time_ms": 0,
+      "server_time_ms": 0,
+      "keyword_coverage_percentage": 0
+    },
+    "category_statistics": {}
+  },
+  "test_results": [
+    {
+      "test_id": "1.1",
+      "category": "Cross-Section Synthesis",
+      "question": "Compare the technical terms used in the Nike Air Zoom Pegasus 40 and Michelin Pilot Sport 4S Tire sections; what technologies do they share?",
+      "difficulty": "hard",
+      "test_capability": "cross-domain synthesis",
+      "timestamp": "2025-10-18T11:42:51.398012",
+      "success": false,
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "performance": {
+        "total_time_ms": 14878.944958996726
+      }
+    }
+  ]
+}

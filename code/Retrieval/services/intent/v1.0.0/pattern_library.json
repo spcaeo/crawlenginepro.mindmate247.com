@@ -1,0 +1,727 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "2.0.0",
+  "last_updated": "2025-10-19T17:01:27.106136",
+  "auto_learning_enabled": true,
+  "confidence_thresholds": {
+    "high": 0.9,
+    "medium": 0.7,
+    "low": 0.5
+  },
+  "patterns": {
+    "comparison": {
+      "priority": 1,
+      "description": "Comparing items, features, technologies",
+      "patterns": [
+        {
+          "regex": "\\b(compare|comparing)\\s+",
+          "confidence": 0.95,
+          "examples": [
+            "Compare X and Y",
+            "Can you compare...",
+            "I want to compare..."
+          ],
+          "match_count": 9,
+          "accuracy": null,
+          "added_date": "2025-10-19",
+          "source": "manual",
+          "note": "Flexible - matches compare anywhere, not just start"
+        },
+        {
+          "regex": "\\b(difference|differences)\\s+between\\b",
+          "confidence": 0.92,
+          "examples": [
+            "What's the difference between A and B?"
+          ],
+          "match_count": 2,
+          "accuracy": null,
+          "added_date": "2025-01-17",
+          "source": "manual"
+        },
+        {
+          "regex": "\\bvs\\.?\\s+",
+          "confidence": 0.88,
+          "examples": [
+            "Nike vs Adidas",
+            "iPhone vs Samsung"
+          ],
+          "match_count": 2,
+          "accuracy": {
+            "correct": 2,
+            "incorrect": 0
+          },
+          "added_date": "2025-01-17",
+          "source": "manual"
+        },
+        {
+          "regex": "\\bversus\\b",
+          "confidence": 0.88,
+          "examples": [
+            "Product A versus Product B"
+          ],
+          "match_count": 2,
+          "accuracy": {
+            "correct": 2,
+            "incorrect": 0
+          },
+          "added_date": "2025-01-17",
+          "source": "manual"
+        },
+        {
+          "regex": "\\b(better|worse|superior|inferior)\\s+(than|to)\\b",
+          "confidence": 0.85,
+          "examples": [
+            "Which is better than...",
+            "Is A superior to B?"
+          ],
+          "match_count": 1,
+          "accuracy": {
+            "correct": 1,
+            "incorrect": 0
+          },
+          "added_date": "2025-10-19",
+          "source": "manual",
+          "note": "Comparative adjectives indicate comparison intent"
+        }
+      ]
+    },
+    "factual_retrieval": {
+      "priority": 2,
+      "description": "Retrieving facts, details, attributes about a single entity (product, invoice, etc.)",
+      "patterns": [
+        {
+          "regex": "^what\\s+(is|are)\\s+the\\s+.*\\s+(and|,)\\s+",
+          "confidence": 0.92,
+          "examples": [
+            "What is the price and key specifications?",
+            "What are the features and benefits?"
+          ],
+          "match_count": 0,
+          "accuracy": null,
+          "added_date": "2025-10-17",
+          "source": "manual"
+        },
+        {
+          "regex": "^what\\s+is\\s+the\\s+(price|cost|weight|color|sku|model)\\b",
+          "confidence": 0.95,
+          "examples": [
+            "What is the price?",
+            "What is the weight?"
+          ],
+          "match_count": 4,
+          "accuracy": null,
+          "added_date": "2025-01-17",
+          "source": "manual"
+        },
+        {
+          "regex": "^how\\s+much\\s+(does|is|costs?)\\b",
+          "confidence": 0.93,
+          "examples": [
+            "How much does it cost?",
+            "How much is this?"
+          ],
+          "match_count": 2,
+          "accuracy": null,
+          "added_date": "2025-01-17",
+          "source": "manual"
+        },
+        {
+          "regex": "^(get|show|find)\\s+(me\\s+)?(the\\s+)?(price|weight|location|contact)\\b",
+          "confidence": 0.9,
+          "examples": [
+            "Get the price",
+            "Show me the weight"
+          ],
+          "match_count": 0,
+          "accuracy": null,
+          "added_date": "2025-01-17",
+          "source": "manual"
+        }
+      ]
+    },
+    "list_enumeration": {
+      "priority": 2,
+      "description": "Listing or enumerating multiple items",
+      "patterns": [
+        {
+          "regex": "^list\\s+(all\\s+)?",
+          "confidence": 0.95,
+          "examples": [
+            "List all products",
+            "List vendors"
+          ],
+          "match_count": 7,
+          "accuracy": null,
+          "added_date": "2025-01-17",
+          "source": "manual"
+        },
+        {
+          "regex": "^show\\s+(all|me\\s+all)\\s+",
+          "confidence": 0.92,
+          "examples": [
+            "Show all invoices",
+            "Show me all vendors"
+          ],
+          "match_count": 4,
+          "accuracy": null,
+          "added_date": "2025-01-17",
+          "source": "manual"
+        },
+        {
+          "regex": "\\benumerate\\b",
+          "confidence": 0.9,
+          "examples": [
+            "Enumerate the products"
+          ],
+          "match_count": 2,
+          "accuracy": null,
+          "added_date": "2025-01-17",
+          "source": "manual"
+        }
+      ]
+    },
+    "yes_no": {
+      "priority": 3,
+      "description": "Binary yes/no questions",
+      "patterns": [
+        {
+          "regex": "^(is|are|does|do|can|could|will|would|has|have|had)\\s+(the|this|that|it|there)\\s+",
+          "confidence": 0.95,
+          "examples": [
+            "Is this product available?",
+            "Does it have warranty?",
+            "Can I return this?"
+          ],
+          "match_count": 4,
+          "accuracy": null,
+          "added_date": "2025-01-17",
+          "source": "manual"
+        },
+        {
+          "regex": "^(available|in stock|ready).*\\?$",
+          "confidence": 0.88,
+          "examples": [
+            "Available in stock?",
+            "Ready to ship?"
+          ],
+          "match_count": 1,
+          "accuracy": {
+            "correct": 1,
+            "incorrect": 0
+          },
+          "added_date": "2025-01-17",
+          "source": "manual"
+        }
+      ]
+    },
+    "aggregation": {
+      "priority": 1,
+      "description": "Calculations, sums, ranking, extremes",
+      "patterns": [
+        {
+          "regex": "(?<!Pro )\\b(highest|lowest|maximum|minimum|max|min|most|least|best|worst)\\b",
+          "confidence": 0.95,
+          "examples": [
+            "Find the highest price",
+            "What's the lowest weight?"
+          ],
+          "match_count": 7,
+          "accuracy": null,
+          "added_date": "2025-01-17",
+          "source": "manual",
+          "note": "Negative lookbehind to exclude 'Pro Max' product names"
+        },
+        {
+          "regex": "\\b(total|sum|average|mean|combined|aggregate)\\s+(weight|cost|price|value|amount|quantity|number)\\b",
+          "confidence": 0.93,
+          "examples": [
+            "Total weight",
+            "Combined cost",
+            "Average price",
+            "Sum of quantities"
+          ],
+          "match_count": 7,
+          "accuracy": null,
+          "added_date": "2025-10-19",
+          "source": "manual",
+          "note": "Requires measurement noun after aggregation verb to avoid false positives like 'total nonsense'"
+        },
+        {
+          "regex": "\\bhow\\s+much\\s+(in\\s+)?total\\b",
+          "confidence": 0.9,
+          "examples": [
+            "How much in total?",
+            "How much total weight?"
+          ],
+          "match_count": 0,
+          "accuracy": null,
+          "added_date": "2025-10-19",
+          "source": "manual",
+          "note": "Common natural language aggregation pattern"
+        },
+        {
+          "regex": "\\b(rank|ranking|top|bottom)\\b",
+          "confidence": 0.88,
+          "examples": [
+            "Rank products by price",
+            "Top 5 vendors"
+          ],
+          "match_count": 2,
+          "accuracy": {
+            "correct": 2,
+            "incorrect": 0
+          },
+          "added_date": "2025-01-17",
+          "source": "manual"
+        }
+      ]
+    },
+    "temporal": {
+      "priority": 1,
+      "description": "Time-based queries, dates, sequences",
+      "patterns": [
+        {
+          "regex": "\\b(chronological|timeline|schedule)\\b",
+          "confidence": 0.95,
+          "examples": [
+            "List invoices in chronological order",
+            "Show timeline"
+          ],
+          "match_count": 0,
+          "accuracy": null,
+          "added_date": "2025-01-17",
+          "source": "manual"
+        },
+        {
+          "regex": "\\b(due date|expir|expiration)\\b",
+          "confidence": 0.93,
+          "examples": [
+            "When does it expire?",
+            "Due date for invoice"
+          ],
+          "match_count": 0,
+          "accuracy": null,
+          "added_date": "2025-01-17",
+          "source": "manual"
+        },
+        {
+          "regex": "^when\\s+(does|is|will|was)\\s+",
+          "confidence": 0.92,
+          "examples": [
+            "When does warranty expire?",
+            "When was it manufactured?"
+          ],
+          "match_count": 0,
+          "accuracy": null,
+          "added_date": "2025-01-17",
+          "source": "manual"
+        },
+        {
+          "regex": "\\b(before|after)\\s+(the|a)\\s+",
+          "confidence": 0.88,
+          "examples": [
+            "Is the due date before the expiration?",
+            "After the warranty period"
+          ],
+          "match_count": 0,
+          "accuracy": null,
+          "added_date": "2025-01-17",
+          "source": "manual"
+        }
+      ]
+    },
+    "cross_reference": {
+      "priority": 1,
+      "description": "Finding overlaps or matches across different sets",
+      "patterns": [
+        {
+          "regex": "\\b(which|what)\\s+.*\\s+(appear in|in)\\s+both\\b",
+          "confidence": 0.93,
+          "examples": [
+            "Which vendors appear in both categories?"
+          ],
+          "match_count": 1,
+          "accuracy": null,
+          "added_date": "2025-01-17",
+          "source": "manual"
+        },
+        {
+          "regex": "\\b(shared|common)\\s+(between|across|to)\\b",
+          "confidence": 0.9,
+          "examples": [
+            "What's shared between A and B?",
+            "Find common items across invoices"
+          ],
+          "match_count": 3,
+          "accuracy": null,
+          "added_date": "2025-10-19",
+          "source": "manual",
+          "note": "Requires directional preposition to avoid false positives"
+        },
+        {
+          "regex": "\\b(overlap|overlapping|intersection)\\s+(between|of|with)\\b",
+          "confidence": 0.88,
+          "examples": [
+            "Show overlap between vendor lists",
+            "Find intersection of categories"
+          ],
+          "match_count": 0,
+          "accuracy": null,
+          "added_date": "2025-10-19",
+          "source": "manual",
+          "note": "Set theory terminology with required preposition"
+        },
+        {
+          "regex": "\\b(match|matching|matches)\\s+.*\\s+(vendor|product|invoice|category|item)\\b",
+          "confidence": 0.85,
+          "examples": [
+            "Which items match this vendor?",
+            "Find products matching category X"
+          ],
+          "match_count": 0,
+          "accuracy": null,
+          "added_date": "2025-10-19",
+          "source": "manual",
+          "note": "Match patterns indicate cross-reference lookups"
+        }
+      ]
+    },
+    "negative_logic": {
+      "priority": 1,
+      "description": "Finding what is NOT present, missing data",
+      "patterns": [
+        {
+          "regex": "\\b(without|missing|absent)\\b",
+          "confidence": 0.93,
+          "examples": [
+            "Products without warranty",
+            "What's missing?",
+            "Items missing SKU"
+          ],
+          "match_count": 0,
+          "accuracy": null,
+          "added_date": "2025-01-17",
+          "source": "manual"
+        },
+        {
+          "regex": "\\b(do not|don't|does not|doesn't|not\\s+(have|in|appear))\\b",
+          "confidence": 0.9,
+          "examples": [
+            "Products that don't have warranty",
+            "Items not in category"
+          ],
+          "match_count": 0,
+          "accuracy": null,
+          "added_date": "2025-01-17",
+          "source": "manual"
+        },
+        {
+          "regex": "\\bare\\s+there\\s+any\\s+.*\\s+(missing|without)\\b",
+          "confidence": 0.88,
+          "examples": [
+            "Are there any reviews missing?",
+            "Are there any items without price?"
+          ],
+          "match_count": 0,
+          "accuracy": null,
+          "added_date": "2025-01-17",
+          "source": "manual"
+        },
+        {
+          "regex": "\\b(for any|for each)\\s+.*\\s+(involving|with|containing|where|having)\\b",
+          "confidence": 0.92,
+          "examples": [
+            "For any invoice involving international shipment",
+            "For each product with a warranty",
+            "For any item containing special materials"
+          ],
+          "match_count": 0,
+          "accuracy": null,
+          "added_date": "2025-10-19",
+          "source": "manual",
+          "note": "Conditional queries requiring existence check before answering"
+        },
+        {
+          "regex": "\\b(provide|show|list)\\s+.*\\s+for\\s+.*\\s+(involving|with|containing|where|having)\\b",
+          "confidence": 0.9,
+          "examples": [
+            "Provide payment terms for any invoice involving international shipment",
+            "Show details for products with warranty",
+            "List items for invoices containing discounts"
+          ],
+          "match_count": 0,
+          "accuracy": null,
+          "added_date": "2025-10-19",
+          "source": "manual",
+          "note": "Conditional queries with imperative verbs - check condition exists first"
+        }
+      ]
+    },
+    "synthesis": {
+      "priority": 1,
+      "description": "Combining information from multiple sources into unified answer",
+      "patterns": [
+        {
+          "regex": "\\b(summarize|summary|overview)\\s+(all|the|of)\\b",
+          "confidence": 0.93,
+          "examples": [
+            "Summarize all the invoices",
+            "Give me an overview of the purchases",
+            "Summary of all vendors"
+          ],
+          "match_count": 2,
+          "accuracy": null,
+          "added_date": "2025-10-19",
+          "source": "manual",
+          "note": "Synthesis requires combining data from multiple sources"
+        },
+        {
+          "regex": "\\b(consolidate|combine|merge|integrate)\\b",
+          "confidence": 0.9,
+          "examples": [
+            "Consolidate the information",
+            "Combine data from both sources"
+          ],
+          "match_count": 0,
+          "accuracy": null,
+          "added_date": "2025-10-19",
+          "source": "manual"
+        }
+      ]
+    },
+    "definition_explanation": {
+      "priority": 2,
+      "description": "Explaining what something is or means",
+      "patterns": [
+        {
+          "regex": "^what\\s+(is|are|does|do)\\s+(?!(the\\s+(price|cost|weight|total|sum)))",
+          "confidence": 0.88,
+          "examples": [
+            "What is Net 30?",
+            "What does FOB mean?",
+            "What are payment terms?"
+          ],
+          "match_count": 1,
+          "accuracy": {
+            "correct": 1,
+            "incorrect": 0
+          },
+          "added_date": "2025-10-19",
+          "source": "manual",
+          "note": "Negative lookahead to avoid matching factual_retrieval price queries"
+        },
+        {
+          "regex": "\\b(explain|clarify|define|meaning of)\\b",
+          "confidence": 0.92,
+          "examples": [
+            "Explain the payment process",
+            "Define Net 30",
+            "What's the meaning of FOB?"
+          ],
+          "match_count": 1,
+          "accuracy": null,
+          "added_date": "2025-10-19",
+          "source": "manual"
+        },
+        {
+          "regex": "\\bhow\\s+(does|do|did)\\s+",
+          "confidence": 0.87,
+          "examples": [
+            "How does this work?",
+            "How do payment terms apply?"
+          ],
+          "match_count": 1,
+          "accuracy": {
+            "correct": 1,
+            "incorrect": 0
+          },
+          "added_date": "2025-10-19",
+          "source": "manual"
+        }
+      ]
+    },
+    "contextual_explanation": {
+      "priority": 1,
+      "description": "Explaining WHY something happened or reasoning behind decisions",
+      "patterns": [
+        {
+          "regex": "\\bwhy\\s+(is|are|was|were|did|do|does)\\b",
+          "confidence": 0.93,
+          "examples": [
+            "Why is this invoice marked as pending?",
+            "Why was this discount applied?",
+            "Why does it cost more?"
+          ],
+          "match_count": 1,
+          "accuracy": null,
+          "added_date": "2025-10-19",
+          "source": "manual",
+          "note": "WHY questions require contextual reasoning"
+        },
+        {
+          "regex": "\\b(reason|rationale|justification)\\s+(for|behind|why)\\b",
+          "confidence": 0.9,
+          "examples": [
+            "What's the reason for this charge?",
+            "Explain the rationale behind..."
+          ],
+          "match_count": 1,
+          "accuracy": null,
+          "added_date": "2025-10-19",
+          "source": "manual"
+        }
+      ]
+    },
+    "relationship_mapping": {
+      "priority": 1,
+      "description": "Understanding connections and relationships between entities",
+      "patterns": [
+        {
+          "regex": "\\b(related to|connected to|associated with|linked to)\\b",
+          "confidence": 0.9,
+          "examples": [
+            "What products are related to this vendor?",
+            "Invoices associated with this customer",
+            "Items linked to warranty claims"
+          ],
+          "match_count": 0,
+          "accuracy": null,
+          "added_date": "2025-10-19",
+          "source": "manual"
+        },
+        {
+          "regex": "\\b(relationship|connection|link|association)\\s+between\\b",
+          "confidence": 0.92,
+          "examples": [
+            "What's the relationship between vendor and product?",
+            "Show the connection between invoices"
+          ],
+          "match_count": 0,
+          "accuracy": null,
+          "added_date": "2025-10-19",
+          "source": "manual"
+        },
+        {
+          "regex": "\\b(whose|where|with)\\s+.*\\s+(is not|are not|not the same|different|differs|!=|\u2260)\\b",
+          "confidence": 0.93,
+          "examples": [
+            "List products whose manufacturer is not the same as vendor",
+            "Items where supplier differs from manufacturer",
+            "Products with different vendor and manufacturer"
+          ],
+          "match_count": 0,
+          "accuracy": null,
+          "added_date": "2025-10-19",
+          "source": "manual",
+          "note": "Field-level comparison - checks if two entity attributes differ"
+        }
+      ]
+    },
+    "document_navigation": {
+      "priority": 2,
+      "description": "Finding where information is located in documents",
+      "patterns": [
+        {
+          "regex": "\\b(where|which (section|part|page|document))\\b.*\\b(find|located|mentioned|stated|says)\\b",
+          "confidence": 0.9,
+          "examples": [
+            "Where can I find the warranty terms?",
+            "Which section mentions payment?",
+            "Where is the price located?"
+          ],
+          "match_count": 0,
+          "accuracy": null,
+          "added_date": "2025-10-19",
+          "source": "manual",
+          "note": "Combination of location words + find/locate verbs"
+        },
+        {
+          "regex": "\\b(locate|find where|point me to)\\b",
+          "confidence": 0.88,
+          "examples": [
+            "Locate the terms and conditions",
+            "Find where warranty is mentioned"
+          ],
+          "match_count": 0,
+          "accuracy": null,
+          "added_date": "2025-10-19",
+          "source": "manual"
+        }
+      ]
+    },
+    "exception_handling": {
+      "priority": 1,
+      "description": "Identifying violations, exceptions, or special cases",
+      "patterns": [
+        {
+          "regex": "\\b(violate|violation|breach|non-compliant|exception)\\b",
+          "confidence": 0.95,
+          "examples": [
+            "Which invoices violate policy?",
+            "Find non-compliant items",
+            "Show exceptions to the rule"
+          ],
+          "match_count": 0,
+          "accuracy": null,
+          "added_date": "2025-10-19",
+          "source": "manual"
+        },
+        {
+          "regex": "\\b(not\\s+(allowed|permitted|valid)|against\\s+(policy|rules))\\b",
+          "confidence": 0.92,
+          "examples": [
+            "What's not allowed?",
+            "Items against policy"
+          ],
+          "match_count": 0,
+          "accuracy": null,
+          "added_date": "2025-10-19",
+          "source": "manual"
+        }
+      ]
+    },
+    "simple_lookup": {
+      "priority": 10,
+      "description": "Direct field lookup by ID or entity name",
+      "patterns": [
+        {
+          "regex": "\\b(what|which|show|get|find|give me|tell me)\\s+(is|are|was|were)?\\s*(the)?\\s+([\\w\\s]+)\\s+(for|of|from)\\s+([A-Z0-9-]+)",
+          "confidence": 0.92,
+          "examples": [
+            "What is the vendor name for GE-CT-12456?",
+            "What is the price for INV-789?",
+            "Show me the manufacturer of SIE-MRI-7890",
+            "Get the status for ORDER-123"
+          ],
+          "match_count": 0,
+          "accuracy": null,
+          "added_date": "2025-10-19",
+          "source": "manual",
+          "note": "Field lookup by ID - What/Which [field] for [ID] pattern"
+        },
+        {
+          "regex": "^(get|show|find|fetch|retrieve|lookup)\\s+([\\w\\s]+)\\s+(for|of|from)\\s+([A-Z0-9-]+)",
+          "confidence": 0.9,
+          "examples": [
+            "Get vendor for GE-CT-12456",
+            "Show price of INV-789",
+            "Fetch status for ORDER-123"
+          ],
+          "match_count": 0,
+          "accuracy": null,
+          "added_date": "2025-10-19",
+          "source": "manual",
+          "note": "Imperative field lookup by ID"
+        }
+      ]
+    }
+  },
+  "learning_stats": {
+    "total_queries_processed": 0,
+    "pattern_matches": 0,
+    "llm_fallbacks": 0,
+    "patterns_learned": 0,
+    "last_learning_run": null,
+    "accuracy_by_intent": {}
+  }
+}

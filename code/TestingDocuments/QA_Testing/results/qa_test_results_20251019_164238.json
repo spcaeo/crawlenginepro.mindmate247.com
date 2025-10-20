@@ -1,0 +1,220 @@
+{
+  "summary": {
+    "test_run_timestamp": "2025-10-19T16:42:38.182277",
+    "collection_name": "test_comprehensive_v4",
+    "total_questions": 18,
+    "successful_tests": 1,
+    "failed_tests": 0,
+    "total_test_duration_seconds": 5.142957925796509,
+    "service_configuration": {
+      "embeddings": {
+        "model": "jina-embeddings-v3",
+        "dimension": 1024,
+        "provider": "jina_api",
+        "device": "jina_cloud_gpu",
+        "cache_enabled": true,
+        "cache_entries": 0
+      },
+      "answer_generation": {
+        "cache_enabled": false
+      },
+      "reranking": {
+        "model": "jina-reranker-v2-base-multilingual",
+        "provider": "jina-api"
+      }
+    },
+    "average_metrics": {
+      "total_time_ms": 5142.642874998273,
+      "server_time_ms": 5138.65327835083,
+      "keyword_coverage_percentage": 100.0
+    },
+    "category_statistics": {
+      "Advanced Logic": {
+        "test_count": 1,
+        "avg_time_ms": 5142.642874998273,
+        "avg_keyword_coverage": 100.0
+      }
+    }
+  },
+  "test_results": [
+    {
+      "test_id": "7.5",
+      "category": "Advanced Logic",
+      "question": "Which items ordered from a vendor with 'Tech' in their company name require delivery outside of the technology category?",
+      "difficulty": "hard",
+      "test_capability": "fuzzy matching with constraints",
+      "timestamp": "2025-10-19T16:42:38.182172",
+      "success": true,
+      "answer": "## Introduction to the Problem\nThe question asks us to identify items ordered from a vendor with 'Tech' in their company name that require delivery outside of the technology category. We have three sources of information: Source 1, which deals with a technology purchase from TechSupply Solutions; Source 2, which involves medical equipment from MedTech Equipment Supply; and Source 3, which concerns construction materials from BuildRight Materials & Supply.\n\n## Identifying Vendors with 'Tech' in Their Name\nFrom the given sources, we identify two vendors with 'Tech' in their company name:\n1. **TechSupply Solutions** (Source 1) - This vendor supplied technology-related items such as laptops, monitors, and mice.\n2. **MedTech Equipment Supply** (Source 2) - This vendor supplied medical equipment, which, while related to technology, falls under the healthcare category.\n\n## Analyzing Delivery Categories\n- **TechSupply Solutions** (Source 1) delivers items that are strictly within the technology category (e.g., Dell XPS 15 Laptop, Samsung 34\" Ultrawide Monitor, Logitech MX Master 3S Mouse).\n- **MedTech Equipment Supply** (Source 2) delivers medical equipment (e.g., Philips IntelliVue MX40 Patient Monitor, Welch Allyn Blood Pressure Cuff Set, Nonin Pulse Oximeter), which, although technological, serves the healthcare sector and thus can be considered outside the general technology category in the context of this question.\n\n## Conclusion\nBased on the analysis, **MedTech Equipment Supply** is the vendor with 'Tech' in their name that delivers items outside of the technology category, specifically into the healthcare sector. These items include medical monitors, blood pressure cuffs, and pulse oximeters, which are used in healthcare settings.\n\n### Summary Table\n| Vendor | Category | Items |\n|--------|----------|-------|\n| TechSupply Solutions | Technology | Dell XPS 15 Laptop, Samsung 34\" Ultrawide Monitor, Logitech MX Master 3S Mouse |\n| MedTech Equipment Supply | Healthcare | Philips IntelliVue MX40 Patient Monitor, Welch Allyn Blood Pressure Cuff Set, Nonin Pulse Oximeter |\n\n**Result:** Items ordered from **MedTech Equipment Supply** require delivery outside of the technology category, into the healthcare sector.",
+      "citations_count": 0,
+      "citations": [],
+      "performance": {
+        "total_time_ms": 5142.642874998273,
+        "server_time_ms": 5138.65327835083,
+        "network_latency_ms": 3.98959664744325,
+        "stage_times": {
+          "intent_detection_ms": 3063.9162063598633,
+          "search_ms": 1269.9458599090576,
+          "reranking_ms": 266.448974609375,
+          "compression_ms": 0.0,
+          "answer_generation_ms": 3601.8757820129395
+        },
+        "stage_percentages": {
+          "intent_detection_pct": 59.624886918682684,
+          "search_pct": 24.7135930586978,
+          "reranking_pct": 5.185190752836463,
+          "compression_pct": 0.0,
+          "answer_generation_pct": 70.09376945488147
+        },
+        "bottleneck": {
+          "stage": "answer_generation",
+          "time_ms": 3601.8757820129395,
+          "percentage_of_total": 70.09376945488147
+        }
+      },
+      "retrieval_metrics": {
+        "search_results_count": 10,
+        "reranked_count": 3,
+        "compressed_count": 3,
+        "context_count": 3
+      },
+      "models_used": {
+        "llm_requested": null,
+        "llm_used": "Meta-Llama-3.3-70B-Instruct",
+        "llm_temperature": 0.3,
+        "used_recommended_model": true,
+        "used_custom_prompt": true
+      },
+      "intent_analysis": {
+        "detected_intent": "cross_reference",
+        "language": "en",
+        "complexity": "moderate",
+        "confidence": 0.95,
+        "recommended_model": "Meta-Llama-3.3-70B-Instruct",
+        "has_custom_prompt": true
+      },
+      "keyword_analysis": {
+        "expected_keywords": [
+          "MedTech",
+          "Philips IntelliVue",
+          "Welch Allyn",
+          "Nonin",
+          "medical equipment"
+        ],
+        "keywords_found": [
+          "MedTech",
+          "Philips IntelliVue",
+          "Welch Allyn",
+          "Nonin",
+          "medical equipment"
+        ],
+        "keywords_missing": [],
+        "coverage_percentage": 100.0
+      },
+      "full_response": {
+        "success": true,
+        "query": "Which items ordered from a vendor with 'Tech' in their company name require delivery outside of the technology category?",
+        "collection_name": "test_comprehensive_v4",
+        "tenant_id": "test_tenant",
+        "answer": "## Introduction to the Problem\nThe question asks us to identify items ordered from a vendor with 'Tech' in their company name that require delivery outside of the technology category. We have three sources of information: Source 1, which deals with a technology purchase from TechSupply Solutions; Source 2, which involves medical equipment from MedTech Equipment Supply; and Source 3, which concerns construction materials from BuildRight Materials & Supply.\n\n## Identifying Vendors with 'Tech' in Their Name\nFrom the given sources, we identify two vendors with 'Tech' in their company name:\n1. **TechSupply Solutions** (Source 1) - This vendor supplied technology-related items such as laptops, monitors, and mice.\n2. **MedTech Equipment Supply** (Source 2) - This vendor supplied medical equipment, which, while related to technology, falls under the healthcare category.\n\n## Analyzing Delivery Categories\n- **TechSupply Solutions** (Source 1) delivers items that are strictly within the technology category (e.g., Dell XPS 15 Laptop, Samsung 34\" Ultrawide Monitor, Logitech MX Master 3S Mouse).\n- **MedTech Equipment Supply** (Source 2) delivers medical equipment (e.g., Philips IntelliVue MX40 Patient Monitor, Welch Allyn Blood Pressure Cuff Set, Nonin Pulse Oximeter), which, although technological, serves the healthcare sector and thus can be considered outside the general technology category in the context of this question.\n\n## Conclusion\nBased on the analysis, **MedTech Equipment Supply** is the vendor with 'Tech' in their name that delivers items outside of the technology category, specifically into the healthcare sector. These items include medical monitors, blood pressure cuffs, and pulse oximeters, which are used in healthcare settings.\n\n### Summary Table\n| Vendor | Category | Items |\n|--------|----------|-------|\n| TechSupply Solutions | Technology | Dell XPS 15 Laptop, Samsung 34\" Ultrawide Monitor, Logitech MX Master 3S Mouse |\n| MedTech Equipment Supply | Healthcare | Philips IntelliVue MX40 Patient Monitor, Welch Allyn Blood Pressure Cuff Set, Nonin Pulse Oximeter |\n\n**Result:** Items ordered from **MedTech Equipment Supply** require delivery outside of the technology category, into the healthcare sector.",
+        "citations": [],
+        "context_chunks": [
+          {
+            "chunk_id": "ComprehensiveTestDocument_chunk_0004",
+            "text": "## Invoice Document - Technology Purchase\n\n**Invoice Number:** INV-2024-00789\n**Transaction Date:** 2024-03-15\n**Vendor Name:** TechSupply Solutions\n**Vendor ID:** VENDOR-TS-001\n\n**Items Purchased:**\n1. Dell XPS 15 Laptop - Model: XPS-15-9530 - SKU: DELL-XPS15-9530-I7 - Price: 2299.00 USD - Year: 2024\n2. Samsung 34\" Ultrawide Monitor - Model: S34C502 - SKU: SAMSUNG-S34C502 - Price: 449.99 USD\n3. Logitech MX Master 3S Mouse - SKU: LOGI-MX-MASTER-3S - Price: 99.99 USD - Color: Graphite\n\n**Amount:** 2848.98\n**Tax Amount:** 227.92\n**Total Amount:** 3076.90\n**Currency:** USD\n**Payment Method:** Corporate Credit Card\n**Payment Status:** Paid\n\n**Vendor Contact:** orders@techsupplysolutions.com | +1-555-TECH-BUY | Account Manager: John Smith\n**Customer:** Acme Corporation, 123 Business Park Dr, San Jose, CA 95110\n\n**Technical Specifications:** Dell XPS 15 features Intel Core i7-13700H processor, 32GB DDR5 RAM, 1TB NVMe SSD, NVIDIA GeForce RTX 4050 GPU, 15.6\" 3.5K OLED display, Windows 11 Pro",
+            "document_id": "ComprehensiveTestDocument",
+            "topics": "Technology Purchase, Corporate Procurement, Hardware Specifications",
+            "keywords": "Dell XPS 15 Laptop, Samsung 34\" Ultrawide Monitor, Logitech MX Master 3S Mouse, TechSupply Solutions, VENDOR-TS-001, transaction: 2024-03-15, payment-status: Paid, payment-method: Corporate Credit Card, invoice: INV-2024-00789, Intel Core i7-13700H, 32GB DDR5 RAM, 1TB NVMe SSD, NVIDIA GeForce RTX 4050 GPU, 15.6\" 3.5K OLED display, Windows 11 Pro",
+            "summary": "Acme Corporation purchased a Dell XPS 15 Laptop, Samsung 34\" Ultrawide Monitor, and Logitech MX Master 3S Mouse from TechSupply Solutions on 2024-03-15. The total amount of $3076.90 was paid via corporate credit card.",
+            "questions": "What items were purchased?|Who is the vendor?|What is the payment status?"
+          },
+          {
+            "chunk_id": "ComprehensiveTestDocument_chunk_0008",
+            "text": "## Medical Equipment Invoice\n\n**Invoice Number:** MED-INV-2024-1523\n**Transaction Date:** 2024-02-28\n**Vendor Name:** MedTech Equipment Supply\n**Vendor ID:** MEDTECH-SUPPLY-099\n\n**Items:**\n1. Philips IntelliVue MX40 Patient Monitor - Model: MX40 - SKU: PHIL-MX40-2024 - Price: 4500.00 USD - Year: 2024\n2. Welch Allyn Blood Pressure Cuff Set - SKU: WA-BP-CUFF-SET - Price: 189.99 USD\n3. Nonin Pulse Oximeter - Model: Onyx Vantage 9590 - SKU: NONIN-9590 - Price: 375.00 USD - Color: Black\n\n**Amount:** 5064.99\n**Tax Amount:** 405.20\n**Total:** 5470.19\n**Currency:** USD\n**Payment Method:** Purchase Order\n**Payment Status:** Net 30 - Due 2024-03-30\n\n**Technical Specifications:** Philips MX40 features ECG, SpO2, NBP monitoring, 8.4\" touchscreen display, 5-hour battery life, wireless connectivity, clinical measurements include heart rate, respiration rate, temperature",
+            "document_id": "ComprehensiveTestDocument",
+            "topics": "Medical Equipment, Invoice, Healthcare Technology",
+            "keywords": "Philips IntelliVue MX40 Patient Monitor, Welch Allyn Blood Pressure Cuff Set, Nonin Pulse Oximeter, MedTech Equipment Supply, MED-INV-2024-1523, transaction: 2024-02-28, due: 2024-03-30, payment-terms: Net 30, payment-method: Purchase Order, ECG, SpO2, NBP monitoring",
+            "summary": "This invoice from MedTech Equipment Supply details the purchase of medical equipment including a Philips IntelliVue MX40 Patient Monitor, Welch Allyn Blood Pressure Cuff Set, and Nonin Pulse Oximeter. The transaction occurred on 2024-02-28, with payment terms of Net 30, due by 2024-03-30.",
+            "questions": "What medical equipment was purchased?|When is the payment due?|What are the technical specifications of the Philips MX40?"
+          },
+          {
+            "chunk_id": "ComprehensiveTestDocument_chunk_0017",
+            "text": "**Amount:** 3636.79\n**Tax Amount:** 290.94\n**Total:** 3927.73\n**Currency:** USD\n**Payment Method:** Net 30 Terms\n**Payment Status:** Pending - Due 2024-04-09\n\n**Specifications:** Douglas Fir lumber is kiln-dried, S4S (surfaced 4 sides), Grade #2 or better. Concrete mix achieves 4000 PSI at 28 days. Paint is interior/exterior acrylic latex, low-VOC, mildew-resistant.\n\n**Technical Terms:** Kiln-dried lumber, S4S (surfaced four sides), PSI (pounds per square inch), VOC (volatile organic compounds), acrylic latex, galvanized fasteners\n\n**Organizations:** BuildRight Materials & Supply (vendor), Greenfield Construction LLC (buyer), Quikrete Companies (manufacturer), Sherwin-Williams (manufacturer)\n\n**Contact:** orders@buildrightmaterials.com | +1-555-BUILD-99 | Warehouse: 789 Industrial Parkway, Houston, TX 77001",
+            "document_id": "ComprehensiveTestDocument",
+            "topics": "Construction materials, Payment terms, Product specifications",
+            "keywords": "Douglas Fir lumber, Greenfield Construction LLC, Quikrete Companies, Sherwin-Williams, payment-terms: Net 30, payment-status: Pending, due: 2024-04-09, Kiln-dried lumber, S4S, PSI, VOC, acrylic latex, galvanized fasteners",
+            "summary": "Greenfield Construction LLC has a pending payment of USD 3927.73, due on 2024-04-09, for kiln-dried Douglas Fir lumber, Quikrete concrete mix, and Sherwin-Williams paint, purchased from BuildRight Materials & Supply.",
+            "questions": "What is the payment status and due date?|What materials are included in the order?|Who are the involved organizations?"
+          }
+        ],
+        "stages": {
+          "search": {
+            "time_ms": 1269.9458599090576,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "results_count": 10,
+              "top_k": 10,
+              "metadata_boost_enabled": true
+            }
+          },
+          "reranking": {
+            "time_ms": 266.448974609375,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "input_count": 10,
+              "output_count": 3,
+              "top_k": 3
+            }
+          },
+          "compression": {
+            "time_ms": 0.0,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "skipped": true
+            }
+          },
+          "intent_detection": {
+            "time_ms": 3063.9162063598633,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "intent": "cross_reference",
+              "language": "en",
+              "complexity": "moderate",
+              "confidence": 0.95,
+              "recommended_model": "Meta-Llama-3.3-70B-Instruct",
+              "recommended_max_tokens": 2048,
+              "has_custom_prompt": true
+            }
+          },
+          "answer_generation": {
+            "time_ms": 3601.8757820129395,
+            "success": true,
+            "error": null,
+            "metadata": {
+              "context_chunks": 3,
+              "citations": 0,
+              "model_used": "Meta-Llama-3.3-70B-Instruct",
+              "model_requested": null,
+              "max_tokens_used": 2048,
+              "temperature": 0.3,
+              "used_custom_prompt": true,
+              "used_recommended_model": true,
+              "used_recommended_max_tokens": true
+            }
+          }
+        },
+        "total_time_ms": 5138.65327835083,
+        "search_results_count": 10,
+        "reranked_count": 3,
+        "compressed_count": 3,
+        "context_count": 3,
+        "api_version": "1.0.0",
+        "timestamp": "2025-10-19T16:42:38.180944"
+      }
+    }
+  ]
+}
