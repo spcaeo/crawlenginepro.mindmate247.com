@@ -12,23 +12,23 @@ The Ingestion Pipeline provides a single unified API for ingesting documents int
 - ✅ **Auto-Dimension Detection**: Collection dimensions automatically match your embedding model
 - ✅ **Smart Defaults**: All parameters optional with sensible defaults
 - ✅ **Full CRUD**: Create, Read, Update, Delete collections and documents
-- ✅ **4 Core Metadata Fields**: Keywords, Topics, Questions, Summary (streamlined from 45 fields)
+- ✅ **7 Metadata Fields**: keywords, topics, questions, summary, semantic_keywords, entity_relationships, attributes
 
 ### Pipeline Flow
 
 ```
-Document → Chunking → Metadata (4 fields) → Embeddings (Multi-Provider) → Storage → Vector DB
+Document → Chunking → Metadata (7 fields) → Embeddings (Multi-Provider) → Storage → Vector DB
 ```
 
 ### Architecture
 
-- **Public API**: Port 8060 (this service)
-- **Internal Services** (ports 8061-8065, not publicly accessible):
-  - 8061: Chunking Service
-  - 8062: Metadata Service (extracts 4 core fields)
-  - 8063: Embeddings Service (multi-provider: Jina/Nebius/SambaNova)
-  - 8064: Storage Service (full CRUD for Milvus)
-  - 8065: LLM Gateway Service (used by Metadata Service)
+- **Public API**: Port 8070 (this service)
+- **Internal Services** (ports 8071-8075, not publicly accessible):
+  - 8071: Chunking Orchestrator
+  - 8072: Metadata Service (extracts 7 fields with SambaNova Qwen3-32B)
+  - 8073: Embeddings Service (multi-provider: Jina/Nebius/SambaNova)
+  - 8074: Storage Service (full CRUD for Milvus, with AUTO_FLUSH_AFTER_INSERT config)
+  - 8075: LLM Gateway Service (used by Metadata Service)
 
 ## API Endpoints
 
@@ -114,7 +114,7 @@ Choose from multiple providers with auto-dimension detection:
       "time_ms": 123.45
     },
     "metadata": {
-      "fields_extracted": ["keywords", "topics", "questions", "summary"],
+      "fields_extracted": ["keywords", "topics", "questions", "summary", "semantic_keywords", "entity_relationships", "attributes"],
       "chunks_processed": 15,
       "time_ms": 456.78
     },
@@ -208,7 +208,7 @@ curl -X POST http://localhost:8060/v1/ingest \
 
 **What happens:**
 - ✅ Chunked using recursive method (1000 tokens, 300 overlap)
-- ✅ Metadata extracted: keywords, topics, questions, summary (4 fields)
+- ✅ Metadata extracted: keywords, topics, questions, summary, semantic_keywords, entity_relationships, attributes (7 fields)
 - ✅ Embeddings: Jina v3 (1024-dim, multilingual)
 - ✅ Stored in Milvus collection "test_collection" (auto-created if missing)
 
@@ -284,13 +284,13 @@ curl -X POST http://localhost:8060/v1/ingest \
 Disable metadata extraction for speed:
 
 ```bash
-curl -X POST http://localhost:8060/v1/ingest \
+curl -X POST http://localhost:8070/v1/ingest \
   -H "Content-Type: application/json" \
   -d '{
     "text": "Your document content here...",
     "document_id": "doc_006",
     "collection_name": "test_collection",
-    "generate_metadata": false  // Skip keywords/topics/questions/summary
+    "generate_metadata": false  // Skip all 7 metadata fields
   }'
 ```
 
@@ -358,19 +358,19 @@ curl -X DELETE http://localhost:8060/v1/collections/test_collection
 Configuration is loaded from `/PipeLineServices/.env`:
 
 ```bash
-# Ingestion Pipeline Ports
-INGESTION_API_PORT=8060
-CHUNKING_SERVICE_PORT=8061
-METADATA_SERVICE_PORT=8062
-EMBEDDINGS_SERVICE_PORT=8063
-STORAGE_SERVICE_PORT=8064
-LLM_GATEWAY_SERVICE_PORT=8065
+# Ingestion Pipeline Ports (Development: 8070-8075)
+INGESTION_API_PORT=8070
+CHUNKING_SERVICE_PORT=8071
+METADATA_SERVICE_PORT=8072
+EMBEDDINGS_SERVICE_PORT=8073
+STORAGE_SERVICE_PORT=8074
+LLM_GATEWAY_SERVICE_PORT=8075
 
 # Service URLs
-CHUNKING_SERVICE_URL=http://localhost:8061/v1/orchestrate
-METADATA_SERVICE_URL=http://localhost:8062/v1/metadata
-EMBEDDINGS_SERVICE_URL=http://localhost:8063/v1/embeddings
-STORAGE_SERVICE_URL=http://localhost:8064/v1
+CHUNKING_SERVICE_URL=http://localhost:8071/v1/orchestrate
+METADATA_SERVICE_URL=http://localhost:8072/v1/metadata
+EMBEDDINGS_SERVICE_URL=http://localhost:8073/v1/embeddings
+STORAGE_SERVICE_URL=http://localhost:8074/v1
 
 # Embedding Providers
 # Jina AI (1024/2048-dim)
@@ -385,14 +385,17 @@ NEBIUS_API_URL=https://api.studio.nebius.ai/v1/embeddings
 SAMBANOVA_API_KEY=your_sambanova_key_here
 SAMBANOVA_API_URL=https://api.sambanova.ai/v1/embeddings
 
-# LLM Gateway (Port 8065 - used by Metadata Service)
-LLM_GATEWAY_URL_DEVELOPMENT=http://localhost:8065/v1/chat/completions
-LLM_GATEWAY_URL_PRODUCTION=http://localhost:8065/v1/chat/completions
+# LLM Gateway (Port 8075 - used by Metadata Service)
+LLM_GATEWAY_URL_DEVELOPMENT=http://localhost:8075/v1/chat/completions
+LLM_GATEWAY_URL_PRODUCTION=http://localhost:8075/v1/chat/completions
 LLM_GATEWAY_API_KEY=your_key_here
 
 # Milvus Vector Database
 MILVUS_HOST=localhost
 MILVUS_PORT=19530
+
+# Storage Service Configuration
+AUTO_FLUSH_AFTER_INSERT=false  # Set to true for immediate persistence (slower)
 ```
 
 ## Installation
@@ -452,11 +455,11 @@ curl http://localhost:8060/health
 
 Check internal service health:
 ```bash
-curl http://localhost:8061/health  # Chunking
-curl http://localhost:8062/health  # Metadata
-curl http://localhost:8063/health  # Embeddings
-curl http://localhost:8064/health  # Storage
-curl http://localhost:8065/health  # LLM Gateway
+curl http://localhost:8071/health  # Chunking
+curl http://localhost:8072/health  # Metadata
+curl http://localhost:8073/health  # Embeddings
+curl http://localhost:8074/health  # Storage
+curl http://localhost:8075/health  # LLM Gateway
 ```
 
 ## Performance
@@ -495,7 +498,8 @@ The API returns appropriate HTTP status codes:
 5. **Batch Processing**: Metadata and embeddings processed in batches for efficiency
 6. **Auto-Dimension Detection**: Collection dimensions automatically match embedding model
 7. **Multi-Provider Embeddings**: Jina/Nebius/SambaNova with automatic failover
-8. **4 Core Metadata Fields**: Streamlined from 45 fields to keywords/topics/questions/summary
+8. **7 Metadata Fields**: keywords, topics, questions, summary, semantic_keywords, entity_relationships, attributes
+9. **Model Tracking**: Collections track actual models used during ingestion (embedding + metadata models)
 
 ## Parameter Reference
 
@@ -520,7 +524,7 @@ The API returns appropriate HTTP status codes:
 | `questions_count` | int | `3` | 1-10 | Number of questions to generate |
 | `summary_length` | string | `"1-2 sentences"` | - | Summary length |
 
-**4 Fields Stored**: keywords, topics, questions, summary
+**7 Fields Stored**: keywords, topics, questions, summary, semantic_keywords, entity_relationships, attributes
 
 ### Embedding Parameters
 
@@ -544,6 +548,8 @@ v1.0.0 - Initial release (October 2025)
 - ✅ Comprehensive parameter control (all chunking/metadata/embedding/storage parameters)
 - ✅ Multi-provider embeddings (Jina/Nebius/SambaNova)
 - ✅ Auto-dimension detection
-- ✅ Reduced metadata fields from 45 → 4 core fields
+- ✅ Reduced metadata fields from 45 → 7 optimized fields for RAG
 - ✅ Smart defaults for all parameters
 - ✅ Full CRUD operations for collections
+- ✅ Model tracking for collections (embedding + metadata models)
+- ✅ Metadata Service uses SambaNova Qwen3-32B model

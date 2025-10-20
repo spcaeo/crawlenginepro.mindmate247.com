@@ -9,7 +9,7 @@
 Chunking Orchestrator v1.0.0 is focused on **pure orchestration**. It coordinates the complete ingestion pipeline by delegating to specialized services, providing users with **full parameter control** over chunking, metadata, embeddings, and storage.
 
 **Key Features:**
-- ✅ **4 Core Metadata Fields**: Keywords, Topics, Questions, Summary (streamlined from 45 fields)
+- ✅ **7 Metadata Fields**: keywords, topics, questions, summary, semantic_keywords, entity_relationships, attributes
 - ✅ **Multi-Provider Embeddings**: Jina (1024/2048-dim), Nebius (4096-dim), SambaNova (FREE 4096-dim)
 - ✅ **Auto-Dimension Detection**: Collection dimensions automatically match embedding model
 - ✅ **Full Parameter Control**: Customize chunking, metadata, embeddings, and storage
@@ -20,47 +20,47 @@ Chunking Orchestrator v1.0.0 is focused on **pure orchestration**. It coordinate
 
 ### ✅ Architecture Simplification
 - **NO direct pymilvus imports** - delegates to Milvus Storage v1.0.0 API
-- **Calls Metadata v1.0.0** (extracts 4 core fields: keywords, topics, questions, summary)
+- **Calls Metadata v1.0.0** (extracts 7 fields: keywords, topics, questions, summary, semantic_keywords, entity_relationships, attributes)
 - **Calls Embeddings v1.0.0** - Multi-provider support (Jina/Nebius/SambaNova)
 - **Pure orchestration** - coordinates services, doesn't implement storage logic
 
 ### ✅ Service Dependencies
 ```
-Chunking v1.0.0 (This service - port 8061)
-  ├── Metadata v1.0.0 (port 8062) → LLM Gateway (port 8065)
-  ├── Embeddings v1.0.0 (port 8063) - Multi-provider (Jina/Nebius/SambaNova)
-  └── Storage v1.0.0 (port 8064) - CRUD API for Milvus
+Chunking v1.0.0 (This service - port 8071)
+  ├── Metadata v1.0.0 (port 8072) → LLM Gateway (port 8075)
+  ├── Embeddings v1.0.0 (port 8073) - Multi-provider (Jina/Nebius/SambaNova)
+  └── Storage v1.0.0 (port 8074) - CRUD API for Milvus
 ```
 
 ### ✅ Metadata Support
-- **4 core metadata fields** per chunk: keywords, topics, questions, summary
-- Extracted via Metadata v1.0.0 service (port 8062)
-- Metadata service uses LLM Gateway (port 8065) for AI-powered extraction
-- **Streamlined from 45 fields** for better performance and simpler schema
+- **7 metadata fields** per chunk: keywords, topics, questions, summary, semantic_keywords, entity_relationships, attributes
+- Extracted via Metadata v1.0.0 service (port 8072) using SambaNova Qwen3-32B model
+- Metadata service uses LLM Gateway (port 8075) for AI-powered extraction
+- **Optimized for RAG**: Includes semantic expansion, entity relationships, and structured attributes
 
 ## Configuration
 
 ### Port
-- **8061** - Chunking Orchestrator v1.0.0
+- **8071** - Chunking Orchestrator v1.0.0
 
 ### Service URLs (INTERNAL_MODE=true, default)
-- **Metadata v1.0.0**: http://localhost:8062/v1/metadata
-- **Embeddings v1.0.0**: http://localhost:8063/v1/embeddings
-- **Milvus Storage v1.0.0**: http://localhost:8064/v1
+- **Metadata v1.0.0**: http://localhost:8072/v1/metadata
+- **Embeddings v1.0.0**: http://localhost:8073/v1/embeddings
+- **Milvus Storage v1.0.0**: http://localhost:8074/v1
 
 ### Environment Variables
 ```bash
 # Server
 HOST=0.0.0.0
-PORT=8061
+PORT=8071
 
 # Mode
 INTERNAL_MODE=true  # Direct localhost calls (default, lower latency)
 
 # Service URLs (auto-configured based on INTERNAL_MODE)
-# EMBEDDINGS_SERVICE_URL=http://localhost:8063/v1/embeddings
-# METADATA_SERVICE_URL=http://localhost:8062/v1/metadata
-# MILVUS_STORAGE_SERVICE_URL=http://localhost:8064/v1
+# EMBEDDINGS_SERVICE_URL=http://localhost:8073/v1/embeddings
+# METADATA_SERVICE_URL=http://localhost:8072/v1/metadata
+# MILVUS_STORAGE_SERVICE_URL=http://localhost:8074/v1
 
 # Processing
 MAX_WORKERS=5  # Parallel metadata extraction workers
@@ -89,7 +89,7 @@ cp .env.example .env
 
 # .env should have:
 HOST=0.0.0.0
-PORT=8061
+PORT=8071
 INTERNAL_MODE=true  # Direct localhost calls (default)
 ```
 
@@ -107,7 +107,7 @@ Chunking Orchestrator v1.0.0
 FEATURES:
   ✅ Internal-mode service (localhost only)
   ✅ Intelligent text chunking (recursive/markdown/token)
-  ✅ 4 core metadata fields (keywords, topics, questions, summary)
+  ✅ 7 metadata fields (keywords, topics, questions, summary, semantic_keywords, entity_relationships, attributes)
   ✅ Multi-provider embeddings (Jina/Nebius/SambaNova)
   ✅ Auto-dimension detection (1024/2048/3584/4096)
   ✅ Milvus Storage Service integration (v1.0.0 API)
@@ -116,16 +116,16 @@ FEATURES:
 ================================================================================
 [CONFIG] INTERNAL_MODE=True
 [CONFIG] Using INTERNAL mode:
-[CONFIG]   Metadata v1: http://localhost:8062/v1/metadata
-[CONFIG]   Embeddings v1: http://localhost:8063/v1/embeddings
-[CONFIG]   Storage v1: http://localhost:8064/v1
+[CONFIG]   Metadata v1: http://localhost:8072/v1/metadata
+[CONFIG]   Embeddings v1: http://localhost:8073/v1/embeddings
+[CONFIG]   Storage v1: http://localhost:8074/v1
 ```
 
 ## API Endpoints
 
 ### Health Check
 ```bash
-curl http://localhost:8061/health
+curl http://localhost:8071/health
 ```
 
 Response:
@@ -146,13 +146,13 @@ Response:
 
 ### Version Info
 ```bash
-curl http://localhost:8061/version
+curl http://localhost:8071/version
 ```
 
 ### Complete Pipeline (Full Parameter Control)
 
 ```bash
-curl -X POST http://localhost:8061/v1/orchestrate \
+curl -X POST http://localhost:8071/v1/orchestrate \
   -H "Content-Type: application/json" \
   -d '{
     "text": "Apple iPhone 15 Pro in Natural Titanium with 128GB storage. Features A17 Pro chip and 48MP camera. Price: $999 USD.",
@@ -187,7 +187,7 @@ curl -X POST http://localhost:8061/v1/orchestrate \
 ```
 
 Response includes:
-- **Chunks** with 4 core metadata fields (keywords, topics, questions, summary)
+- **Chunks** with 7 metadata fields (keywords, topics, questions, summary, semantic_keywords, entity_relationships, attributes)
 - **Embeddings** from selected provider (dimension auto-detected)
 - **Processing times** for each stage
 - **Storage confirmation** from Milvus Storage v1.0.0
@@ -199,7 +199,7 @@ Response includes:
 import httpx
 
 response = httpx.post(
-    "http://localhost:8061/v1/orchestrate",
+    "http://localhost:8071/v1/orchestrate",
     json={
         "text": "Your long document here...",
         "method": "recursive",
@@ -220,7 +220,7 @@ print(f"Created {result['total_chunks']} chunks")
 import httpx
 
 response = httpx.post(
-    "http://localhost:8061/v1/orchestrate",
+    "http://localhost:8071/v1/orchestrate",
     json={
         "text": "Apple iPhone 15 Pro - Premium smartphone with titanium design...",
         "method": "recursive",
@@ -237,12 +237,15 @@ response = httpx.post(
 
 result = response.json()
 
-# Access 4 core metadata fields
+# Access 7 metadata fields
 for chunk in result['chunks']:
     print(f"Keywords: {chunk['keywords']}")
     print(f"Topics: {chunk['topics']}")
     print(f"Questions: {chunk['questions']}")
     print(f"Summary: {chunk['summary']}")
+    print(f"Semantic Keywords: {chunk['semantic_keywords']}")
+    print(f"Entity Relationships: {chunk['entity_relationships']}")
+    print(f"Attributes: {chunk['attributes']}")
     print(f"Dense embedding: {len(chunk['dense_embedding'])} dims")  # 1024
 ```
 
@@ -251,7 +254,7 @@ for chunk in result['chunks']:
 import httpx
 
 response = httpx.post(
-    "http://localhost:8061/v1/orchestrate",
+    "http://localhost:8071/v1/orchestrate",
     json={
         "text": "Your document content here...",
         "method": "recursive",
@@ -275,7 +278,7 @@ print(f"Embeddings: {len(result['chunks'][0]['dense_embedding'])} dims")  # 4096
 import httpx
 
 response = httpx.post(
-    "http://localhost:8061/v1/orchestrate",
+    "http://localhost:8071/v1/orchestrate",
     json={
         "text": "Your document content here...",
         "method": "recursive",
@@ -300,7 +303,7 @@ response = httpx.post(
 import httpx
 
 response = httpx.post(
-    "http://localhost:8061/v1/orchestrate",
+    "http://localhost:8071/v1/orchestrate",
     json={
         "text": "# Chapter 1\nContent...\n## Section 1.1\nMore content...",
         "method": "markdown",
@@ -321,7 +324,7 @@ response = httpx.post(
 import httpx
 
 response = httpx.post(
-    "http://localhost:8061/v1/orchestrate",
+    "http://localhost:8071/v1/orchestrate",
     json={
         "text": "Your document content here...",
         "method": "recursive",
@@ -377,7 +380,7 @@ The service supports multiple embedding providers with auto-dimension detection:
 | `metadata_config.questions_count` | string | `"3"` | Number of questions (1-10) |
 | `metadata_config.summary_length` | string | `"1-2 sentences"` | Summary length |
 
-**4 Fields Extracted**: keywords, topics, questions, summary
+**7 Fields Extracted**: keywords, topics, questions, summary, semantic_keywords, entity_relationships, attributes
 
 ### Embedding Parameters
 
@@ -398,14 +401,15 @@ The service supports multiple embedding providers with auto-dimension detection:
 ## Service Dependencies
 
 ### Required Services (Must be running)
-1. **Metadata v1.0.0** (port 8062) - Extracts 4 core metadata fields
-2. **Embeddings v1.0.0** (port 8063) - Multi-provider embedding generation
-3. **Milvus Storage v1.0.0** (port 8064) - Vector storage API
+1. **Metadata v1.0.0** (port 8072) - Extracts 7 metadata fields using SambaNova Qwen3-32B
+2. **Embeddings v1.0.0** (port 8073) - Multi-provider embedding generation
+3. **Milvus Storage v1.0.0** (port 8074) - Vector storage API
+4. **LLM Gateway** (port 8075) - Used by Metadata Service
 
 ### Check Service Health
 ```bash
 # Check all dependencies
-curl http://localhost:8061/health
+curl http://localhost:8071/health
 
 # Should show:
 # "embeddings": true
@@ -413,9 +417,10 @@ curl http://localhost:8061/health
 # "milvus_storage": true
 
 # Check individual services
-curl http://localhost:8062/health  # Metadata v1
-curl http://localhost:8063/health  # Embeddings v1
-curl http://localhost:8064/health  # Storage v1
+curl http://localhost:8072/health  # Metadata v1
+curl http://localhost:8073/health  # Embeddings v1
+curl http://localhost:8074/health  # Storage v1
+curl http://localhost:8075/health  # LLM Gateway
 ```
 
 ## Performance Metrics
@@ -425,7 +430,7 @@ Pipeline timings (typical document with 10-20 chunks):
 | Stage | Time | Notes |
 |-------|------|-------|
 | **Chunking** | 10-50ms | Fast, in-memory operation |
-| **Metadata** | 200-400ms/chunk | LLM-powered extraction (4 fields) |
+| **Metadata** | 200-400ms/chunk | LLM-powered extraction (7 fields using SambaNova Qwen3-32B) |
 | **Embeddings** | 50-200ms/batch | Varies by provider and dimension |
 | **Storage** | <100ms | Via Storage API |
 
@@ -441,38 +446,40 @@ Pipeline timings (typical document with 10-20 chunks):
 
 | Feature | v3.0.0/v5.0.0 | v1.0.0 |
 |---------|---------------|--------|
-| **Metadata Fields** | 45 fields (product data, business data, entities) | **4 core fields** (keywords, topics, questions, summary) |
+| **Metadata Fields** | 45 fields (product data, business data, entities) | **7 optimized fields** (keywords, topics, questions, summary, semantic_keywords, entity_relationships, attributes) |
+| **Metadata Model** | Nebius models | **SambaNova Qwen3-32B** (via LLM Gateway) |
 | **Embeddings** | Single provider (Nebius 4096-dim) | **Multi-provider** (Jina/Nebius/SambaNova) |
 | **Default Dimension** | 4096 | **1024** (Jina v3, faster) |
 | **Chunk Overlap** | 200 tokens | **300 tokens** (better context) |
 | **Parameter Control** | Limited | **Full control** (all parameters customizable) |
 | **Auto-Dimension** | Manual configuration | **Auto-detected** from embedding model |
 | **FREE Option** | None | **SambaNova** (4096-dim FREE) |
-| **Performance** | Slower (45 fields) | **Faster** (4 core fields, 40-60% speedup) |
-| **Schema Complexity** | High (45 fields) | **Simple** (4 core fields) |
-| **Use Case** | Product/business-specific | **General-purpose RAG** |
+| **Performance** | Slower (45 fields) | **Faster** (7 fields optimized for RAG) |
+| **Schema Complexity** | High (45 fields) | **Optimized** (7 fields for RAG) |
+| **Use Case** | Product/business-specific | **General-purpose RAG with semantic expansion** |
 
 ## API Documentation
 
 Interactive API docs available at:
-- Swagger UI: http://localhost:8061/docs
-- ReDoc: http://localhost:8061/redoc
+- Swagger UI: http://localhost:8071/docs
+- ReDoc: http://localhost:8071/redoc
 
 ## Troubleshooting
 
 ### Service Won't Start
 ```bash
-# Check if port 8061 is in use
-netstat -tulpn | grep 8061
+# Check if port 8071 is in use
+netstat -tulpn | grep 8071
 
 # Check virtual environment
 source venv/bin/activate
 python -c "import fastapi; print('OK')"
 
 # Check dependencies health
-curl http://localhost:8062/health  # Metadata v1
-curl http://localhost:8063/health  # Embeddings v1
-curl http://localhost:8064/health  # Storage v1
+curl http://localhost:8072/health  # Metadata v1
+curl http://localhost:8073/health  # Embeddings v1
+curl http://localhost:8074/health  # Storage v1
+curl http://localhost:8075/health  # LLM Gateway
 ```
 
 ### Metadata Extraction Slow
@@ -483,13 +490,13 @@ curl http://localhost:8064/health  # Storage v1
 ### Storage Fails
 ```bash
 # Check Milvus Storage service
-curl http://localhost:8064/health
+curl http://localhost:8074/health
 
 # Check if collection exists
-curl http://localhost:8064/v1/collections
+curl http://localhost:8074/v1/collections
 
 # Check Milvus connection
-curl http://localhost:8064/v1/health
+curl http://localhost:8074/v1/health
 ```
 
 ### Wrong Embedding Dimension
@@ -500,15 +507,15 @@ curl http://localhost:8064/v1/health
 ## Version History
 
 - **v1.0.0** (2025-10-18): Streamlined release
-  - Reduced metadata from 45 → 4 core fields (keywords, topics, questions, summary)
+  - Optimized metadata from 45 → 7 RAG-focused fields (keywords, topics, questions, summary, semantic_keywords, entity_relationships, attributes)
+  - Metadata extraction using SambaNova Qwen3-32B model via LLM Gateway (port 8075)
   - Added multi-provider embedding support (Jina/Nebius/SambaNova)
   - Auto-dimension detection (1024/2048/3584/4096)
   - Full parameter control (chunking, metadata, embeddings, storage)
   - Changed default chunk_overlap: 200 → 300 tokens
   - Changed default embedding: Nebius 4096-dim → Jina v3 1024-dim
   - Added FREE option: SambaNova E5-Mistral-7B-Instruct (4096-dim)
-  - 40-60% faster than v3.0.0/v5.0.0 (fewer metadata fields)
-  - Simplified schema (4 fields vs 45 fields)
+  - Optimized schema (7 fields optimized for RAG with semantic expansion)
 
 ## License
 

@@ -6,7 +6,7 @@ Quick reference for common Storage Service operations.
 
 ### Health Check
 ```bash
-curl -s http://localhost:8064/health | jq '{status, milvus_connected, collections_count}'
+curl -s http://localhost:8074/health | jq '{status, milvus_connected, collections_count}'
 ```
 
 Response:
@@ -20,14 +20,14 @@ Response:
 
 ### Version Info
 ```bash
-curl -s http://localhost:8064/version
+curl -s http://localhost:8074/version
 ```
 
 ## Collection Management
 
 ### List All Collections
 ```bash
-curl -s http://localhost:8064/v1/collections | jq .
+curl -s http://localhost:8074/v1/collections | jq .
 ```
 
 Response:
@@ -41,7 +41,7 @@ Response:
 
 ### Get Collection Info
 ```bash
-curl -s http://localhost:8064/v1/collection/{collection_name} | jq .
+curl -s http://localhost:8074/v1/collection/{collection_name} | jq .
 ```
 
 Response includes:
@@ -51,7 +51,7 @@ Response includes:
 
 ### Create Collection
 ```bash
-curl -X POST http://localhost:8064/v1/collection/create \
+curl -X POST http://localhost:8074/v1/collection/create \
   -H 'Content-Type: application/json' \
   -d '{
     "collection_name": "my_collection",
@@ -62,14 +62,14 @@ curl -X POST http://localhost:8064/v1/collection/create \
 
 ### Delete Collection
 ```bash
-curl -X DELETE http://localhost:8064/v1/collection/{collection_name}
+curl -X DELETE http://localhost:8074/v1/collection/{collection_name}
 ```
 
 ## Data Operations
 
 ### Search (Hybrid)
 ```bash
-curl -X POST http://localhost:8064/v1/search \
+curl -X POST http://localhost:8074/v1/search \
   -H 'Content-Type: application/json' \
   -d '{
     "collection_name": "test_collection",
@@ -82,7 +82,7 @@ curl -X POST http://localhost:8064/v1/search \
 
 ### Insert Chunks
 ```bash
-curl -X POST http://localhost:8064/v1/insert \
+curl -X POST http://localhost:8074/v1/insert \
   -H 'Content-Type: application/json' \
   -d '{
     "collection_name": "test_collection",
@@ -100,7 +100,7 @@ curl -X POST http://localhost:8064/v1/insert \
 
 ### Update Chunks
 ```bash
-curl -X POST http://localhost:8064/v1/update \
+curl -X POST http://localhost:8074/v1/update \
   -H 'Content-Type: application/json' \
   -d '{
     "collection_name": "test_collection",
@@ -111,7 +111,7 @@ curl -X POST http://localhost:8064/v1/update \
 
 ### Delete Chunks
 ```bash
-curl -X POST http://localhost:8064/v1/delete \
+curl -X POST http://localhost:8074/v1/delete \
   -H 'Content-Type: application/json' \
   -d '{
     "collection_name": "test_collection",
@@ -121,7 +121,7 @@ curl -X POST http://localhost:8064/v1/delete \
 
 ### Delete by ID
 ```bash
-curl -X DELETE "http://localhost:8064/v1/delete/{chunk_id}?collection_name=test_collection"
+curl -X DELETE "http://localhost:8074/v1/delete/{chunk_id}?collection_name=test_collection"
 ```
 
 ## Common Filters

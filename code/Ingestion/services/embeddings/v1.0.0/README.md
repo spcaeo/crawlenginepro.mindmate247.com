@@ -3,7 +3,7 @@
 Part of **PipeLineServices** - Ingestion Pipeline Internal Service
 
 **Version:** 1.0.0
-**Port:** 8063 (Internal only)
+**Port:** 8073 (Internal only)
 **Providers:** Jina AI, Nebius AI Studio, SambaNova AI
 **Vectors:** Dense embeddings (optional sparse support)
 **Speed:** 10-20x faster than local CPU inference
@@ -13,9 +13,9 @@ Part of **PipeLineServices** - Ingestion Pipeline Internal Service
 ```
 Ingestion API (8060)
     ↓
-Chunking Service (8061)
+Chunking Service (8071)
     ↓
-Embeddings Service (8063) ← YOU ARE HERE
+Embeddings Service (8073) ← YOU ARE HERE
     ↓ (Multiple providers)
     ├── Jina AI API (1024/2048-dim)
     ├── Nebius AI Studio API (3584/4096-dim)
@@ -96,7 +96,7 @@ payload = {
     "model": "jina-embeddings-v3"  # Optional, this is the default
 }
 
-response = requests.post("http://localhost:8063/v1/embeddings", json=payload)
+response = requests.post("http://localhost:8073/v1/embeddings", json=payload)
 result = response.json()
 
 print(f"Dimension: {result['dense_dimension']}")  # 1024
@@ -132,7 +132,7 @@ payload = {
     "model": "E5-Mistral-7B-Instruct"  # FREE tier
 }
 
-response = requests.post("http://localhost:8063/v1/embeddings", json=payload)
+response = requests.post("http://localhost:8073/v1/embeddings", json=payload)
 result = response.json()
 
 print(f"Dimension: {result['dense_dimension']}")  # 4096
@@ -150,7 +150,7 @@ payload = {
     "model": "intfloat/e5-mistral-7b-instruct"  # Best for RAG
 }
 
-response = requests.post("http://localhost:8063/v1/embeddings", json=payload)
+response = requests.post("http://localhost:8073/v1/embeddings", json=payload)
 result = response.json()
 
 print(f"Dimension: {result['dense_dimension']}")  # 4096
@@ -172,7 +172,7 @@ payload = {
     "model": "jina-embeddings-v3"  # Default
 }
 
-response = requests.post("http://localhost:8063/v1/embeddings", json=payload)
+response = requests.post("http://localhost:8073/v1/embeddings", json=payload)
 result = response.json()
 
 for item in result['data']:
@@ -191,7 +191,7 @@ payload = {
     "model": "jina-embeddings-v4"  // 2048-dim, multimodal
 }
 
-response = requests.post("http://localhost:8063/v1/embeddings", json=payload)
+response = requests.post("http://localhost:8073/v1/embeddings", json=payload)
 result = response.json()
 
 print(f"Dimension: {result['dense_dimension']}")  # 2048
@@ -411,17 +411,17 @@ Same setup - Configure API keys in `.env`
 python3 embeddings_api.py
 
 # Health check
-curl http://localhost:8063/health
+curl http://localhost:8073/health
 
 # Test default model (Jina v3)
-curl -X POST http://localhost:8063/v1/embeddings \
+curl -X POST http://localhost:8073/v1/embeddings \
   -H "Content-Type: application/json" \
   -d '{
     "input": "Test text for embeddings"
   }'
 
 # Test SambaNova FREE
-curl -X POST http://localhost:8063/v1/embeddings \
+curl -X POST http://localhost:8073/v1/embeddings \
   -H "Content-Type: application/json" \
   -d '{
     "input": "Test text for embeddings",
@@ -438,7 +438,7 @@ import requests
 texts = ["Test text " + str(i) for i in range(100)]
 
 start = time.time()
-response = requests.post("http://localhost:8063/v1/embeddings", json={
+response = requests.post("http://localhost:8073/v1/embeddings", json={
     "input": texts,
     "model": "jina-embeddings-v3"
 })
@@ -456,7 +456,7 @@ print(f"Dimension: {response.json()['dense_dimension']}")
 
 ```bash
 # Check health endpoint
-curl http://localhost:8063/health
+curl http://localhost:8073/health
 
 # Should show provider connectivity:
 # "jina_connected": true
@@ -481,7 +481,7 @@ cat .env | grep API_KEY
 ```bash
 # Dimension is auto-detected from model
 # Check which model you're using:
-curl -X POST http://localhost:8063/v1/embeddings \
+curl -X POST http://localhost:8073/v1/embeddings \
   -H "Content-Type: application/json" \
   -d '{"input": "test", "model": "jina-embeddings-v3"}'
 
@@ -540,7 +540,7 @@ Internal use only - CrawlEnginePro / MindMate247
 ## 🤝 Support
 
 For issues or questions:
-- Check health endpoint: `curl http://localhost:8063/health`
+- Check health endpoint: `curl http://localhost:8073/health`
 - Verify API keys are configured in `.env`
 - Test with simple text first before batch processing
 - Try different providers if one is slow/unavailable

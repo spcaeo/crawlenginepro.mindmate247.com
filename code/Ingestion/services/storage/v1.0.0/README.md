@@ -11,27 +11,28 @@ Dedicated service for all Milvus operations with:
 - ✅ **Multi-tenancy** support via `tenant_id` field
 - ✅ **Dense vector search** (semantic similarity)
 - ✅ **Automatic dimension detection** - Collections auto-size for embedding dimensions
-- ✅ **14-field schema** with base metadata (keywords, topics, questions, summary)
+- ✅ **17-field schema** with 7 metadata fields (keywords, topics, questions, summary, semantic_keywords, entity_relationships, attributes)
 - ✅ **Independent service** - No direct Milvus access from other services
 - ✅ **REST API** - Standard HTTP endpoints for all operations
 - ✅ **Environment-aware** - Supports development & production modes
+- ✅ **Configurable flush behavior** - AUTO_FLUSH_AFTER_INSERT setting for performance tuning
 
 ## Architecture
 
 ```
-Ingestion API (8060)
+Ingestion API (8070)
     ↓
-Chunking Service (8061)
+Chunking Service (8071)
     ↓
-Storage Service (8064) ← YOU ARE HERE
+Storage Service (8074) ← YOU ARE HERE
     ↓
 Milvus Database (19530)
 ```
 
 ## Port
 
-- **8064** - Internal service (localhost only, blocked from external access)
-- Configured via `.env`: `STORAGE_SERVICE_PORT=8064`
+- **8074** - Internal service (localhost only, blocked from external access)
+- Configured via `.env`: `STORAGE_SERVICE_PORT=8074`
 
 ## Endpoints
 
@@ -68,7 +69,7 @@ All operations support tenant isolation via `tenant_id` field:
 1. **Collection per tenant**: `client_acme_products_v3`, `client_beta_docs_v3`
 2. **Shared collection with tenant_id**: Single collection, filter by `tenant_id`
 
-## Schema (14 Fields)
+## Schema (17 Fields)
 
 ### Core Fields (9)
 - `id` (PRIMARY KEY)
@@ -80,13 +81,16 @@ All operations support tenant isolation via `tenant_id` field:
 - `char_count`, `token_count`
 
 ### Vectors (1)
-- `dense_vector` [dynamic] - Semantic similarity (auto-detected from chunk data: 1024 or 4096)
+- `dense_vector` [dynamic] - Semantic similarity (auto-detected from chunk data: 1024/2048/3584/4096)
 
-### Base Metadata (4 fields)
-- `keywords` - Extracted keywords
-- `topics` - Document topics
-- `questions` - Related questions
-- `summary` - Chunk summary
+### Metadata Fields (7 fields)
+- `keywords` - Extracted keywords (exact terms from text)
+- `topics` - High-level categories
+- `questions` - Answerable questions from text
+- `summary` - Brief 1-2 sentence summary
+- `semantic_keywords` - Synonyms, industry terms, semantic expansions
+- `entity_relationships` - Entity → relationship → Entity triplets
+- `attributes` - Structured key: value pairs for filtering
 
 ## Usage Examples
 
@@ -108,13 +112,16 @@ chunks_data = {
             "keywords": "iPhone, Apple, smartphone, titanium, A17 Pro",
             "topics": "Smartphones, Apple Products, Technology",
             "questions": "What are iPhone 15 Pro features?; What chip does iPhone 15 Pro have?",
-            "summary": "Apple iPhone 15 Pro features titanium design and advanced A17 Pro chip."
+            "summary": "Apple iPhone 15 Pro features titanium design and advanced A17 Pro chip.",
+            "semantic_keywords": "mobile device, iOS device, premium phone, flagship smartphone",
+            "entity_relationships": "Apple Inc. → manufacturer-of → iPhone 15 Pro; A17 Pro → powers → iPhone 15 Pro",
+            "attributes": "brand: Apple, model: iPhone 15 Pro, storage: 128GB, color: Natural Titanium"
         }
     ],
     "create_collection": true
 }
 
-response = httpx.post("http://localhost:8064/v1/insert", json=chunks_data)
+response = httpx.post("http://localhost:8074/v1/insert", json=chunks_data)
 print(response.json())
 # {"success": true, "inserted_count": 1, "chunk_ids": ["chunk_001"], ...}
 ```
@@ -132,7 +139,7 @@ update_data = {
     "tenant_id": "client_acme"
 }
 
-response = httpx.post("http://localhost:8064/v1/update", json=update_data)
+response = httpx.post("http://localhost:8074/v1/update", json=update_data)
 print(response.json())
 # {"success": true, "updated_count": 5, ...}
 ```
@@ -148,7 +155,7 @@ search_data = {
     "limit": 20
 }
 
-response = httpx.post("http://localhost:8064/v1/search", json=search_data)
+response = httpx.post("http://localhost:8074/v1/search", json=search_data)
 results = response.json()
 # {"success": true, "results": [...], "total_results": 15, ...}
 ```
@@ -162,7 +169,7 @@ delete_data = {
     "tenant_id": "client_acme"
 }
 
-response = httpx.post("http://localhost:8064/v1/delete", json=delete_data)
+response = httpx.post("http://localhost:8074/v1/delete", json=delete_data)
 print(response.json())
 # {"success": true, "deleted_count": 10, ...}
 ```
@@ -193,7 +200,7 @@ python storage_api.py
 ### 4. Test Health
 
 ```bash
-curl http://localhost:8064/health
+curl http://localhost:8074/health
 ```
 
 ## Systemd Service (Production)
@@ -268,7 +275,7 @@ chunks_data = prepare_chunks_for_storage(chunks, metadata, embeddings)
 # Call Milvus Storage Service (direct localhost)
 async with httpx.AsyncClient() as client:
     response = await client.post(
-        "http://localhost:8064/v1/insert",
+        "http://localhost:8074/v1/insert",
         json={
             "collection_name": request.collection_name,
             "chunks": chunks_data
@@ -299,23 +306,23 @@ if not result["success"]:
 
 ```bash
 # Health check
-curl http://localhost:8064/health
+curl http://localhost:8074/health
 
 # Version
-curl http://localhost:8064/version
+curl http://localhost:8074/version
 
 # List collections
-curl http://localhost:8064/v1/collections
+curl http://localhost:8074/v1/collections
 
 # Collection info
-curl http://localhost:8064/v1/collection/client_acme_products_v3
+curl http://localhost:8074/v1/collection/client_acme_products_v3
 ```
 
 ## API Documentation
 
 Interactive API docs:
-- Swagger UI: http://localhost:8064/docs
-- ReDoc: http://localhost:8064/redoc
+- Swagger UI: http://localhost:8074/docs
+- ReDoc: http://localhost:8074/redoc
 
 ## Troubleshooting
 
@@ -334,13 +341,14 @@ python -c "from pymilvus import connections; connections.connect('default', 'loc
 ### Collection Not Found
 ```bash
 # List all collections
-curl http://localhost:8064/v1/collections
+curl http://localhost:8074/v1/collections
 ```
 
 ### Slow Inserts
 - Check if indexes are created: `GET /v1/collection/{name}`
 - Batch inserts (100-1000 chunks per request)
-- Consider disabling auto-flush for bulk inserts
+- Set `AUTO_FLUSH_AFTER_INSERT=false` in .env for better bulk insert performance (default)
+- Set `AUTO_FLUSH_AFTER_INSERT=true` for immediate persistence at cost of performance
 
 ## Version History
 
@@ -349,7 +357,9 @@ curl http://localhost:8064/v1/collections
   - Multi-tenancy support
   - **Automatic dimension detection** from chunk vectors (1024/2048/3584/4096 dims for multi-provider support)
   - Dense vector search with dynamic dimensions (Jina/Nebius/SambaNova)
-  - 14-field schema with 4 core metadata fields (keywords, topics, questions, summary)
+  - **17-field schema** with 7 metadata fields (keywords, topics, questions, summary, semantic_keywords, entity_relationships, attributes)
   - Independent service architecture (no direct Milvus access from other services)
   - Full parameter control from Ingestion API
+  - **AUTO_FLUSH_AFTER_INSERT** configuration for performance tuning (default: false)
+  - Model tracking: Collections store embedding and metadata models used during ingestion
   - **Bug Fix**: Collections now auto-size based on actual embedding dimensions (operations.py:240-246)
