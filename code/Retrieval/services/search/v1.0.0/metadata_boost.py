@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 """
-Metadata boosting using ALL 4 fields
+Metadata boosting using ALL 7 fields
 - keywords: Exact keyword matching
 - topics: Category relevance
 - questions: Question similarity
 - summary: Coverage check
+- semantic_keywords: LLM-extracted conceptual keywords (NEW)
+- entity_relationships: Entity relationships for "who did what" queries (NEW)
+- attributes: Entity attributes for attribute-based queries (NEW)
 """
 
 import re
@@ -170,6 +173,123 @@ def boost_summary(query_keywords: Set[str], chunk_summary: str, weight: float) -
         return 0.0
 
 # ============================================================================
+# Enhanced Metadata Boost Functions (3 NEW fields)
+# ============================================================================
+
+def boost_semantic_keywords(query_keywords: Set[str], chunk_semantic_kw: str, weight: float) -> Tuple[float, List[str]]:
+    """
+    Boost score based on LLM-extracted semantic keywords
+
+    These are higher-quality conceptual keywords extracted by the LLM during ingestion.
+    They represent core themes and ideas beyond surface-level keyword extraction.
+
+    Args:
+        query_keywords: Set of keywords extracted from query
+        chunk_semantic_kw: Comma-separated semantic keywords from chunk metadata
+        weight: Boost weight per match
+
+    Returns:
+        (boost_score, matched_semantic_keywords)
+    """
+    if not chunk_semantic_kw:
+        return 0.0, []
+
+    # Parse semantic keywords (comma-separated)
+    semantic_kw = set(kw.strip().lower() for kw in chunk_semantic_kw.split(",") if kw.strip())
+
+    # Find matches
+    matches = query_keywords.intersection(semantic_kw)
+
+    # Higher reward for semantic matches (no diminishing returns like keywords)
+    # Semantic keywords are higher quality, so each match is more valuable
+    boost = len(matches) * weight
+
+    return boost, list(matches)
+
+
+def boost_entity_relationships(query: str, chunk_relationships: str, weight: float) -> float:
+    """
+    Boost score if query mentions entities that have relationships in chunk
+
+    Entity relationships are extracted during ingestion (e.g., "Indra → attacked → Hanuman").
+    This is critical for relationship queries like:
+    - "Who did X to Y?"
+    - "What is the relationship between A and B?"
+    - "Which entities interacted with X?"
+
+    Args:
+        query: Original query text
+        chunk_relationships: Entity relationship descriptions from chunk metadata
+        weight: Boost weight for relationship relevance
+
+    Returns:
+        boost_score
+    """
+    if not chunk_relationships:
+        return 0.0
+
+    # Extract query keywords
+    query_words = extract_query_keywords(query)
+
+    # Check if query words appear in relationship descriptions
+    relationships_lower = chunk_relationships.lower()
+
+    # Count how many query terms appear in relationships
+    matches = sum(1 for word in query_words if word in relationships_lower)
+
+    # Boost based on match density
+    if matches >= 3:  # High relevance: 3+ query terms in relationships
+        return weight
+    elif matches == 2:  # Medium relevance: 2 query terms
+        return weight * 0.7
+    elif matches == 1:  # Low relevance: 1 query term
+        return weight * 0.4
+
+    return 0.0
+
+
+def boost_attributes(query_keywords: Set[str], chunk_attributes: str, weight: float) -> float:
+    """
+    Boost score based on entity attribute matches
+
+    Attributes are key properties of entities extracted during ingestion
+    (e.g., "Hanuman: son of Vayu, devotee of Rama, strength=immense").
+
+    Useful for attribute-based queries:
+    - "Entities with property X"
+    - "What are the attributes of Y?"
+    - "Find all items with specification Z"
+
+    Args:
+        query_keywords: Set of keywords extracted from query
+        chunk_attributes: Entity attributes from chunk metadata
+        weight: Boost weight for attribute coverage
+
+    Returns:
+        boost_score
+    """
+    if not chunk_attributes:
+        return 0.0
+
+    # Extract words from attributes
+    attributes_lower = chunk_attributes.lower()
+    attributes_words = set(re.findall(r'\w+', attributes_lower))
+
+    # Calculate coverage (how many query keywords appear in attributes)
+    if not query_keywords:
+        return 0.0
+
+    coverage = len(query_keywords.intersection(attributes_words)) / len(query_keywords)
+
+    # Boost based on coverage
+    if coverage > 0.6:  # High coverage: 60%+ of query keywords in attributes
+        return weight
+    elif coverage > 0.3:  # Medium coverage: 30-60%
+        return weight * (coverage / 0.6)
+
+    return 0.0
+
+# ============================================================================
 # Main Boosting Function
 # ============================================================================
 
@@ -177,10 +297,10 @@ def apply_metadata_boost(
     query: str,
     chunk: Dict,
     weights: Dict[str, float],
-    max_boost: float = 0.30
+    max_boost: float = 0.60
 ) -> Tuple[float, MetadataMatch]:
     """
-    Apply ALL 4 metadata field boosts
+    Apply ALL 7 metadata field boosts
 
     Args:
         query: User query text
@@ -194,7 +314,9 @@ def apply_metadata_boost(
     # Extract query keywords once
     query_kw = extract_query_keywords(query)
 
-    # Boost from each field
+    # ========================================
+    # Standard metadata boosts (4 fields)
+    # ========================================
     kw_boost, kw_matches = boost_keywords(
         query_kw,
         chunk.get("keywords", ""),
@@ -204,7 +326,7 @@ def apply_metadata_boost(
     topic_boost, topic_matches = boost_topics(
         query_kw,
         chunk.get("topics", ""),
-        weights.get("topics", 0.05)
+        weights.get("topics", 0.06)
     )
 
     question_boost = boost_questions(
@@ -216,25 +338,68 @@ def apply_metadata_boost(
     summary_boost = boost_summary(
         query_kw,
         chunk.get("summary", ""),
-        weights.get("summary", 0.07)
+        weights.get("summary", 0.06)
     )
 
-    # Calculate normalized scores (0-1) for reporting
+    # ========================================
+    # Enhanced metadata boosts (3 NEW fields)
+    # ========================================
+    semantic_kw_boost, semantic_kw_matches = boost_semantic_keywords(
+        query_kw,
+        chunk.get("semantic_keywords", ""),
+        weights.get("semantic_keywords", 0.15)
+    )
+
+    entity_rel_boost = boost_entity_relationships(
+        query,
+        chunk.get("entity_relationships", ""),
+        weights.get("entity_relationships", 0.10)
+    )
+
+    attributes_boost = boost_attributes(
+        query_kw,
+        chunk.get("attributes", ""),
+        weights.get("attributes", 0.08)
+    )
+
+    # ========================================
+    # Calculate normalized scores for reporting
+    # ========================================
     question_weight = weights.get("questions", 0.08)
     question_sim = (question_boost / question_weight) if question_weight > 0 else 0.0
 
-    summary_weight = weights.get("summary", 0.07)
+    summary_weight = weights.get("summary", 0.06)
     summary_cov = (summary_boost / summary_weight) if summary_weight > 0 else 0.0
 
-    # Total boost (capped at max_boost)
-    total_boost = min(kw_boost + topic_boost + question_boost + summary_boost, max_boost)
+    # NEW: Enhanced metadata normalized scores
+    entity_rel_weight = weights.get("entity_relationships", 0.10)
+    entity_rel_score = (entity_rel_boost / entity_rel_weight) if entity_rel_weight > 0 else 0.0
 
+    attributes_weight = weights.get("attributes", 0.08)
+    attributes_cov = (attributes_boost / attributes_weight) if attributes_weight > 0 else 0.0
+
+    # ========================================
+    # Total boost (capped at max_boost)
+    # ========================================
+    total_boost = min(
+        kw_boost + topic_boost + question_boost + summary_boost +
+        semantic_kw_boost + entity_rel_boost + attributes_boost,
+        max_boost
+    )
+
+    # ========================================
     # Build metadata match details
+    # ========================================
     metadata_match = MetadataMatch(
+        # Standard metadata
         keywords_matched=kw_matches,
         topics_matched=topic_matches,
         question_similarity=question_sim,
-        summary_coverage=summary_cov
+        summary_coverage=summary_cov,
+        # Enhanced metadata (NEW)
+        semantic_keywords_matched=semantic_kw_matches,
+        entity_relationships_score=entity_rel_score,
+        attributes_coverage=attributes_cov
     )
 
     return total_boost, metadata_match

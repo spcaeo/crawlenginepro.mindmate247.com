@@ -7,15 +7,21 @@ LLM-based answer generation with context and citations
 import os
 import sys
 from pathlib import Path
-from dotenv import load_dotenv
 
-# Load common .env from PipeLineServices root
-env_path = Path(__file__).resolve().parents[4] / ".env"
-load_dotenv(env_path)
+# Add shared directory to path FIRST (before any imports that need it)
+SHARED_DIR = Path(__file__).resolve().parents[4] / "shared"
+sys.path.insert(0, str(SHARED_DIR))
 
-# Add shared module to path
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from shared import get_llm_for_task, LLMModels
+# Import and load environment using config_loader
+from config_loader import load_shared_env, get_env
+
+# Load environment configuration (dev/prod/staging)
+load_shared_env()
+
+# Import service_registry for environment-aware service URLs
+from service_registry import get_registry
+
+from model_registry import get_llm_for_task, LLMModels
 
 # Service metadata
 API_VERSION = "1.0.0"
@@ -26,9 +32,11 @@ SERVICE_DESCRIPTION = "LLM-based answer generation with retrieved context and ci
 DEFAULT_HOST = os.getenv("HOST", "0.0.0.0")
 DEFAULT_PORT = int(os.getenv("ANSWER_SERVICE_PORT", "8074"))
 
-# Dependent service URLs
-# Note: Use base URL without endpoint path (answer_api.py adds /health for health checks and /v1/chat/completions for API calls)
-LLM_GATEWAY_URL = os.getenv("LLM_GATEWAY_URL_DEVELOPMENT", "http://localhost:8065").replace("/v1/chat/completions", "")
+# Dependent service URLs - Environment-aware via service_registry
+# Note: Service registry returns full URL with /v1/chat/completions, we need base URL
+# (answer_api.py adds /health for health checks and /v1/chat/completions for API calls)
+registry = get_registry()
+LLM_GATEWAY_URL = registry.get_service_url('llm_gateway').replace("/v1/chat/completions", "")
 
 # LLM parameters for answer generation
 # Use shared registry for model selection (no more hardcoded models!)

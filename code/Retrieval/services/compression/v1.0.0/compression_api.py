@@ -89,7 +89,7 @@ async def startup_event():
 
     # Check dependencies before starting
     print("\n🔍 Checking dependencies...")
-    llm_gateway_url = LLM_GATEWAY_URL.replace("/v1/chat/completions", "/health")
+    llm_gateway_url = f"{LLM_GATEWAY_URL.rstrip('/')}/health"
     llm_ok = await asyncio.to_thread(wait_for_dependency, "LLM Gateway", llm_gateway_url)
 
     if not llm_ok:
@@ -283,7 +283,7 @@ async def health_check():
     llm_connected = False
     try:
         response = requests.get(
-            LLM_GATEWAY_URL.replace("/v1/chat/completions", "/health"),
+            f"{LLM_GATEWAY_URL.rstrip('/')}/health",
             timeout=2  # STANDARDIZED: 2s timeout
         )
         llm_connected = response.status_code == 200

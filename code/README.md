@@ -12,7 +12,7 @@ Complete Ingestion and Retrieval pipelines for Retrieval-Augmented Generation (R
 
 ```bash
 # 1. Start SSH tunnel to server infrastructure (Terminal 1)
-ssh -i ~/reku631_nebius -L 19530:localhost:19530 -L 3000:localhost:3000 reku631@89.169.108.8
+ssh -i ~/reku631_nebius -L 19530:localhost:19530 -L 3000:localhost:3000 reku631@89.169.103.3
 
 # 2. Start all services (Terminal 2)
 cd /path/to/crawlenginepro.mindmate247.com/local_dev
@@ -25,7 +25,7 @@ curl http://localhost:8070/health
 ### Server Deployment
 
 ```bash
-# On server (89.169.108.8)
+# On server (89.169.103.3)
 cd /var/www/CrawlEnginePro/code
 
 # Staging environment
@@ -351,7 +351,7 @@ This allows flexible port assignment without code changes.
 ### Prerequisites
 
 1. **Python 3.11+**
-2. **SSH access to server** (89.169.108.8)
+2. **SSH access to server** (89.169.103.3)
 3. **SSH key**: `~/reku631_nebius`
 4. **API keys**: Nebius, Jina AI (optional), SambaNova (optional)
 
@@ -406,7 +406,7 @@ vim shared/.env.dev
 ssh -i ~/reku631_nebius \
   -L 19530:localhost:19530 \
   -L 3000:localhost:3000 \
-  reku631@89.169.108.8
+  reku631@89.169.103.3
 ```
 
 This tunnels:
@@ -452,7 +452,7 @@ tail -f local_dev/llm_gateway.log
 
 ### Server Environments
 
-The production server (89.169.108.8) runs three isolated environments:
+The production server (89.169.103.3) runs three isolated environments:
 
 1. **Production** - Live traffic (ports 8060-8069, 8110-8119)
 2. **Staging** - Pre-production testing (ports 8080-8109)
@@ -471,7 +471,7 @@ cd ../code
 ./deploy/deploy.sh
 
 # 3. SSH to server
-ssh -i ~/reku631_nebius reku631@89.169.108.8
+ssh -i ~/reku631_nebius reku631@89.169.103.3
 
 # 4. Setup environment (first time only)
 cd /var/www/CrawlEnginePro/code
@@ -610,7 +610,7 @@ Each API provides Swagger UI documentation:
 lsof -i :19530
 
 # Restart tunnel
-ssh -i ~/reku631_nebius -L 19530:localhost:19530 -L 3000:localhost:3000 reku631@89.169.108.8
+ssh -i ~/reku631_nebius -L 19530:localhost:19530 -L 3000:localhost:3000 reku631@89.169.103.3
 ```
 
 ### Port Already in Use

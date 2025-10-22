@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Search Service v1.0.0
-Dense vector search + metadata boosting (ALL 4 fields)
+Dense vector search + metadata boosting (ALL 7 fields)
 """
 
 from fastapi import FastAPI, HTTPException, Request
@@ -112,12 +112,17 @@ async def startup_event():
     print(f"Port: {config.DEFAULT_PORT}")
     print(f"Embeddings: {config.EMBEDDINGS_URL}")
     print(f"Storage: {config.STORAGE_URL}")
-    print(f"\nMetadata Boost Weights:")
-    print(f"  - keywords:  {config.BOOST_WEIGHTS['keywords']:.2f}")
-    print(f"  - topics:    {config.BOOST_WEIGHTS['topics']:.2f}")
-    print(f"  - questions: {config.BOOST_WEIGHTS['questions']:.2f}")
-    print(f"  - summary:   {config.BOOST_WEIGHTS['summary']:.2f}")
-    print(f"  - max boost: {config.MAX_TOTAL_BOOST:.2f}")
+    print(f"\nMetadata Boost Weights (ALL 7 FIELDS):")
+    print(f"  Standard Fields:")
+    print(f"    - keywords:  {config.BOOST_WEIGHTS['keywords']:.2f}")
+    print(f"    - topics:    {config.BOOST_WEIGHTS['topics']:.2f}")
+    print(f"    - questions: {config.BOOST_WEIGHTS['questions']:.2f}")
+    print(f"    - summary:   {config.BOOST_WEIGHTS['summary']:.2f}")
+    print(f"  Enhanced Fields:")
+    print(f"    - semantic_keywords:     {config.BOOST_WEIGHTS['semantic_keywords']:.2f}")
+    print(f"    - entity_relationships:  {config.BOOST_WEIGHTS['entity_relationships']:.2f}")
+    print(f"    - attributes:            {config.BOOST_WEIGHTS['attributes']:.2f}")
+    print(f"  Max Total Boost: {config.MAX_TOTAL_BOOST:.2f}")
     print(f"{'='*60}")
 
     # Check dependencies before starting
@@ -219,7 +224,8 @@ async def search_milvus(
         "filter": filter_expr,
         "output_fields": [
             "id", "text", "document_id", "chunk_index",
-            "keywords", "topics", "questions", "summary"
+            "keywords", "topics", "questions", "summary",
+            "semantic_keywords", "entity_relationships", "attributes"  # NEW: +3 enhanced fields
         ],
         "search_mode": "dense"  # Dense only (no sparse)
     }
@@ -288,12 +294,12 @@ async def get_version():
 @app.post("/v1/search", response_model=SearchResponse)
 async def search_endpoint(request: SearchRequest):
     """
-    Dense vector search + metadata boosting (ALL 4 fields)
+    Dense vector search + metadata boosting (ALL 7 fields)
 
     Process:
     1. Get query embedding from Embeddings Service
     2. Search Milvus Storage with dense vector
-    3. Apply metadata boost (keywords, topics, questions, summary)
+    3. Apply metadata boost (keywords, topics, questions, summary, semantic_keywords, entity_relationships, attributes)
     4. Return top-k results sorted by boosted score
 
     Example:
@@ -358,10 +364,15 @@ async def search_endpoint(request: SearchRequest):
                     metadata_matches=metadata_match,
                     document_id=result.get("document_id"),
                     chunk_index=result.get("chunk_index"),
+                    # Standard metadata (4 fields)
                     keywords=result.get("keywords"),
                     topics=result.get("topics"),
                     questions=result.get("questions"),
-                    summary=result.get("summary")
+                    summary=result.get("summary"),
+                    # Enhanced metadata (3 NEW fields)
+                    semantic_keywords=result.get("semantic_keywords"),
+                    entity_relationships=result.get("entity_relationships"),
+                    attributes=result.get("attributes")
                 )
             )
 

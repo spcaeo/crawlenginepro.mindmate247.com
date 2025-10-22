@@ -103,7 +103,7 @@ JINA_AI_KEY=<your_jina_api_key>  # Required if RERANKER_BACKEND=jina
 ## Production Deployment
 
 ### Target Setup
-**Server:** 89.169.108.8
+**Server:** 89.169.103.3
 **Location:** `/home/reku631/services/reranking_v2.0.0/`
 **Port:** 8002
 **APISIX Route:** `/api/v2/rerank/*`
@@ -111,7 +111,7 @@ JINA_AI_KEY=<your_jina_api_key>  # Required if RERANKER_BACKEND=jina
 
 ### Production Access (APISIX Gateway)
 ```bash
-curl -X POST http://89.169.108.8:9080/api/v2/rerank/rerank \
+curl -X POST http://89.169.103.3:9080/api/v2/rerank/rerank \
   -H "apikey: sk-enterprise-mindmate247-2025-v2" \
   -H "Content-Type: application/json" \
   -d '{
@@ -135,12 +135,12 @@ tar -czf reranking_v2.0.0.tar.gz v2.0.0/
 
 2. **Upload to server**:
 ```bash
-scp reranking_v2.0.0.tar.gz reku631@89.169.108.8:/home/reku631/
+scp reranking_v2.0.0.tar.gz reku631@89.169.103.3:/home/reku631/
 ```
 
 3. **Deploy on server**:
 ```bash
-ssh reku631@89.169.108.8
+ssh reku631@89.169.103.3
 cd /home/reku631/
 mkdir -p services/reranking_v2.0.0
 tar -xzf reranking_v2.0.0.tar.gz -C services/reranking_v2.0.0 --strip-components=1

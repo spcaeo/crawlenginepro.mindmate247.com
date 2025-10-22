@@ -41,7 +41,8 @@ This document contains a comprehensive test suite designed to challenge retrieva
 ---
 
 ### Query 1.3: Highest-Priced Product with Full Specifications
-**Question:** "Find the highest-priced product listed across all invoices and describe its key features and technical specifications."
+**Question:** "Find the highest-priced 
+roduct listed across all invoices and describe its key features and technical specifications."
 
 **Answer:**
 - The highest-priced product is the Hobart Commercial Dishwasher (Model LXeR-2) at $8,999.00 USD
@@ -184,7 +185,7 @@ This document contains a comprehensive test suite designed to challenge retrieva
 ### Query 7.1: Implicit Negative Logic
 **Question:** "Which product listed in any invoice is not paid, and which vendor is responsible for it?"
 
-**Answer:** The Construction Materials Invoice (Vendor: BuildRight Materials Supply) has Payment Status: Pending – Due 2024-04-09; those products (lumber, concrete mix, nails, paint) are not yet paid.
+**Answer:** The Construction Materials Invoice (Vendor: BuildRight Materials Supply) has Payment Status: Pending – Due 2024-04-09; those products (lumber, concrete mix, nails, paint) are not yet paid.fix
 
 **Reason for Difficulty:** Requires understanding negative conditions (NOT paid) and mapping to vendors.
 

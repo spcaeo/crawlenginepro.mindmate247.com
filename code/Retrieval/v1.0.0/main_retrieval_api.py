@@ -344,7 +344,8 @@ async def call_answer_service(
     max_tokens: int = None,  # Will use service default if not specified
     temperature: float = 0.3,
     system_prompt: Optional[str] = None,
-    stream: bool = True  # Enable streaming by default for better UX
+    stream: bool = True,  # Enable streaming by default for better UX
+    response_style: str = "balanced"  # NEW: Answer style parameter
 ):
     """Call Answer Generation Service with retry logic"""
     async def _call():
@@ -357,7 +358,8 @@ async def call_answer_service(
             "enable_citations": enable_citations,
             "llm_model": model_to_use,  # Use llm_model field (correct field name for Answer Generation API)
             "temperature": temperature,
-            "stream": stream  # Pass streaming preference
+            "stream": stream,  # Pass streaming preference
+            "response_style": response_style  # NEW: Pass response style to Answer Generation
         }
 
         # Add max_tokens if provided (otherwise Answer Service will use its default)
@@ -586,13 +588,19 @@ async def retrieve(request: RetrievalRequest):
                     timestamp=datetime.now().isoformat()
                 )
 
-            # Create metadata lookup for later use
+            # Create metadata lookup for later use (ALL 7 FIELDS)
             metadata_lookup = {
                 r.get('chunk_id'): {
+                    # Standard metadata (4 fields)
                     'topics': r.get('topics', ''),
                     'keywords': r.get('keywords', ''),
                     'summary': r.get('summary', ''),
                     'questions': r.get('questions', ''),
+                    # Enhanced metadata (3 NEW fields)
+                    'semantic_keywords': r.get('semantic_keywords', ''),
+                    'entity_relationships': r.get('entity_relationships', ''),
+                    'attributes': r.get('attributes', ''),
+                    # Document metadata
                     'document_id': r.get('document_id', 'unknown')
                 }
                 for r in search_results
@@ -742,7 +750,7 @@ async def retrieve(request: RetrievalRequest):
                         )
                         # Continue with None values (will use request.model as fallback)
 
-                # Prepare context chunks with metadata
+                # Prepare context chunks with metadata (ALL 7 FIELDS)
                 context_chunks = []
                 for chunk in compressed_chunks[:request.max_context_chunks]:
                     chunk_id = chunk.get('id')
@@ -751,10 +759,15 @@ async def retrieve(request: RetrievalRequest):
                         "chunk_id": chunk_id,
                         "text": chunk.get('compressed_text', chunk.get('original_text', '')),
                         "document_id": metadata.get('document_id', 'unknown'),
+                        # Standard metadata (4 fields)
                         "topics": metadata.get('topics', ''),
                         "keywords": metadata.get('keywords', ''),
                         "summary": metadata.get('summary', ''),
-                        "questions": metadata.get('questions', '')
+                        "questions": metadata.get('questions', ''),
+                        # Enhanced metadata (3 NEW fields)
+                        "semantic_keywords": metadata.get('semantic_keywords', ''),
+                        "entity_relationships": metadata.get('entity_relationships', ''),
+                        "attributes": metadata.get('attributes', '')
                     })
 
                 # Use recommended model from Intent Service if available, otherwise fall back to request.model
@@ -770,7 +783,8 @@ async def retrieve(request: RetrievalRequest):
                         max_tokens=recommended_max_tokens,
                         temperature=request.temperature,
                         system_prompt=custom_system_prompt,
-                        stream=True
+                        stream=True,
+                        response_style=request.response_style or "balanced"
                     )
                     # Return the streaming response directly
                     return StreamingResponse(
@@ -787,7 +801,8 @@ async def retrieve(request: RetrievalRequest):
                     max_tokens=recommended_max_tokens,
                     temperature=request.temperature,
                     system_prompt=custom_system_prompt,
-                    stream=False
+                    stream=False,
+                    response_style=request.response_style or "balanced"
                 )
                 answer_time_ms = (time.time() - answer_start) * 1000
 

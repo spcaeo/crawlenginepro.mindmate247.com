@@ -5,13 +5,22 @@ Simplified orchestration - delegates to Metadata v3 and Milvus Storage v1
 """
 
 import os
+import sys
 from pathlib import Path
 from enum import Enum
-from dotenv import load_dotenv
 
-# Load common .env from PipeLineServices root (4 levels up: v1.0.0 -> chunking -> services -> Ingestion -> PipeLineServices)
-env_path = Path(__file__).resolve().parents[4] / ".env"
-load_dotenv(env_path)
+# Add shared directory to path FIRST (before imports that need it)
+SHARED_DIR = Path(__file__).resolve().parents[5] / "shared"
+sys.path.insert(0, str(SHARED_DIR))
+
+# Import and load environment using config_loader
+from config_loader import load_shared_env, get_env
+
+# Load environment configuration (dev/prod/staging)
+load_shared_env()
+
+# Import service_registry
+from service_registry import get_registry
 
 # Service metadata
 API_VERSION = "1.0.0"
@@ -29,13 +38,14 @@ DEFAULT_PORT = int(os.getenv("CHUNKING_SERVICE_PORT", os.getenv("PORT", "8071"))
 INTERNAL_MODE = True
 
 # ============================================================================
-# Service URLs (Internal localhost communication)
+# Service URLs - using service_registry (environment-aware)
 # ============================================================================
-EMBEDDINGS_SERVICE_URL = os.getenv("EMBEDDINGS_SERVICE_URL", "http://localhost:8073/v1/embeddings")
-METADATA_SERVICE_URL = os.getenv("METADATA_SERVICE_URL", "http://localhost:8072/v1/metadata")
-MILVUS_STORAGE_SERVICE_URL = os.getenv("MILVUS_STORAGE_SERVICE_URL", "http://localhost:8074/v1")
+registry = get_registry()
+EMBEDDINGS_SERVICE_URL = registry.get_service_url('embeddings')  # Already includes /v1/embeddings
+METADATA_SERVICE_URL = registry.get_service_url('metadata')  # Already includes /v1/metadata
+MILVUS_STORAGE_SERVICE_URL = registry.get_service_url('storage')  # Already includes /v1
 
-print(f"[CONFIG] Internal mode (localhost communication)")
+print(f"[CONFIG] Internal mode (localhost communication) - Environment: {registry.environment}")
 print(f"[CONFIG]   Metadata v1: {METADATA_SERVICE_URL}")
 print(f"[CONFIG]   Embeddings v1: {EMBEDDINGS_SERVICE_URL}")
 print(f"[CONFIG]   Storage v1: {MILVUS_STORAGE_SERVICE_URL}")

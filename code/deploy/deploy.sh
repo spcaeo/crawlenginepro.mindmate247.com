@@ -3,7 +3,7 @@
 # CrawlEnginePro Server Deployment Script
 # ==============================================================================
 # Deploys code from local machine to server
-# Server: reku631@89.169.108.8
+# Server: reku631@89.169.103.3
 # ==============================================================================
 
 set -e
@@ -18,7 +18,7 @@ NC='\033[0m'
 
 # Configuration
 SERVER_USER="reku631"
-SERVER_HOST="89.169.108.8"
+SERVER_HOST="89.169.103.3"
 SSH_KEY="$HOME/reku631_nebius"
 REMOTE_DIR="~/crawlenginepro/code"
 LOCAL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

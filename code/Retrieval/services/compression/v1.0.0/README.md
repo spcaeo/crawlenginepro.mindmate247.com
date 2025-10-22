@@ -103,7 +103,7 @@ DEFAULT_MODEL=7B-fast
 ## Production Deployment
 
 ### Target Setup
-**Server:** 89.169.108.8
+**Server:** 89.169.103.3
 **Location:** `/home/reku631/services/compression_v2.0.0/`
 **Port:** 9003
 **APISIX Route:** `/api/v2/compress/*`
@@ -111,7 +111,7 @@ DEFAULT_MODEL=7B-fast
 
 ### Production Access (APISIX Gateway)
 ```bash
-curl -X POST http://89.169.108.8:9080/api/v2/compress/v2/compress \
+curl -X POST http://89.169.103.3:9080/api/v2/compress/v2/compress \
   -H "apikey: sk-enterprise-mindmate247-2025-v2" \
   -H "Content-Type: application/json" \
   -d '{
@@ -139,12 +139,12 @@ tar -czf compression_v2.0.0.tar.gz v2.0.0/
 
 2. **Upload to server**:
 ```bash
-scp compression_v2.0.0.tar.gz reku631@89.169.108.8:/home/reku631/
+scp compression_v2.0.0.tar.gz reku631@89.169.103.3:/home/reku631/
 ```
 
 3. **Deploy on server**:
 ```bash
-ssh reku631@89.169.108.8
+ssh reku631@89.169.103.3
 cd /home/reku631/
 mkdir -p services/compression_v2.0.0
 tar -xzf compression_v2.0.0.tar.gz -C services/compression_v2.0.0 --strip-components=1

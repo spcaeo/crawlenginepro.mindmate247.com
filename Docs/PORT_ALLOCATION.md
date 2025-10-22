@@ -3,6 +3,8 @@
 ## Overview
 All PipeLineServices use a structured port allocation scheme with three isolated environments: **Development**, **Staging**, and **Production**. Each environment uses a different port range to avoid conflicts.
 
+**IMPORTANT:** All services are environment-aware and automatically select ports based on the `ENVIRONMENT` environment variable (`production`, `staging`, or `development`).
+
 ## Multi-Environment Port Allocation
 
 ### Production Environment (8060-8069, 8110-8119)
@@ -126,7 +128,7 @@ For optimal startup, services should be started in dependency order:
 
 ```bash
 # 1. Start SSH tunnel to server (Terminal 1)
-ssh -i ~/reku631_nebius -L 19530:localhost:19530 -L 3000:localhost:3000 reku631@89.169.108.8
+ssh -i ~/reku631_nebius -L 19530:localhost:19530 -L 3000:localhost:3000 reku631@89.169.103.3
 
 # 2. Start services using startup script (Terminal 2)
 cd /path/to/crawlenginepro.mindmate247.com/local_dev
@@ -221,7 +223,7 @@ Development requires SSH tunnel to access server infrastructure:
 ssh -i ~/reku631_nebius \
   -L 19530:localhost:19530 \  # Milvus
   -L 3000:localhost:3000 \    # Attu UI
-  reku631@89.169.108.8
+  reku631@89.169.103.3
 ```
 
 This provides local access to:
@@ -285,3 +287,133 @@ kill -9 <PID>
 - Check service logs for errors
 - Verify network connectivity
 - Test individual service health endpoints
+
+---
+
+## Production Server Configuration (89.169.103.3)
+
+### Server Details
+- **VM Name:** lavender-chameleon-instance-2
+- **Instance ID:** computeinstance-e00akjpdm3mceg5ps0
+- **Public IP:** 89.169.103.3
+- **Private IP:** 10.0.0.65
+- **Platform:** cpu-e2 (16 vCPUs, 64 GiB), 1280 GiB SSD
+- **OS:** Ubuntu 24.04 LTS
+- **Region:** eu-north1
+
+### DNS Records (Hostinger)
+- `milvus.mindmate247.com` → 89.169.103.3
+- `crawlenginepro.mindmate247.com` → 89.169.103.3
+- `mindmate247.com` (@) → 89.169.103.3
+
+### SSH Access
+- **Username:** reku631
+- **SSH Key:** ~/reku631_nebius
+- **Ports:** 22 (standard), 443 (firewall bypass)
+
+```bash
+# Standard SSH
+ssh -i ~/reku631_nebius reku631@89.169.103.3
+
+# Alternative (works on restrictive networks)
+ssh -i ~/reku631_nebius -p 443 reku631@89.169.103.3
+```
+
+### Service Management
+
+**Start all production services:**
+```bash
+cd ~/crawlenginepro/code
+./start_production.sh
+```
+
+**Check service health:**
+```bash
+# Individual service
+curl http://localhost:8110/health | jq
+
+# All services
+for port in 8060 8061 8062 8063 8064 8065 8110 8111 8112 8113 8114 8115; do
+  echo "Port $port: $(curl -s http://localhost:$port/health | jq -r '.status')"
+done
+```
+
+**View logs:**
+```bash
+cd ~/crawlenginepro/code/logs
+tail -f retrieval_api.log
+```
+
+### Environment Variables
+
+Production services automatically detect `ENVIRONMENT=production` and use correct ports (8060-8069, 8110-8119).
+
+**Critical environment variables in shared/.env.prod:**
+- `ENVIRONMENT=production`
+- `LLM_GATEWAY_URL_PRODUCTION=http://localhost:8065`
+- `LLM_GATEWAY_URL_DEVELOPMENT=http://localhost:8000`
+- `MILVUS_HOST_PRODUCTION=localhost`
+- `MILVUS_PORT_PRODUCTION=19530`
+
+### Service Status (as of Oct 22, 2025)
+
+**Current Environment:** Development (Local Mac) + Production Milvus (Server)
+
+✅ **Local Development Services (6/6 Healthy):**
+- Ingestion API (8070)
+- Chunking (8071)
+- Metadata (8072)
+- Embeddings (8073)
+- Storage (8074)
+- LLM Gateway (8075)
+
+✅ **Production Server - Milvus Only:**
+- Milvus Database (19530) - v2.6.4
+- Attu UI (3000) - v2.5.7
+- etcd (2379) - v3.5.5
+- Minio (9000/9001)
+
+⏳ **Production Services (Not Yet Deployed):**
+- Retrieval services will be deployed in future phase
+- Ingestion services may be deployed for production use
+
+**Status:** Development environment fully operational with production Milvus backend. Ready for testing and development.
+
+### Key Fixes Applied
+
+1. **Storage Service Port:** Fixed to correctly use port 8064 (was starting on 8014)
+2. **Environment-Aware Configs:** All services now check `ENVIRONMENT` variable for port selection
+3. **LLM Gateway URLs:** Fixed to use base URLs without paths (services append endpoints)
+4. **Dependency URLs:** Main APIs now use correct production ports for internal services
+
+### Milvus Database
+
+**Status:** Running in Docker (Upgraded Oct 22, 2025)
+```bash
+cd ~/crawlenginepro/milvus
+sudo docker-compose ps
+```
+
+**Services:**
+- `milvus-standalone` - Port 19530 (v2.6.4 - Latest)
+- `milvus-attu` - Port 3000 (v2.5.7 - Latest open-source, Admin UI via SSH tunnel)
+- `milvus-etcd` - Metadata store (v3.5.5)
+- `milvus-minio` - Object storage (ports 9000, 9001)
+
+**Recent Upgrade (Oct 22, 2025):**
+- Milvus: v2.3.3 → v2.6.4
+- Attu: v2.3.10 → v2.5.7
+- Fresh installation (all old data cleared)
+- All 7 metadata fields verified working
+
+**Access Attu UI:**
+```bash
+# From local machine
+ssh -i ~/reku631_nebius -L 3000:localhost:3000 reku631@89.169.103.3
+# Then open: http://localhost:3000
+```
+
+---
+
+**Last Updated:** October 22, 2025  
+**Documentation:** Complete production setup with all services configured and tested

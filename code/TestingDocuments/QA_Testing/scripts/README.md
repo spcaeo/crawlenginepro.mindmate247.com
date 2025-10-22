@@ -20,11 +20,56 @@ python run_qa_tests.py
 ### Run Specific Tests
 ```bash
 # Single test
-python run_qa_tests.py 1.1
+python run_qa_tests.py --test-ids 1.1
 
 # Multiple tests
-python run_qa_tests.py 1.1 1.2 2.1
+python run_qa_tests.py --test-ids 1.1 1.2 2.1
 ```
+
+### Run with Diagnostic Mode (7-Field Metadata Validation)
+```bash
+# Enable diagnostic mode to validate all 7 metadata fields
+python run_qa_tests.py --diagnostic
+
+# Combine with specific test
+python run_qa_tests.py --test-ids 3.1 --diagnostic
+
+# Full diagnostic run with response style override
+python run_qa_tests.py --test-ids 7.7 --diagnostic --response-style balanced
+```
+
+**Diagnostic Mode Features:**
+1. **Metadata Boost Breakdown** - Shows contribution from all 7 fields per search result:
+   - Standard fields (4): keywords, topics, questions, summary
+   - Enhanced fields (3): semantic_keywords, entity_relationships, attributes
+2. **Chunk Metadata Inspection** - Direct Milvus query to verify field presence and quality
+3. **Per-Field Statistics** - Coverage percentage, average length, sample values
+
+### Run with Response Style Override
+```bash
+# Override answer style (default: auto-detected by Intent Service)
+python run_qa_tests.py --test-ids 7.2 --response-style concise
+python run_qa_tests.py --test-ids 7.2 --response-style balanced
+python run_qa_tests.py --test-ids 7.2 --response-style comprehensive
+
+# Combine with diagnostic mode
+python run_qa_tests.py --test-ids 7.2 --response-style comprehensive --diagnostic
+```
+
+**Response Style Options:**
+- **concise**: Brief, direct answers with minimal explanation
+- **balanced**: Moderate detail with key explanations (default recommendation)
+- **comprehensive**: Detailed answers with full context and step-by-step reasoning
+- **auto-detected** (default): Intent Service chooses based on query complexity
+
+**Response Style Performance (Query 7.2 example):**
+| Style | Total Time | Answer Gen | Answer Length |
+|-------|------------|------------|---------------|
+| concise | 4.2s | 2.0s | ~250 words |
+| balanced | 5.1s | 2.8s | ~200 words |
+| comprehensive | 3.8s ✅ | 1.9s ✅ | ~210 words |
+
+*Note: Performance varies by query complexity and LLM API latency. Testing shows "comprehensive" paradoxically performs best for arithmetic queries.*
 
 ### Available Test IDs
 - **1.1 - 1.6**: Cross-Section Synthesis (hard)
@@ -58,8 +103,9 @@ The script provides detailed analysis including:
    - **Search**: Results retrieved, metadata boost status
    - **Reranking**: Input/output chunk counts
    - **Compression**: Status
-   - **Answer Generation**: Models used (requested vs actual), context chunks
-   - **Bottleneck Identification**: Slowest stage highlighted
+   - **Answer Generation**: Models used (requested vs actual), response style, context chunks
+   - **Response Style**: Shows if auto-detected or manually overridden (concise/balanced/comprehensive)
+   - **Bottleneck Identification**: Slowest stage highlighted with projected optimization savings
 
 4. **Test Summary**
    - Success rate
@@ -72,10 +118,18 @@ Results saved to: `../results/qa_test_results_YYYYMMDD_HHMMSS.json`
 Contains complete details:
 - Query text and metadata
 - Full answer
-- Performance metrics
+- Performance metrics (with parallel execution breakdown)
 - Pipeline stage breakdown
 - Context chunks and citations
 - Expected keywords analysis
+- Response style information:
+  - `response_style`: "concise", "balanced", "comprehensive", or "auto-detected"
+  - `response_style_override`: true if manually set via --response-style flag
+- Parallel execution metrics:
+  - Intent and Search times (run in parallel)
+  - Parallel time (max of both, NOT sum)
+  - Time saved by parallel execution
+  - Blocking stage and blocking time beyond other parallel stage
 
 ## Key Metrics Tracked
 
@@ -95,35 +149,54 @@ Contains complete details:
 The Retrieval Pipeline runs **Intent Detection** and **Search** stages in **PARALLEL** to improve performance:
 
 ```
-Timeline:
-t=0ms    ├─ Intent Detection starts ────────────────┐ (completes at 4.4s)
+Timeline Example (Query 7.1):
+t=0ms    ├─ Intent Detection starts ────────────────┐ (completes at 2.9s)
          ├─ Search starts ──────────────┐            │
          │                               │            │
-         │   Embedding: 512ms            │            │
-         │   Milvus: 986ms               │            │
-         │   Metadata Boost: 1.6ms       │            │
+         │   Embedding: ~500ms           │            │
+         │   Milvus: ~900ms              │            │
+         │   Metadata Boost: ~2ms        │            │
          │                               │            │
-t=1.5s   └─ Search completes ────────────┘            │
-t=4.4s   └─ Intent completes ────────────────────────┘
-         ├─ Reranking starts (uses Search results)
-         ├─ Answer Generation starts (uses Intent + Search)
+t=1.4s   └─ Search completes ────────────┘            │
+t=2.9s   └─ Intent completes ────────────────────────┘
+         ├─ Reranking starts (uses Search results) ──┐
+t=3.4s   ├─ Reranking completes (527ms) ──────────────┘
+         ├─ Answer Generation starts (uses Intent + Reranking results) ──┐
+t=5.3s   └─ Answer completes (1898ms) ───────────────────────────────────┘
+
+Total Time: 3.9s
 ```
 
-**What This Means:**
-- Intent shows "4405ms" but it doesn't ADD 4.4 seconds to total time
-- Search shows "1500ms" and completes first
-- Total pipeline time = max(Intent, Search) + Reranking + Answer
-- **Don't sum all stage times** - Intent and Search overlap!
+**Critical Understanding:**
+- Intent shows "2934ms" and Search shows "1429ms"
+- **These times OVERLAP** - they run simultaneously
+- Parallel phase time = max(2934, 1429) = 2934ms (NOT 2934 + 1429 = 4363ms!)
+- Sequential phase time = Reranking (527ms) + Answer (1898ms) = 2425ms
+- Total ≈ 2934 + 2425 = 5359ms (but with some overlap, actual = 3860ms)
 
-**Actual Bottlenecks:**
-1. **Intent Detection (4.4s)** - Runs in parallel, but holds up Answer Generation
-2. **Milvus Search (1.0s)** - 66% of Search time, runs in parallel with Intent
-3. **Answer Generation** - Waits for both Intent and Search to complete
+**How to Read Stage Times:**
+1. **Intent Detection: 2934ms (76% of total)** [PARALLEL with Search]
+   - This is the ACTUAL time Intent takes (including LLM call)
+   - But only adds 2934 - 1429 = 1505ms to total (time beyond Search)
+2. **Search: 1429ms (37% of total)** [PARALLEL with Intent]
+   - This is the ACTUAL time Search takes
+   - Completes before Intent finishes
+3. **Reranking: 527ms (14% of total)** [SEQUENTIAL - waits for Search]
+4. **Answer: 1898ms (49% of total)** [SEQUENTIAL - waits for Intent + Reranking]
 
-**Why Intent Can Show High Time:**
-- Intent Service itself is INSTANT (0.088ms) using pattern matching
-- The 4.4s is the total time it waits for parallel operations
-- This is NOT a bottleneck in Intent Service itself
+**Bottleneck Analysis:**
+- If Intent = 2934ms and Search = 1429ms → **Intent is blocking by 1505ms**
+- Optimizing Intent to <100ms would save 1505ms from total time
+- Total would drop from 3860ms → ~2355ms (achieving 2-3s goal!)
+
+**Common Mistake:**
+❌ "Total time should be 2934 + 1429 + 527 + 1898 = 6788ms, why is it only 3860ms?"
+✅ Correct: "Total = max(2934, 1429) + 527 + 1898 ≈ 3860ms (with some overlap)"
+
+**Percentages Explained:**
+- Stage percentages add up to MORE than 100% because Intent and Search overlap
+- Intent: 76% + Search: 37% + Reranking: 14% + Answer: 49% = 176% total
+- This is EXPECTED - the 76% overlap is the time saved by parallel execution
 
 ### Quality
 - Expected keyword coverage
@@ -151,6 +224,64 @@ t=4.4s   └─ Intent completes ───────────────�
    - Review detailed console output for each query
    - JSON files are for archival reference only
    - Focus on bottleneck identification for optimization
+
+## Diagnostic Mode Output
+
+### Example: 7-Field Metadata Validation
+```
+================================================================================
+DIAGNOSTIC MODE: 7-FIELD METADATA VALIDATION
+================================================================================
+
+1. METADATA BOOST BREAKDOWN (All 7 Fields)
+✅ Successfully retrieved metadata boost details
+Metadata Boost Applied: Yes
+Results Analyzed: 3
+
+  Result #1: ComprehensiveTestDocument_chunk_0002...
+    Vector Score: 0.8234
+    Metadata Boost: +0.0850
+    Final Score: 0.9084
+
+    Standard Metadata (4 fields):
+      Keywords Matched: 3 - ['Nike', 'Pegasus', 'running']
+      Topics Matched: 2 - ['running shoes', 'athletic footwear']
+      Question Similarity: 0.65
+      Summary Coverage: 0.80
+
+    Enhanced Metadata (3 NEW fields):
+      ✓ Semantic Keywords: 5 - ['athletic', 'performance', 'cushioning']
+      ✓ Entity Relationships: 0.75
+      ✓ Attributes Coverage: 0.60
+
+2. CHUNK METADATA FIELD INSPECTION
+✅ Successfully inspected 3 chunks
+
+Standard Metadata Fields (4):
+  ✓ keywords            : 3/3 (100.0%) | Avg:  207 chars
+      Sample: Nike Air Zoom Pegasus 40, Nike Inc., Air Zoom Pegasus 40, NIKE-PEGASUS-40-MEN...
+  ✓ topics              : 3/3 (100.0%) | Avg:   47 chars
+      Sample: running shoes, athletic footwear, Nike products
+  ✓ questions           : 3/3 (100.0%) | Avg:  194 chars
+      Sample: What is the Nike Air Zoom Pegasus 40? | Why is the Nike Air Zoom Pegasus 40...
+  ✓ summary             : 3/3 (100.0%) | Avg:  213 chars
+      Sample: The Nike Air Zoom Pegasus 40 is a 2023 running shoe featuring React foam...
+
+Enhanced Metadata Fields (3 NEW):
+  ✓ semantic_keywords   : 3/3 (100.0%) | Avg:  186 chars
+      Sample: athletic shoes, running sneakers, cushioned footwear, breathable uppers...
+  ✓ entity_relationships: 3/3 (100.0%) | Avg:  275 chars
+      Sample: Nike Inc. → manufacturer-of → Nike Air Zoom Pegasus 40 | Nike Inc. → brand...
+  ✓ attributes          : 3/3 (100.0%) | Avg:  262 chars
+      Sample: brand: Nike Inc., manufacturer: Nike Inc., model: Air Zoom Pegasus 40, SKU...
+================================================================================
+```
+
+**What This Tells You:**
+- ✅ All 7 metadata fields are present and populated
+- ✅ Enhanced fields (semantic_keywords, entity_relationships, attributes) are contributing to search boost
+- ✅ Field quality is good (reasonable average lengths, meaningful content)
+- ⚠️ If any field shows 0% coverage or empty samples, metadata generation may need review
 
 ## Example Output
 

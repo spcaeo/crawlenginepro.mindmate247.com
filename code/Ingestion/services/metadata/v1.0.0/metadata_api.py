@@ -467,7 +467,7 @@ async def health_check():
     llm_connected = False
     try:
         response = await http_client.get(
-            LLM_GATEWAY_URL.replace("/v1/chat/completions", "/health"),
+            f"{LLM_GATEWAY_URL.rstrip('/')}/health",
             timeout=2.0  # Optimized timeout
         )
         llm_connected = response.status_code == 200

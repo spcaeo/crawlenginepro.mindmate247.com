@@ -21,7 +21,7 @@ mkdir -p ~/scripts/backups
 cd ~/scripts/backups
 
 # Copy all scripts
-scp -i ~/reku631_nebius backup_*.sh reku631@89.169.108.8:~/scripts/backups/
+scp -i ~/reku631_nebius backup_*.sh reku631@89.169.103.3:~/scripts/backups/
 
 # Make executable
 chmod +x ~/scripts/backups/*.sh

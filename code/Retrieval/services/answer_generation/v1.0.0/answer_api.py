@@ -165,15 +165,16 @@ async def check_service(url: str) -> bool:
     except:
         return False
 
-def build_context_prompt(query: str, context_chunks: List[ContextChunk], enable_citations: bool, include_metadata_questions: bool = False) -> str:
+def build_context_prompt(query: str, context_chunks: List[ContextChunk], enable_citations: bool, include_metadata_questions: bool = False, response_style: str = "balanced") -> str:
     """
-    Build context prompt from retrieved chunks
+    Build context prompt from retrieved chunks with response style adaptation
 
     Args:
         query: User query
         context_chunks: Retrieved context chunks
         enable_citations: Whether to include citation instructions
         include_metadata_questions: Whether to include questions field in metadata (default: False for performance)
+        response_style: Answer style - "concise", "balanced", or "comprehensive" (default: "balanced")
 
     Returns:
         Formatted prompt with context
@@ -181,13 +182,15 @@ def build_context_prompt(query: str, context_chunks: List[ContextChunk], enable_
     # Limit to max chunks
     chunks_to_use = context_chunks[:config.MAX_CONTEXT_CHUNKS]
 
-    # Build context section WITH METADATA
+    # Build context section WITH METADATA (ALL 7 FIELDS)
     context_parts = []
     for i, chunk in enumerate(chunks_to_use, 1):
         context_parts.append(f"[Source {i}]")
 
         # Add metadata if available
         metadata_lines = []
+
+        # Standard metadata (4 fields)
         if hasattr(chunk, 'topics') and chunk.topics:
             metadata_lines.append(f"Topics: {chunk.topics}")
         if hasattr(chunk, 'keywords') and chunk.keywords:
@@ -197,6 +200,14 @@ def build_context_prompt(query: str, context_chunks: List[ContextChunk], enable_
             metadata_lines.append(f"Questions: {chunk.questions}")
         if hasattr(chunk, 'summary') and chunk.summary:
             metadata_lines.append(f"Summary: {chunk.summary}")
+
+        # Enhanced metadata (3 NEW fields)
+        if hasattr(chunk, 'semantic_keywords') and chunk.semantic_keywords:
+            metadata_lines.append(f"Semantic Keywords: {chunk.semantic_keywords}")
+        if hasattr(chunk, 'entity_relationships') and chunk.entity_relationships:
+            metadata_lines.append(f"Entity Relationships: {chunk.entity_relationships}")
+        if hasattr(chunk, 'attributes') and chunk.attributes:
+            metadata_lines.append(f"Attributes: {chunk.attributes}")
 
         if metadata_lines:
             context_parts.append("\n".join(metadata_lines))
@@ -211,17 +222,49 @@ def build_context_prompt(query: str, context_chunks: List[ContextChunk], enable_
 
     context_text = "\n".join(context_parts)
 
-    # Build user prompt
+    # Build citation instruction
     citation_instruction = ""
     if enable_citations:
         citation_instruction = "\n\nWhen referencing information, cite the source using [Source X] notation."
+
+    # Build response style instruction with metadata guidance
+    style_instructions = {
+        "concise": """Provide a brief, direct answer using only the most essential information from the context.
+- Focus on core facts and key points
+- Use simple, clear language
+- Keep the answer to 2-3 sentences or short bullet points
+- Use the metadata fields (Topics, Keywords, Summary) to quickly identify the most relevant information""",
+
+        "balanced": """Provide a clear, well-structured answer that addresses the question with appropriate detail.
+- Include key facts and necessary context
+- Use the rich metadata provided (Topics, Keywords, Summary, Semantic Keywords, Entity Relationships, Attributes) to understand the context deeply
+- Explain important relationships between entities when relevant
+- Keep explanations concise but complete
+- Use 2-4 paragraphs or structured sections as appropriate""",
+
+        "comprehensive": """Provide a thorough, detailed answer that fully addresses all aspects of the question.
+- Leverage ALL metadata fields to provide deep context:
+  * Topics and Keywords for subject matter framing
+  * Summary for high-level understanding
+  * Semantic Keywords for conceptual connections
+  * Entity Relationships to explain how entities interact
+  * Attributes to provide specific characteristics and properties
+- Include step-by-step reasoning for calculations or complex queries
+- Provide relevant background information and context
+- Explain relationships, causality, and implications
+- Use structured formatting (headers, lists, sections) for clarity
+- Be detailed but avoid unnecessary verbosity"""
+    }
+
+    answer_instruction = style_instructions.get(response_style, style_instructions["balanced"])
 
     user_prompt = f"""Question: {query}
 
 Context:
 {context_text}
 
-Please provide a comprehensive answer to the question based on the context above.{citation_instruction}"""
+Instructions:
+{answer_instruction}{citation_instruction}"""
 
     return user_prompt
 
@@ -278,7 +321,8 @@ async def generate_answer(
     enable_citations: bool,
     cite_only_relevant_sources: bool,
     custom_system_prompt: str = None,
-    include_metadata_questions: bool = False
+    include_metadata_questions: bool = False,
+    response_style: str = "balanced"
 ) -> Dict:
     """
     Generate answer using LLM Gateway (non-streaming)
@@ -292,12 +336,13 @@ async def generate_answer(
         enable_citations: Whether to include citations
         cite_only_relevant_sources: Only cite relevant sources (true) or explain all sources (false)
         custom_system_prompt: Custom system prompt from Intent Service (overrides default)
+        response_style: Answer style - "concise", "balanced", or "comprehensive" (default: "balanced")
 
     Returns:
         Dict with answer and metadata
     """
-    # Build prompt with optional metadata questions
-    user_prompt = build_context_prompt(query, context_chunks, enable_citations, include_metadata_questions)
+    # Build prompt with optional metadata questions and response style
+    user_prompt = build_context_prompt(query, context_chunks, enable_citations, include_metadata_questions, response_style)
 
     # Use custom system prompt if provided, otherwise select based on cite_only_relevant_sources
     if custom_system_prompt:
@@ -362,7 +407,8 @@ async def generate_answer_stream(
     enable_citations: bool,
     cite_only_relevant_sources: bool,
     custom_system_prompt: str = None,
-    include_metadata_questions: bool = False
+    include_metadata_questions: bool = False,
+    response_style: str = "balanced"
 ):
     """
     Generate answer using LLM Gateway with streaming (progressive delivery)
@@ -377,12 +423,13 @@ async def generate_answer_stream(
         cite_only_relevant_sources: Only cite relevant sources (true) or explain all sources (false)
         custom_system_prompt: Custom system prompt from Intent Service (overrides default)
         include_metadata_questions: Whether to include questions field in metadata (default: False for performance)
+        response_style: Answer style - "concise", "balanced", or "comprehensive" (default: "balanced")
 
     Yields:
         SSE-formatted chunks as they arrive from LLM
     """
-    # Build prompt with optional metadata questions
-    user_prompt = build_context_prompt(query, context_chunks, enable_citations, include_metadata_questions)
+    # Build prompt with optional metadata questions and response style
+    user_prompt = build_context_prompt(query, context_chunks, enable_citations, include_metadata_questions, response_style)
 
     # Use custom system prompt if provided, otherwise select based on cite_only_relevant_sources
     if custom_system_prompt:
@@ -529,7 +576,8 @@ async def generate_answer_endpoint(request: AnswerRequest):
                     enable_citations=request.enable_citations,
                     cite_only_relevant_sources=request.cite_only_relevant_sources,
                     custom_system_prompt=request.system_prompt,
-                    include_metadata_questions=request.include_metadata_questions
+                    include_metadata_questions=request.include_metadata_questions,
+                    response_style=request.response_style or "balanced"
                 ),
                 media_type="text/event-stream"
             )
@@ -563,7 +611,8 @@ async def generate_answer_endpoint(request: AnswerRequest):
                 enable_citations=request.enable_citations,
                 cite_only_relevant_sources=request.cite_only_relevant_sources,
                 custom_system_prompt=request.system_prompt,
-                include_metadata_questions=request.include_metadata_questions
+                include_metadata_questions=request.include_metadata_questions,
+                response_style=request.response_style or "balanced"
             )
 
             answer_text = result["answer"]

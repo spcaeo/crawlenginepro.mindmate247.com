@@ -32,16 +32,19 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, status
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
-from dotenv import load_dotenv
 
-# Load common .env from PipeLineServices root
-env_path = Path(__file__).resolve().parents[2] / ".env"
-load_dotenv(env_path)
-
-# Add shared directory to path for model registry
-SHARED_DIR = env_path.parent / "shared"
+# Add shared directory to path FIRST (before imports that need it)
+SHARED_DIR = Path(__file__).resolve().parents[3] / "shared"
 sys.path.insert(0, str(SHARED_DIR))
 
+# Import and load environment using config_loader
+from config_loader import load_shared_env, get_env
+
+# Load environment configuration (dev/prod/staging)
+load_shared_env()
+
+# Import service_registry and model_registry
+from service_registry import get_registry
 from model_registry import DEFAULT_EMBEDDING_MODEL, get_embedding_dimension, get_llm_for_task, get_metadata_enum_for_model
 
 # ============================================================================
@@ -58,12 +61,13 @@ METADATA_MODEL = get_llm_for_task("metadata_extraction", complexity="complex")
 HOST = os.getenv("HOST", "0.0.0.0")
 PORT = int(os.getenv("INGESTION_API_PORT", "8060"))
 
-# Internal service URLs
-CHUNKING_URL = os.getenv("CHUNKING_SERVICE_URL", "http://localhost:8061/v1/orchestrate")
-METADATA_URL = os.getenv("METADATA_SERVICE_URL", "http://localhost:8062/v1/metadata")
-EMBEDDINGS_URL = os.getenv("EMBEDDINGS_SERVICE_URL", "http://localhost:8063/v1/embeddings")
-STORAGE_URL = os.getenv("STORAGE_SERVICE_URL", "http://localhost:8064/v1")
-LLM_GATEWAY_URL = os.getenv("LLM_GATEWAY_URL_DEVELOPMENT", "http://localhost:8065")
+# Internal service URLs - using service_registry (environment-aware)
+registry = get_registry()
+CHUNKING_URL = registry.get_service_url('chunking')  # Already includes /v1/orchestrate
+METADATA_URL = registry.get_service_url('metadata')  # Already includes /v1/metadata
+EMBEDDINGS_URL = registry.get_service_url('embeddings')  # Already includes /v1/embeddings
+STORAGE_URL = registry.get_service_url('storage')  # Already includes /v1
+LLM_GATEWAY_URL = registry.get_service_url('llm_gateway')  # Already includes /v1/chat/completions
 
 # Connection pooling for internal service calls
 CONNECTION_POOL_SIZE = int(os.getenv("CONNECTION_POOL_SIZE", "20"))
@@ -137,7 +141,7 @@ async def lifespan(app: FastAPI):
         "Metadata": METADATA_URL.replace("/v1/metadata", "/health"),
         "Embeddings": EMBEDDINGS_URL.replace("/v1/embeddings", "/health"),
         "Storage": STORAGE_URL.replace("/v1", "") + "/health",
-        "LLM Gateway": LLM_GATEWAY_URL + "/health"
+        "LLM Gateway": LLM_GATEWAY_URL.replace("/v1/chat/completions", "/health")  # Fixed: strip /v1/chat/completions first
     }
 
     healthy_services = 0
@@ -230,9 +234,9 @@ class IngestDocumentRequest(BaseModel):
 
     # Metadata parameters (passed to Metadata Service via Chunking Service)
     generate_metadata: bool = Field(default=True, description="Generate semantic metadata for chunks")
-    keywords_count: int = Field(default=5, ge=1, le=20, description="Number of keywords to extract per chunk")
-    topics_count: int = Field(default=3, ge=1, le=10, description="Number of topics to extract per chunk")
-    questions_count: int = Field(default=3, ge=1, le=10, description="Number of questions to generate per chunk")
+    keywords_count: str = Field(default="5", description="Number of keywords to extract per chunk (e.g., '5', '5-10')")
+    topics_count: str = Field(default="3", description="Number of topics to extract per chunk (e.g., '3', '2-5')")
+    questions_count: str = Field(default="3", description="Number of questions to generate per chunk (e.g., '3', '3-5')")
     summary_length: str = Field(default="1-2 sentences", description="Length of summary (e.g., '1-2 sentences', 'brief', 'detailed')")
 
     # Embedding parameters (passed to Embeddings Service via Chunking Service)
@@ -831,7 +835,7 @@ async def health_check():
         "metadata": {"status": "unknown", "url": METADATA_URL.replace("/v1/metadata", "/health")},
         "embeddings": {"status": "unknown", "url": EMBEDDINGS_URL.replace("/v1/embeddings", "/health")},
         "storage": {"status": "unknown", "url": STORAGE_URL.replace("/v1", "") + "/health"},
-        "llm_gateway": {"status": "unknown", "url": LLM_GATEWAY_URL + "/health"}
+        "llm_gateway": {"status": "unknown", "url": LLM_GATEWAY_URL.replace("/v1/chat/completions", "/health")}  # Fixed
     }
 
     # Check each service (async, with timeout)

@@ -9,16 +9,19 @@ UPDATED: Now uses shared model registry from /shared/model_registry.py
 import os
 import sys
 from pathlib import Path
-from dotenv import load_dotenv
 
-# Load common .env from PipeLineServices root
-env_path = Path(__file__).resolve().parents[2] / ".env"
-load_dotenv(env_path)
-
-# Add shared directory to path
-SHARED_DIR = env_path.parent / "shared"
+# Add shared directory to path FIRST (before imports that need it)
+SHARED_DIR = Path(__file__).resolve().parents[3] / "shared"
 sys.path.insert(0, str(SHARED_DIR))
 
+# Import and load environment using config_loader
+from config_loader import load_shared_env, get_env
+
+# Load environment configuration (dev/prod/staging)
+load_shared_env()
+
+# Import service_registry and model_registry
+from service_registry import get_registry
 from model_registry import (
     LLMModels,
     get_llm_for_task,
@@ -32,14 +35,15 @@ SERVICE_DESCRIPTION = "RAG retrieval orchestrator: Search → Rerank → Compres
 
 # Server configuration
 DEFAULT_HOST = os.getenv("HOST", "0.0.0.0")
-DEFAULT_PORT = int(os.getenv("RETRIEVAL_API_PORT", "8070"))
+DEFAULT_PORT = int(os.getenv("RETRIEVAL_API_PORT", "8090"))  # Development: 8090, Staging: 8100, Production: 8110
 
-# Internal service URLs
-INTENT_SERVICE_URL = os.getenv("INTENT_SERVICE_URL", "http://localhost:8075/v1")
-SEARCH_SERVICE_URL = os.getenv("SEARCH_SERVICE_URL", "http://localhost:8071/v1")
-RERANK_SERVICE_URL = os.getenv("RERANK_SERVICE_URL", "http://localhost:8072/v1")
-COMPRESS_SERVICE_URL = os.getenv("COMPRESS_SERVICE_URL", "http://localhost:8073/v1")
-ANSWER_SERVICE_URL = os.getenv("ANSWER_SERVICE_URL", "http://localhost:8074/v1")
+# Internal service URLs - using service_registry (environment-aware)
+registry = get_registry()
+INTENT_SERVICE_URL = registry.get_service_url('intent')  # Already includes /v1
+SEARCH_SERVICE_URL = registry.get_service_url('search')  # Already includes /v1
+RERANK_SERVICE_URL = registry.get_service_url('reranking')  # Already includes /v1
+COMPRESS_SERVICE_URL = registry.get_service_url('compression')  # Already includes /v1
+ANSWER_SERVICE_URL = registry.get_service_url('answer_generation')  # Already includes /v1
 
 # Connection pooling for internal service calls
 CONNECTION_POOL_SIZE = int(os.getenv("CONNECTION_POOL_SIZE", "20"))

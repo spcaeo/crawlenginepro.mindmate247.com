@@ -10,13 +10,17 @@ from pathlib import Path
 from dotenv import load_dotenv
 from enum import Enum
 
-# Load common .env from PipeLineServices root (4 levels up: v1.0.0 -> metadata -> services -> Ingestion -> PipeLineServices)
-env_path = Path(__file__).resolve().parents[4] / ".env"
-load_dotenv(env_path)
-
-# Add shared directory to path
-SHARED_DIR = env_path.parent / "shared"
+# Add shared directory to path (4 levels up to code dir, then to shared)
+CODE_DIR = Path(__file__).resolve().parents[4]
+SHARED_DIR = CODE_DIR / "shared"
 sys.path.insert(0, str(SHARED_DIR))
+
+# Load environment using shared config loader
+from config_loader import load_shared_env
+load_shared_env()
+
+# Import service_registry for environment-aware service URLs
+from service_registry import get_registry
 
 from model_registry import (
     LLMModels,
@@ -49,16 +53,13 @@ DEFAULT_WORKERS = 2
 INTERNAL_MODE = os.getenv("INTERNAL_MODE", "true").lower() == "true"
 
 # ============================================================================
-# LLM Gateway Configuration (Environment-aware)
+# LLM Gateway Configuration (Environment-aware via service_registry)
 # ============================================================================
-ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+registry = get_registry()
 
 if INTERNAL_MODE:
-    # Direct internal calls - Environment-aware
-    if ENVIRONMENT == "production":
-        LLM_GATEWAY_URL = os.getenv("LLM_GATEWAY_URL_PRODUCTION", "http://localhost:8065/v1/chat/completions")
-    else:  # development
-        LLM_GATEWAY_URL = os.getenv("LLM_GATEWAY_URL_DEVELOPMENT", "http://localhost:8065/v1/chat/completions")
+    # Direct internal calls - Environment-aware via service_registry
+    LLM_GATEWAY_URL = registry.get_service_url('llm_gateway')  # Already includes /v1/chat/completions
 else:
     # Via APISIX gateway (requires API key)
     APISIX_GATEWAY = os.getenv("APISIX_GATEWAY_URL", "http://localhost:9080")
@@ -67,7 +68,7 @@ else:
 # Service API key (only used if INTERNAL_MODE=false)
 LLM_GATEWAY_API_KEY = os.getenv("LLM_GATEWAY_API_KEY", "dev_crawlenginepro_2025_secret_key_001")
 
-print(f"[CONFIG] Environment: {ENVIRONMENT}")
+print(f"[CONFIG] Environment: {registry.environment}")
 print(f"[CONFIG] LLM Gateway: {LLM_GATEWAY_URL}")
 
 # ============================================================================
@@ -299,8 +300,13 @@ Extract these 7 fields:
   * Examples: "Hobart → manufacturer-of → Commercial Dishwasher | ChefPro → distributor-of → Hobart products | VitaLife Laboratories → manufacturer-of → CardioHealth Plus | BuildRight Materials & Supply → vendor-of → Lumber"
 - attributes (10-15): Structured key-value pairs for filtering - comma separated
   * Format: key: value
-  * Include: payment-status, payment-due, manufacturer, vendor, product-category, invoice-type, industry, brand, model, price, currency
-  * Examples: "payment-status: Pending, manufacturer: Hobart, vendor: ChefPro, industry: Restaurant Equipment, product-category: Commercial Dishwasher"
+  * CRITICAL: Choose attribute keys that fit the document's domain and context
+  * For religious/spiritual content: use "religion", "deity", "scripture", "tradition", "practice", "sect", "text-source"
+  * For business/financial content: use "industry", "payment-status", "manufacturer", "vendor", "invoice-type"
+  * For technical content: use "technology", "language", "framework", "platform", "license"
+  * For general content: use "domain", "category", "type", "format", "subject"
+  * Examples (religious): "religion: Hinduism, deity: Hanuman, scripture: Ramayana, tradition: Bhakti, practice: Devotion"
+  * Examples (business): "payment-status: Pending, manufacturer: Hobart, vendor: ChefPro, industry: Restaurant Equipment"
 
 CRITICAL RULES FOR KEYWORDS (Enterprise SaaS - Multi-Industry):
 1. FULL ENTITY NAMES FIRST: Always include complete product names, company names, and organization names before abbreviations or components
@@ -323,12 +329,12 @@ CRITICAL RULES FOR KEYWORDS (Enterprise SaaS - Multi-Industry):
    - Always distinguish between Payment Terms (HOW LONG to pay) vs Payment Status (WHETHER paid)
    - Examples: "payment-terms: Net 30, payment-status: Pending, due: 2024-03-30, invoice: MED-INV-2024-1523"
 
-INDUSTRY EXAMPLES:
-- E-commerce: "iPhone 15 Pro Max, Apple Inc., A17 Pro chip, iOS 17" (NOT "iPhone, Apple, chip")
-- Healthcare: "CardioHealth Plus Daily Supplement, VitaLife Laboratories Inc., NSF International, expiration: 2026-12-31, manufactured: 2024-01-15, Omega-3" (NOT "Omega-3, NSF, supplement" - MUST include dates!)
-- Invoices/Financial: "MedTech Equipment Supply, invoice: MED-INV-2024-1523, transaction: 2024-02-28, due: 2024-03-30, payment-terms: Net 30, payment-status: Pending, payment-method: Purchase Order" (NOT just "invoice, medical equipment" - MUST include structured payment data!)
-- Automotive: "Michelin Pilot Sport 4S Tire, Michelin Corporation, ZP run-flat technology" (NOT "Michelin tire, run-flat")
-- Legal: "Meta Platforms Inc., Facebook Ireland Limited" (NOT "Facebook, Meta")
+DOMAIN EXAMPLES (Context-Aware Extraction):
+- Religious/Spiritual: Keywords: "Lord Hanuman, Ramayana, Bhakti tradition, devotional practice" | Attributes: "religion: Hinduism, deity: Hanuman, scripture: Ramayana, tradition: Bhakti, practice: Devotion"
+- E-commerce: "iPhone 15 Pro Max, Apple Inc., A17 Pro chip, iOS 17" | Attributes: "industry: Consumer Electronics, brand: Apple, model: iPhone 15 Pro Max"
+- Healthcare: "CardioHealth Plus Daily Supplement, VitaLife Laboratories Inc., NSF International, expiration: 2026-12-31, manufactured: 2024-01-15, Omega-3" | Attributes: "industry: Healthcare, manufacturer: VitaLife Laboratories, expiration: 2026-12-31"
+- Invoices/Financial: "MedTech Equipment Supply, invoice: MED-INV-2024-1523, transaction: 2024-02-28, due: 2024-03-30, payment-terms: Net 30, payment-status: Pending" | Attributes: "industry: Medical Equipment, payment-status: Pending, invoice: MED-INV-2024-1523"
+- Technical: "React 18.2, TypeScript, Vite build tool" | Attributes: "technology: Web Development, language: TypeScript, framework: React, platform: Web"
 
 Output format (respond with ONLY this JSON, nothing else):
 {{"keywords": "term1, term2", "topics": "theme1, theme2", "questions": "question1 | question2 | question3", "summary": "brief overview", "semantic_keywords": "synonym1, industry-term1, status-descriptor1", "entity_relationships": "entity1 → relationship → entity2 | entity3 → relationship → entity4", "attributes": "key1: value1, key2: value2"}}"""

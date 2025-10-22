@@ -41,3 +41,42 @@ volumes/
 benchmark_*.json
 *_test_*.py
 test_*.py
+
+# Backup files (don't commit these)
+*.backup
+*.backup_*
+*_backup_*
+code_backup_*/
+
+# Archives and old files
+archives/
+cleanup_*/
+
+# Local development only
+local_dev/venv/
+local_dev/*.log
+local_dev/nohup.out
+
+# Testing documents (optional - exclude if large)
+# code/TestingDocuments/
+
+# Temporary files
+*.tmp
+*.temp
+nohup.out
+
+# QA test results (generated files)
+code/TestingDocuments/QA_Testing/results/
+
+# Documentation that's auto-generated or temporary
+COMPREHENSIVE_AUDIT_REPORT.md
+CONFIGURATION_AUDIT.md
+ENTERPRISE_CONFIGURATION_UPGRADE.md
+
+# Sensitive information (NEVER commit these!)
+Docs/mykeys.txt
+Docs/newVMDetails.txt
+**/mykeys.txt
+**/*keys*.txt
+**/credentials*.txt
+**/*password*.txt

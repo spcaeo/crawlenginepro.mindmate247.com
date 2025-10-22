@@ -13,11 +13,17 @@ class ContextChunk(BaseModel):
     document_id: Optional[str] = Field(None, description="Source document ID")
     chunk_index: Optional[int] = Field(None, description="Chunk index in document")
     score: Optional[float] = Field(None, description="Relevance score")
-    # Metadata fields (optional)
+
+    # Standard metadata fields (4 fields)
     topics: Optional[str] = Field(None, description="Topics/categories extracted from chunk")
     keywords: Optional[str] = Field(None, description="Keywords extracted from chunk")
     questions: Optional[str] = Field(None, description="Questions this chunk answers")
     summary: Optional[str] = Field(None, description="Summary of chunk content")
+
+    # Enhanced metadata fields (3 NEW fields)
+    semantic_keywords: Optional[str] = Field(None, description="LLM-extracted semantic/conceptual keywords")
+    entity_relationships: Optional[str] = Field(None, description="Entity relationships extracted from chunk")
+    attributes: Optional[str] = Field(None, description="Entity attributes/properties extracted from chunk")
 
 class AnswerRequest(BaseModel):
     """Request for answer generation"""
@@ -65,6 +71,10 @@ class AnswerRequest(BaseModel):
     include_metadata_questions: bool = Field(
         default=False,
         description="Include questions field in context metadata (default: False for performance optimization - reduces token usage and latency)"
+    )
+    response_style: Optional[str] = Field(
+        default="balanced",
+        description="Answer style: 'concise' (brief), 'balanced' (moderate detail), or 'comprehensive' (detailed)"
     )
 
 class Citation(BaseModel):

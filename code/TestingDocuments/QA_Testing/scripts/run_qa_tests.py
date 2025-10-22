@@ -34,8 +34,8 @@ class Colors:
 
 # Configuration
 RETRIEVAL_API_URL = "http://localhost:8090/v1/retrieve"
-COLLECTION_NAME = "test_comprehensive_v4"  # Updated for enhanced metadata testing
-TENANT_ID = "test_tenant"  # Updated for enhanced metadata testing
+COLLECTION_NAME = "production_final"  # Production collection with 7-field metadata
+TENANT_ID = "default"  # Default tenant
 RESULTS_DIR = Path(__file__).parent.parent / "results"
 REPORTS_DIR = Path(__file__).parent.parent / "reports"
 
@@ -260,7 +260,161 @@ def get_service_models_and_cache():
 
     return services_info
 
-def run_single_query(question_data: Dict[str, Any], test_index: int, total_tests: int, response_style: Optional[str] = None) -> Dict[str, Any]:
+def run_diagnostic_metadata_check(collection_name: str, tenant_id: str, chunk_ids: List[str]) -> Dict[str, Any]:
+    """
+    Diagnostic function: Query Milvus directly to inspect metadata fields for specific chunks
+
+    Args:
+        collection_name: Milvus collection name
+        tenant_id: Tenant ID
+        chunk_ids: List of chunk IDs to inspect
+
+    Returns:
+        Dictionary with metadata field statistics and samples
+    """
+    try:
+        from pymilvus import connections, Collection
+
+        # Connect to Milvus
+        connections.connect(alias="diagnostic", host="localhost", port="19530")
+        collection = Collection(collection_name)
+        collection.load()
+
+        # Build expression to query specific chunks
+        chunk_id_list = "', '".join(chunk_ids[:5])  # Limit to 5 chunks for performance
+        expr = f"id in ['{chunk_id_list}']"
+
+        # Query all 7 metadata fields
+        results = collection.query(
+            expr=expr,
+            output_fields=[
+                "id", "text",
+                "keywords", "topics", "questions", "summary",  # Standard 4
+                "semantic_keywords", "entity_relationships", "attributes"  # Enhanced 3
+            ],
+            limit=5
+        )
+
+        # Analyze metadata presence
+        field_stats = {
+            "keywords": {"present": 0, "empty": 0, "avg_length": 0, "samples": []},
+            "topics": {"present": 0, "empty": 0, "avg_length": 0, "samples": []},
+            "questions": {"present": 0, "empty": 0, "avg_length": 0, "samples": []},
+            "summary": {"present": 0, "empty": 0, "avg_length": 0, "samples": []},
+            "semantic_keywords": {"present": 0, "empty": 0, "avg_length": 0, "samples": []},
+            "entity_relationships": {"present": 0, "empty": 0, "avg_length": 0, "samples": []},
+            "attributes": {"present": 0, "empty": 0, "avg_length": 0, "samples": []}
+        }
+
+        for chunk in results:
+            for field in field_stats.keys():
+                value = chunk.get(field, "")
+                if value and len(value.strip()) > 0:
+                    field_stats[field]["present"] += 1
+                    field_stats[field]["avg_length"] += len(value)
+                    if len(field_stats[field]["samples"]) < 2:  # Keep 2 samples
+                        field_stats[field]["samples"].append(value[:100])
+                else:
+                    field_stats[field]["empty"] += 1
+
+        # Calculate averages
+        for field in field_stats:
+            if field_stats[field]["present"] > 0:
+                field_stats[field]["avg_length"] = field_stats[field]["avg_length"] // field_stats[field]["present"]
+
+        connections.disconnect("diagnostic")
+
+        return {
+            "success": True,
+            "chunks_inspected": len(results),
+            "field_statistics": field_stats
+        }
+
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e)
+        }
+
+def get_search_metadata_boost_breakdown(collection_name: str, query_text: str, tenant_id: str, top_k: int = 3) -> Dict[str, Any]:
+    """
+    Diagnostic function: Call Search Service directly to get detailed metadata boost breakdown
+
+    Args:
+        collection_name: Milvus collection name
+        query_text: Query text
+        tenant_id: Tenant ID
+        top_k: Number of results to retrieve
+
+    Returns:
+        Search results with metadata boost details per field
+    """
+    try:
+        # First, get query embedding from Embeddings Service
+        emb_response = requests.post(
+            "http://localhost:8073/v1/embeddings",
+            json={"input": [query_text]},
+            timeout=10
+        )
+        emb_response.raise_for_status()
+        emb_data = emb_response.json()
+        query_vector = emb_data["data"][0]["dense_embedding"]
+
+        # Now call Search Service directly with vector
+        search_payload = {
+            "query_text": query_text,
+            "collection": collection_name,
+            "tenant_id": tenant_id,
+            "top_k": top_k,
+            "use_metadata_boost": True
+        }
+
+        search_response = requests.post(
+            "http://localhost:8091/v1/search",
+            json=search_payload,
+            timeout=15
+        )
+        search_response.raise_for_status()
+        search_data = search_response.json()
+
+        # Extract metadata boost information from results
+        results = search_data.get("results", [])
+        boost_breakdown = []
+
+        for result in results[:3]:  # Top 3 results
+            metadata_matches = result.get("metadata_matches", {})
+            boost_breakdown.append({
+                "chunk_id": result.get("chunk_id"),
+                "vector_score": result.get("vector_score", 0),
+                "metadata_boost": result.get("metadata_boost", 0),
+                "final_score": result.get("score", 0),
+                "boost_details": {
+                    # Standard fields (4)
+                    "keywords_matched": metadata_matches.get("keywords_matched", []),
+                    "topics_matched": metadata_matches.get("topics_matched", []),
+                    "question_similarity": metadata_matches.get("question_similarity", 0),
+                    "summary_coverage": metadata_matches.get("summary_coverage", 0),
+                    # Enhanced fields (3 NEW)
+                    "semantic_keywords_matched": metadata_matches.get("semantic_keywords_matched", []),
+                    "entity_relationships_score": metadata_matches.get("entity_relationships_score", 0),
+                    "attributes_coverage": metadata_matches.get("attributes_coverage", 0)
+                }
+            })
+
+        return {
+            "success": True,
+            "total_results": len(results),
+            "boost_breakdown": boost_breakdown,
+            "metadata_boost_applied": search_data.get("metadata_boost_applied", False)
+        }
+
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e)
+        }
+
+def run_single_query(question_data: Dict[str, Any], test_index: int, total_tests: int, response_style: Optional[str] = None, diagnostic_mode: bool = False) -> Dict[str, Any]:
     """Run a single Q&A test and return results
 
     Args:
@@ -268,6 +422,7 @@ def run_single_query(question_data: Dict[str, Any], test_index: int, total_tests
         test_index: Current test index
         total_tests: Total number of tests
         response_style: Optional override for answer style (concise/balanced/comprehensive)
+        diagnostic_mode: Enable detailed metadata field validation and boost breakdown
     """
 
     print(f"\n{Colors.HEADER}{Colors.BOLD}{'='*100}{Colors.ENDC}")
@@ -400,9 +555,22 @@ def run_single_query(question_data: Dict[str, Any], test_index: int, total_tests
         print(f"{Colors.BOLD}DETAILED PIPELINE ANALYSIS{Colors.ENDC}")
         print(f"{Colors.BOLD}{'='*80}{Colors.ENDC}")
 
+        # Calculate parallel execution metrics
+        intent_time = stage_times.get('intent_detection', 0)
+        search_time = stage_times.get('search', 0)
+        parallel_time = max(intent_time, search_time)
+        parallel_overlap = min(intent_time, search_time)
+
+        print(f"\n{Colors.WARNING}⏱️  PARALLEL EXECUTION: Intent Detection + Search run simultaneously{Colors.ENDC}")
+        print(f"   Intent Detection: {intent_time:.0f}ms")
+        print(f"   Search:           {search_time:.0f}ms")
+        print(f"   Parallel Time:    {parallel_time:.0f}ms (max of both, NOT sum)")
+        print(f"   Time Saved:       {parallel_overlap:.0f}ms (overlap avoided by parallel execution)")
+
         # Intent Detection
         intent_metadata = stages.get("intent_detection", {}).get("metadata", {}) if isinstance(stages.get("intent_detection"), dict) else {}
-        print(f"\n{Colors.OKCYAN}1. INTENT DETECTION ({stage_times.get('intent_detection', 0):.0f}ms - {(stage_times.get('intent_detection', 0)/server_time*100) if server_time > 0 else 0:.1f}% of total){Colors.ENDC}")
+        parallel_marker = " [PARALLEL with Search]" if intent_time > 0 and search_time > 0 else ""
+        print(f"\n{Colors.OKCYAN}1. INTENT DETECTION ({stage_times.get('intent_detection', 0):.0f}ms - {(stage_times.get('intent_detection', 0)/server_time*100) if server_time > 0 else 0:.1f}% of total){parallel_marker}{Colors.ENDC}")
         print(f"   Intent: {intent_metadata.get('intent', 'unknown')}")
         print(f"   Language: {intent_metadata.get('language', 'unknown')}")
         print(f"   Complexity: {intent_metadata.get('complexity', 'unknown')}")
@@ -455,7 +623,7 @@ def run_single_query(question_data: Dict[str, Any], test_index: int, total_tests
 
         # Search
         search_metadata = stages.get("search", {}).get("metadata", {}) if isinstance(stages.get("search"), dict) else {}
-        print(f"\n{Colors.OKCYAN}2. SEARCH ({stage_times.get('search', 0):.0f}ms - {(stage_times.get('search', 0)/server_time*100) if server_time > 0 else 0:.1f}% of total){Colors.ENDC}")
+        print(f"\n{Colors.OKCYAN}2. SEARCH ({stage_times.get('search', 0):.0f}ms - {(stage_times.get('search', 0)/server_time*100) if server_time > 0 else 0:.1f}% of total){parallel_marker}{Colors.ENDC}")
         print(f"   Results Retrieved: {result.get('search_results_count', 0)}")
         print(f"   Top K: {search_metadata.get('top_k', 20)}")
         print(f"   Metadata Boost: {'✅ Enabled' if search_metadata.get('metadata_boost_enabled') else '❌ Disabled'}")
@@ -484,14 +652,133 @@ def run_single_query(question_data: Dict[str, Any], test_index: int, total_tests
         print(f"   Model Used: {answer_metadata.get('model_used', 'unknown')}")
         print(f"   Used Recommended: {'✅ Yes' if answer_metadata.get('used_recommended_model') else '❌ No'}")
         print(f"   Custom Prompt: {'✅ Yes' if answer_metadata.get('used_custom_prompt') else '❌ No'}")
+        print(f"   Response Style: {response_style.upper() if response_style else 'Auto-Detected'}")
         print(f"   Temperature: {answer_metadata.get('temperature', 0)}")
         print(f"   Context Chunks: {result.get('context_count', 0)}")
         print(f"   Citations: {len(citations)}")
 
-        # Bottleneck summary
+        # Bottleneck summary with parallel execution context
         print(f"\n{Colors.WARNING}⚠️  BOTTLENECK: {bottleneck_stage.replace('_', ' ').title()} ({bottleneck_time:.0f}ms = {bottleneck_percentage:.1f}% of total time){Colors.ENDC}")
 
+        # Explain what optimizing this bottleneck would achieve
+        if bottleneck_stage == 'intent_detection' and intent_time > search_time:
+            time_saved_if_optimized = intent_time - search_time
+            projected_time = server_time - time_saved_if_optimized
+            print(f"{Colors.WARNING}   → If Intent reduced to <100ms (pattern match), total time would drop to ~{projected_time:.0f}ms{Colors.ENDC}")
+            print(f"{Colors.WARNING}   → Time savings: ~{time_saved_if_optimized:.0f}ms (Intent is blocking Search completion){Colors.ENDC}")
+        elif bottleneck_stage == 'search' and search_time > intent_time:
+            time_saved_if_optimized = search_time - intent_time
+            projected_time = server_time - time_saved_if_optimized
+            print(f"{Colors.WARNING}   → Search is blocking Intent completion by {time_saved_if_optimized:.0f}ms{Colors.ENDC}")
+
         print(f"{Colors.BOLD}{'='*80}{Colors.ENDC}")
+
+        # DIAGNOSTIC MODE: Detailed metadata field validation
+        diagnostic_data = {}
+        if diagnostic_mode:
+            print(f"\n{Colors.BOLD}{'='*80}{Colors.ENDC}")
+            print(f"{Colors.BOLD}{Colors.OKCYAN}DIAGNOSTIC MODE: 7-FIELD METADATA VALIDATION{Colors.ENDC}")
+            print(f"{Colors.BOLD}{'='*80}{Colors.ENDC}")
+
+            # 1. Get metadata boost breakdown from Search Service
+            print(f"\n{Colors.BOLD}1. METADATA BOOST BREAKDOWN (All 7 Fields){Colors.ENDC}")
+            boost_data = get_search_metadata_boost_breakdown(
+                COLLECTION_NAME,
+                question_data["question"],
+                TENANT_ID,
+                top_k=3
+            )
+
+            if boost_data.get("success"):
+                print(f"{Colors.OKGREEN}✅ Successfully retrieved metadata boost details{Colors.ENDC}")
+                print(f"Metadata Boost Applied: {'Yes' if boost_data.get('metadata_boost_applied') else 'No'}")
+                print(f"Results Analyzed: {len(boost_data.get('boost_breakdown', []))}")
+
+                for idx, chunk_boost in enumerate(boost_data.get("boost_breakdown", []), 1):
+                    print(f"\n{Colors.OKCYAN}  Result #{idx}: {chunk_boost.get('chunk_id', 'N/A')[:50]}...{Colors.ENDC}")
+                    print(f"    Vector Score: {chunk_boost.get('vector_score', 0):.4f}")
+                    print(f"    Metadata Boost: +{chunk_boost.get('metadata_boost', 0):.4f}")
+                    print(f"    Final Score: {chunk_boost.get('final_score', 0):.4f}")
+
+                    details = chunk_boost.get("boost_details", {})
+                    print(f"\n    {Colors.BOLD}Standard Metadata (4 fields):{Colors.ENDC}")
+                    kw_matched = details.get("keywords_matched", [])
+                    print(f"      Keywords Matched: {len(kw_matched)} - {kw_matched[:3] if kw_matched else 'None'}")
+                    topics_matched = details.get("topics_matched", [])
+                    print(f"      Topics Matched: {len(topics_matched)} - {topics_matched[:3] if topics_matched else 'None'}")
+                    print(f"      Question Similarity: {details.get('question_similarity', 0):.2f}")
+                    print(f"      Summary Coverage: {details.get('summary_coverage', 0):.2f}")
+
+                    print(f"\n    {Colors.BOLD}Enhanced Metadata (3 NEW fields):{Colors.ENDC}")
+                    sem_kw = details.get("semantic_keywords_matched", [])
+                    status_sem = "✓" if sem_kw else "✗"
+                    print(f"      {status_sem} Semantic Keywords: {len(sem_kw)} - {sem_kw[:3] if sem_kw else 'None'}")
+                    entity_score = details.get("entity_relationships_score", 0)
+                    status_entity = "✓" if entity_score > 0 else "✗"
+                    print(f"      {status_entity} Entity Relationships: {entity_score:.2f}")
+                    attr_score = details.get("attributes_coverage", 0)
+                    status_attr = "✓" if attr_score > 0 else "✗"
+                    print(f"      {status_attr} Attributes Coverage: {attr_score:.2f}")
+
+                diagnostic_data["metadata_boost_breakdown"] = boost_data
+            else:
+                print(f"{Colors.FAIL}❌ Failed to retrieve metadata boost: {boost_data.get('error')}{Colors.ENDC}")
+
+            # 2. Inspect actual chunk metadata from Milvus
+            print(f"\n{Colors.BOLD}2. CHUNK METADATA FIELD INSPECTION{Colors.ENDC}")
+
+            # Extract chunk IDs from context_chunks (if available in result)
+            context_chunks = result.get("context_chunks", [])
+            if context_chunks and len(context_chunks) > 0:
+                chunk_ids = [chunk.get("chunk_id") for chunk in context_chunks if chunk.get("chunk_id")]
+
+                if chunk_ids:
+                    metadata_check = run_diagnostic_metadata_check(COLLECTION_NAME, TENANT_ID, chunk_ids)
+
+                    if metadata_check.get("success"):
+                        print(f"{Colors.OKGREEN}✅ Successfully inspected {metadata_check.get('chunks_inspected', 0)} chunks{Colors.ENDC}\n")
+
+                        field_stats = metadata_check.get("field_statistics", {})
+
+                        print(f"{Colors.BOLD}Standard Metadata Fields (4):{Colors.ENDC}")
+                        for field in ["keywords", "topics", "questions", "summary"]:
+                            stats = field_stats.get(field, {})
+                            present = stats.get("present", 0)
+                            empty = stats.get("empty", 0)
+                            total = present + empty
+                            coverage = (present / total * 100) if total > 0 else 0
+                            avg_len = stats.get("avg_length", 0)
+                            status = "✓" if coverage == 100 else "⚠️"
+
+                            print(f"  {status} {field:20s}: {present}/{total} ({coverage:5.1f}%) | Avg: {avg_len:4d} chars")
+                            samples = stats.get("samples", [])
+                            if samples:
+                                print(f"      Sample: {samples[0][:80]}...")
+
+                        print(f"\n{Colors.BOLD}Enhanced Metadata Fields (3 NEW):{Colors.ENDC}")
+                        for field in ["semantic_keywords", "entity_relationships", "attributes"]:
+                            stats = field_stats.get(field, {})
+                            present = stats.get("present", 0)
+                            empty = stats.get("empty", 0)
+                            total = present + empty
+                            coverage = (present / total * 100) if total > 0 else 0
+                            avg_len = stats.get("avg_length", 0)
+                            status = "✓" if coverage == 100 else "⚠️"
+
+                            print(f"  {status} {field:20s}: {present}/{total} ({coverage:5.1f}%) | Avg: {avg_len:4d} chars")
+                            samples = stats.get("samples", [])
+                            if samples:
+                                print(f"      Sample: {samples[0][:80]}...")
+
+                        diagnostic_data["chunk_metadata_inspection"] = metadata_check
+                    else:
+                        print(f"{Colors.FAIL}❌ Failed to inspect chunks: {metadata_check.get('error')}{Colors.ENDC}")
+                else:
+                    print(f"{Colors.WARNING}⚠️  No chunk IDs available for inspection{Colors.ENDC}")
+            else:
+                print(f"{Colors.WARNING}⚠️  No context chunks in response{Colors.ENDC}")
+
+            print(f"{Colors.BOLD}{'='*80}{Colors.ENDC}")
 
         # Extract model and intent information (already calculated above)
         answer_gen_metadata = stages.get("answer_generation", {}).get("metadata", {}) if isinstance(stages.get("answer_generation"), dict) else {}
@@ -527,6 +814,15 @@ def run_single_query(question_data: Dict[str, Any], test_index: int, total_tests
                     "compression_pct": (stage_times["compression"] / server_time * 100) if server_time > 0 else 0,
                     "answer_generation_pct": (stage_times["answer_generation"] / server_time * 100) if server_time > 0 else 0
                 },
+                "parallel_execution": {
+                    "note": "Intent Detection and Search run in PARALLEL. Their times OVERLAP and should NOT be summed.",
+                    "intent_time_ms": intent_time,
+                    "search_time_ms": search_time,
+                    "parallel_time_ms": parallel_time,
+                    "time_saved_by_parallel_ms": parallel_overlap,
+                    "blocking_stage": "intent_detection" if intent_time > search_time else "search",
+                    "blocking_time_beyond_other_ms": abs(intent_time - search_time)
+                },
                 "bottleneck": {
                     "stage": bottleneck_stage,
                     "time_ms": bottleneck_time,
@@ -544,7 +840,9 @@ def run_single_query(question_data: Dict[str, Any], test_index: int, total_tests
                 "llm_used": answer_gen_metadata.get("model_used"),
                 "llm_temperature": answer_gen_metadata.get("temperature"),
                 "used_recommended_model": answer_gen_metadata.get("used_recommended_model"),
-                "used_custom_prompt": answer_gen_metadata.get("used_custom_prompt")
+                "used_custom_prompt": answer_gen_metadata.get("used_custom_prompt"),
+                "response_style": response_style if response_style else "auto-detected",
+                "response_style_override": response_style is not None
             },
             "intent_analysis": {
                 "detected_intent": intent_meta.get("intent"),
@@ -560,6 +858,7 @@ def run_single_query(question_data: Dict[str, Any], test_index: int, total_tests
                 "keywords_missing": keywords_missing,
                 "coverage_percentage": (len(keywords_found) / len(question_data["expected_answer_keywords"]) * 100) if question_data["expected_answer_keywords"] else 0
             },
+            "diagnostic_data": diagnostic_data if diagnostic_mode else None,
             "full_response": result
         }
 
@@ -637,6 +936,12 @@ Examples:
         metavar='STYLE'
     )
 
+    parser.add_argument(
+        '--diagnostic',
+        action='store_true',
+        help='Enable diagnostic mode: validates all 7 metadata fields, metadata boost breakdown, and context chunk inspection'
+    )
+
     args = parser.parse_args()
 
     # Filter questions if specific IDs provided
@@ -657,9 +962,11 @@ Examples:
     print(f"{Colors.OKCYAN}Retrieval API:{Colors.ENDC} {RETRIEVAL_API_URL}")
     print(f"{Colors.OKCYAN}Collection:{Colors.ENDC} {COLLECTION_NAME}")
     if args.test_ids:
-        print(f"{Colors.OKCYAN}Running Specific Tests:{Colors.ENDC} --test-ids, {', '.join(args.test_ids)}")
+        print(f"{Colors.OKCYAN}Running Specific Tests:{Colors.ENDC} {', '.join(args.test_ids)}")
     if args.response_style:
         print(f"{Colors.OKCYAN}Response Style:{Colors.ENDC} {args.response_style.upper()} (override)")
+    if args.diagnostic:
+        print(f"{Colors.OKCYAN}Diagnostic Mode:{Colors.ENDC} {Colors.OKGREEN}ENABLED{Colors.ENDC} (7-field metadata validation)")
     print(f"{Colors.OKCYAN}Total Questions:{Colors.ENDC} {len(questions_to_run)}")
     print(f"{Colors.OKCYAN}Results Directory:{Colors.ENDC} {RESULTS_DIR}\n")
 
@@ -711,7 +1018,7 @@ Examples:
     test_start_time = time.time()
 
     for idx, question in enumerate(questions_to_run, 1):
-        result = run_single_query(question, idx, len(questions_to_run), args.response_style)
+        result = run_single_query(question, idx, len(questions_to_run), args.response_style, args.diagnostic)
         all_results.append(result)
 
         # Small delay between tests to avoid overwhelming the API

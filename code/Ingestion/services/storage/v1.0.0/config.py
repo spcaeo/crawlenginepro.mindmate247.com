@@ -6,15 +6,14 @@ Multi-tenant vector storage with full CRUD operations
 import os
 import sys
 from pathlib import Path
-from dotenv import load_dotenv
 
-# Load common .env from PipeLineServices root (4 levels up: v1.0.0 -> storage -> services -> Ingestion -> PipeLineServices)
-env_path = Path(__file__).resolve().parents[4] / ".env"
-load_dotenv(env_path)
-
-# Add shared directory to path for model registry
-SHARED_DIR = env_path.parent / "shared"
+# Add shared directory to path FIRST (before imports that need it)
+SHARED_DIR = Path(__file__).resolve().parents[5] / "shared"
 sys.path.insert(0, str(SHARED_DIR))
+
+# Import and load environment using config_loader
+from config_loader import load_shared_env
+load_shared_env()
 
 from model_registry import get_embedding_dimension
 
@@ -27,19 +26,22 @@ SERVICE_DESCRIPTION = "Vector storage with CRUD operations and multi-tenancy sup
 DEFAULT_HOST = os.getenv("HOST", "0.0.0.0")
 DEFAULT_PORT = int(os.getenv("PORT", "8064"))
 
-# Environment-aware Milvus connection
-ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
-if ENVIRONMENT == "production":
+# Environment-aware Milvus connection (using PIPELINE_ENV for consistency)
+PIPELINE_ENV = os.getenv("PIPELINE_ENV", "dev")
+if PIPELINE_ENV == "prod":
     MILVUS_HOST = os.getenv("MILVUS_HOST_PRODUCTION", "localhost")
     MILVUS_PORT = int(os.getenv("MILVUS_PORT_PRODUCTION", "19530"))
-else:  # development
+elif PIPELINE_ENV == "staging":
+    MILVUS_HOST = os.getenv("MILVUS_HOST_STAGING", os.getenv("MILVUS_HOST_DEVELOPMENT", "localhost"))
+    MILVUS_PORT = int(os.getenv("MILVUS_PORT_STAGING", os.getenv("MILVUS_PORT_DEVELOPMENT", "19530")))
+else:  # dev
     MILVUS_HOST = os.getenv("MILVUS_HOST_DEVELOPMENT", "localhost")
     MILVUS_PORT = int(os.getenv("MILVUS_PORT_DEVELOPMENT", "19530"))
 
 MILVUS_USER = os.getenv("MILVUS_USER", "")
 MILVUS_PASSWORD = os.getenv("MILVUS_PASSWORD", "")
 
-print(f"[CONFIG] Environment: {ENVIRONMENT}")
+print(f"[CONFIG] Environment: {PIPELINE_ENV}")
 print(f"[CONFIG] Milvus: {MILVUS_HOST}:{MILVUS_PORT}")
 
 # Schema configuration - Get dimension from shared model registry

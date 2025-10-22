@@ -8,15 +8,19 @@ UPDATED: Now uses shared model registry from /shared/model_registry.py
 import os
 import sys
 from pathlib import Path
-from dotenv import load_dotenv
 
-# Load common .env from PipeLineServices root
-env_path = Path(__file__).resolve().parents[4] / ".env"
-load_dotenv(env_path)
-
-# Add shared directory to path
-SHARED_DIR = env_path.parent / "shared"
+# Add shared directory to path FIRST (before any imports that need it)
+SHARED_DIR = Path(__file__).resolve().parents[4] / "shared"
 sys.path.insert(0, str(SHARED_DIR))
+
+# Import and load environment using config_loader
+from config_loader import load_shared_env, get_env
+
+# Load environment configuration (dev/prod/staging)
+load_shared_env()
+
+# Import service_registry for environment-aware service URLs
+from service_registry import get_registry
 
 from model_registry import (
     LLMModels,
@@ -43,11 +47,12 @@ DEFAULT_PORT = int(os.getenv("COMPRESS_SERVICE_PORT", "8073"))
 INTERNAL_MODE = os.getenv("INTERNAL_MODE", "true").lower() == "true"
 
 # ============================================================================
-# LLM Gateway Configuration
+# LLM Gateway Configuration - Environment-aware via service_registry
 # ============================================================================
+registry = get_registry()
 if INTERNAL_MODE:
-    # Direct internal calls (localhost) - Default mode
-    LLM_GATEWAY_URL = os.getenv("LLM_GATEWAY_URL_DEVELOPMENT", "http://localhost:8065/v1/chat/completions")
+    # Direct internal calls (localhost) - Default mode, uses service_registry
+    LLM_GATEWAY_URL = registry.get_service_url('llm_gateway')  # Already includes /v1/chat/completions
 else:
     # Via APISIX gateway (requires API key)
     APISIX_GATEWAY = os.getenv("APISIX_GATEWAY_URL", "http://localhost:9080")

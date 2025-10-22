@@ -10,12 +10,15 @@ UPDATED: Now uses shared model registry from /shared/model_registry.py
 import os
 import sys
 from pathlib import Path
-from dotenv import load_dotenv
 from enum import Enum
 
 # Add shared directory to path
 SHARED_DIR = Path(__file__).resolve().parent.parent.parent.parent.parent / "shared"
 sys.path.insert(0, str(SHARED_DIR))
+
+# Load shared configuration (from /code/shared/.env.dev or .env.prod)
+from config_loader import load_shared_env
+load_shared_env()
 
 from model_registry import (
     LLMModels,
@@ -24,8 +27,6 @@ from model_registry import (
     get_model_provider,
     is_sambanova_model
 )
-
-load_dotenv()
 
 # ============================================================================
 # Version Management
@@ -38,7 +39,7 @@ SERVICE_DESCRIPTION = "Nebius AI Studio proxy with tenant API keys, cost trackin
 # Server Configuration
 # ============================================================================
 DEFAULT_HOST = "0.0.0.0"
-DEFAULT_PORT = int(os.getenv("PORT", "8065"))  # Changed from 8000 to avoid conflicts (part of Ingestion services 8060-8069)
+DEFAULT_PORT = int(os.getenv("LLM_GATEWAY_SERVICE_PORT", os.getenv("PORT", "8075")))
 DEFAULT_WORKERS = 2
 
 # ============================================================================

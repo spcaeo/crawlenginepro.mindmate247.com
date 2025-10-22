@@ -25,11 +25,16 @@ class SearchRequest(BaseModel):
 # ============================================================================
 
 class MetadataMatch(BaseModel):
-    """Metadata matching details"""
+    """Metadata matching details (ALL 7 fields)"""
+    # Standard metadata matches (4 fields)
     keywords_matched: List[str] = Field(default_factory=list, description="Keywords that matched")
     topics_matched: List[str] = Field(default_factory=list, description="Topics that matched")
     question_similarity: float = Field(default=0.0, description="Question similarity score (0-1)")
     summary_coverage: float = Field(default=0.0, description="Summary coverage score (0-1)")
+    # Enhanced metadata matches (3 NEW fields)
+    semantic_keywords_matched: List[str] = Field(default_factory=list, description="Semantic keywords that matched")
+    entity_relationships_score: float = Field(default=0.0, description="Entity relationship relevance (0-1)")
+    attributes_coverage: float = Field(default=0.0, description="Attributes coverage score (0-1)")
 
 class SearchResultItem(BaseModel):
     """Single search result with metadata boosting details"""
@@ -41,11 +46,15 @@ class SearchResultItem(BaseModel):
     metadata_matches: MetadataMatch = Field(..., description="Metadata matching details")
     document_id: Optional[str] = Field(default=None, description="Parent document ID")
     chunk_index: Optional[int] = Field(default=None, description="Chunk sequence number")
-    # Metadata fields
+    # Standard metadata fields (4 fields)
     keywords: Optional[str] = Field(default=None, description="Chunk keywords")
     topics: Optional[str] = Field(default=None, description="Chunk topics")
     questions: Optional[str] = Field(default=None, description="Chunk questions")
     summary: Optional[str] = Field(default=None, description="Chunk summary")
+    # Enhanced metadata fields (3 NEW fields)
+    semantic_keywords: Optional[str] = Field(default=None, description="LLM-extracted semantic/conceptual keywords")
+    entity_relationships: Optional[str] = Field(default=None, description="Entity relationships extracted from chunk")
+    attributes: Optional[str] = Field(default=None, description="Entity attributes/properties extracted from chunk")
 
 class SearchResponse(BaseModel):
     """Search response"""

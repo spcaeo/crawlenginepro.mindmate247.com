@@ -8,15 +8,14 @@ UPDATED: Now uses shared model registry from /shared/model_registry.py
 import os
 import sys
 from pathlib import Path
-from dotenv import load_dotenv
 
-# Load common .env from PipeLineServices root
-env_path = Path(__file__).resolve().parents[4] / ".env"
-load_dotenv(env_path)
-
-# Add shared directory to path
-SHARED_DIR = env_path.parent / "shared"
+# Add shared directory to path FIRST (before imports that need it)
+SHARED_DIR = Path(__file__).resolve().parents[5] / "shared"
 sys.path.insert(0, str(SHARED_DIR))
+
+# Import and load environment using config_loader
+from config_loader import load_shared_env
+load_shared_env()
 
 from model_registry import (
     RerankingModels,
